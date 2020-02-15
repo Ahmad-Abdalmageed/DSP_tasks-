@@ -6,11 +6,11 @@ import sys
 
 
 class signalViewer(ss.Ui_MainWindow):
-    i = 0
+    i = 0 # counter represents the chunks size of data to be loaded
     def __init__(self, mainwindow):
         '''
         Main loop of the UI
-        :param mainwindow:QMainWindow Object
+        :param mainwindow: QMainWindow Object
         '''
         super(signalViewer, self).setupUi(mainwindow)
         self.load_data()
@@ -41,7 +41,6 @@ class signalViewer(ss.Ui_MainWindow):
         '''
         signalViewer.i += 200
         self.y = pd.concat([self.y, self.data.iloc[self.i:self.i+200, 1]], axis=0, sort=True)
-        # self.x = pd.concat([s elf.x, self.data.iloc[self.i:self.i+200, 1]], axis=0, sort=True)
         self.data_line.setData(self.y)
 
     def timer(self):
@@ -53,9 +52,17 @@ class signalViewer(ss.Ui_MainWindow):
         self.stop_timer()
 
     def start_timer(self):
+        '''
+        Event of clicking the start button which starts the signal plotting
+        :return:
+        '''
         self.toolButton.clicked.connect(self.timer.start)
 
     def stop_timer(self):
+        '''
+        Event of clicking the stop button which stops the signal plotting
+        :return:
+        '''
         self.toolButton_2.clicked.connect(self.timer.stop)
 
 
