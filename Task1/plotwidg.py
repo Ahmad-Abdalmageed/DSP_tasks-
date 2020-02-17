@@ -18,6 +18,7 @@ class signalViewer(ss.Ui_MainWindow):
         super(signalViewer, self).setupUi(mainwindow)
         # self.data = {}
         self.speed = speed
+<<<<<<< Updated upstream
 
         # Load Button connector
         self.load_bt.clicked.connect(self.load)
@@ -53,6 +54,18 @@ class signalViewer(ss.Ui_MainWindow):
         self.load_mat_data(filename)
         self.plot()
         self.timer()
+=======
+        self.File = self.load_bt.clicked.connect(self.load)
+        print(self.File)
+        self.load_data(self.File)
+        self.plot()
+        self.timer()
+
+
+    def load(self):
+        filename, format= QtWidgets.QFileDialog.getOpenFileName(None, 'Load Signal','/home', "*.csv;; *.edf;;*.mat")
+        return [filename, format]
+>>>>>>> Stashed changes
 
     def plotSignal_txt(self, filename):
         self.load_txt_data(filename)
@@ -64,6 +77,7 @@ class signalViewer(ss.Ui_MainWindow):
         load the data from user
         :return:
         '''
+<<<<<<< Updated upstream
 
         self.data = pd.read_csv(file_name)
         self.y = self.data.iloc[:1, 1]
@@ -77,6 +91,12 @@ class signalViewer(ss.Ui_MainWindow):
     def load_txt_data(self, file_name):
         self.data = pd.read_csv(file_name, skiprows=[i for i in range(500,7657)])
         self.y = self.data.iloc[:1, 2]
+=======
+        if filename != None:
+            self.data = pd.read_csv(filename[0])
+            self.y = self.data.iloc[:1, 1]
+            self.x = self.data.iloc[:1, 2] # TODO : Convert to dictionary holding all channels
+>>>>>>> Stashed changes
 
     def plot(self):
         '''
@@ -85,8 +105,29 @@ class signalViewer(ss.Ui_MainWindow):
         '''
         # TODO : Adapt to plot all channels in channels dict
 
+<<<<<<< Updated upstream
         self.data_line1 = self.widget.plotItem.plot(self.y, pen=self.pen1, name='y')
         # self.data_line2 = self.widget.plotItem.plot(self.x, pen=pen2, name= 'x')
+=======
+        # Color of each line
+        if hasattr(self,'y'):
+
+            pen2 = pg.mkPen(color=(255, 0, 0))
+            pen1 = pg.mkPen(color=(0, 255, 0))
+            # Setting ranges of the x and y axis
+            self.widget.setYRange(min=-1, max=1)
+            self.widget.setXRange(min=0, max=4000)
+            # set title and add legend
+            self.widget.plotItem.setTitle("PLOT")
+            self.widget.plotItem.addLegend(size=(2,3))
+            # Grid
+            self.widget.plotItem.showGrid(True, True, alpha=0.4)
+            self.widget.plotItem.setLabel('bottom', text='Time (ms)')
+
+            #Ploting
+            self.data_line1 = self.widget.plotItem.plot(self.y, pen=pen1, name='y')
+            self.data_line2 = self.widget.plotItem.plot(self.x, pen=pen2, name= 'x')
+>>>>>>> Stashed changes
 
 
     def update_plot_data(self):
@@ -94,6 +135,7 @@ class signalViewer(ss.Ui_MainWindow):
         update function .... add chunks to self.y from loaded data self.data
         :return:
         '''
+<<<<<<< Updated upstream
 
         signalViewer.i += 30
         self.y = pd.concat([self.y, self.data.iloc[signalViewer.i:signalViewer.i+self.speed, 1]], axis=0, sort=True)
@@ -102,6 +144,15 @@ class signalViewer(ss.Ui_MainWindow):
         # self.data_line2.setData(self.x)
 
 
+=======
+        if hasattr(self, 'y'):
+            signalViewer.i += 20
+            self.y = pd.concat([self.y, self.data.iloc[signalViewer.i:signalViewer.i+self.speed, 1]], axis=0, sort=True)
+            self.data_line1.setData(self.y)
+            self.x = pd.concat([self.x, self.data.iloc[signalViewer.i:signalViewer.i+self.speed, 2]], axis=0, sort=True)
+            self.data_line2.setData(self.x)
+        # else : pass
+>>>>>>> Stashed changes
     def timer(self):
         self.timer = QtCore.QTimer()
         self.timer.setInterval(50)
