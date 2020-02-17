@@ -28,6 +28,7 @@ class signalViewer(ss.Ui_MainWindow):
         self.pen1 = pg.mkPen(color=(0, 255, 0))
         # Setting ranges of the x and y axis
         self.widget.setXRange(min=0, max=4000)
+        self.widget.setYRange(min=-1, max=1)
         # set title and add legend
         self.widget.plotItem.setTitle("Main Window")
         self.widget.plotItem.addLegend(size=(2, 3))
@@ -35,7 +36,6 @@ class signalViewer(ss.Ui_MainWindow):
         self.widget.plotItem.showGrid(True, True, alpha=0.8)
         self.widget.plotItem.setLabel('bottom', text='Time (ms)')
         # TODO : Set Auto Panning
-        self.plot()
         # Load Button connector
         self.load_bt.clicked.connect(self.load_file)
 
@@ -69,6 +69,8 @@ class signalViewer(ss.Ui_MainWindow):
             signalViewer.chunks[file_name] = signalViewer.channels[file_name].iloc[:1,1]
             print(signalViewer.chunks)
             print(signalViewer.channels)
+            self.plot(file_name, signalViewer.chunks[file_name])
+
             # self.x = self.data.iloc[:1, 2] # TODO : Convert to dictionary holding all channels
 
     def load_mat_data(self, file_name):
@@ -89,17 +91,15 @@ class signalViewer(ss.Ui_MainWindow):
             # self.y = self.data.iloc[:1, 2]
             signalViewer.chunks[file_name] = signalViewer.channels[file_name].iloc[:1, 2]
 
-    def plot(self):
+    def plot(self, file_name, chunk):
         '''
         main plotting function
         :return:
         '''
         # TODO : Adapt to plot all channels in channels dict
-        # self.data_line1 = self.widget.plotItem.plot(self.y, pen=self.pen1, name='y')
-        for channel in signalViewer.chunks :
-            name = channel.split('/')[-1]
-            signalViewer.graphs[channel] = self.widget.plotItem.plot(signalViewer.chunks[channel], name=name)
-
+        print('Here')
+        name = file_name.split('/')[-1]
+        signalViewer.graphs[file_name] = self.widget.plotItem.plot(chunk, name=name, pen=self.pen1)
 
 
     def update_plot_data(self):
@@ -107,14 +107,17 @@ class signalViewer(ss.Ui_MainWindow):
         update function .... add chunks to self.y from loaded data self.data
         :return:
         '''
+
         signalViewer.i += 30
 
-        for chunk in signalViewer.graphs:  # graph ->> file_name
+        for chunk in signalViewer.chunks:  # graph ->> file_name
             # self.y = pd.concat([self.y, self.data.iloc[signalViewer.i:signalViewer.i+self.speed, 1]], axis=0, sort=True)
             # self.data_line1.setData(self.y)
             signalViewer.chunks[chunk] = pd.concat([signalViewer.chunks[chunk],
                                                     signalViewer.channels[chunk].iloc[signalViewer.i:signalViewer.i+self.speed, 1]],
                                                    axis=0,sort=True)
+            signalViewer.graphs[chunk].setData(signalViewer.chunks[chunk])
+            # print(signalViewer.chunks[chunk])
 
 
     def timer(self):
