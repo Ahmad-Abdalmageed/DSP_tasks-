@@ -8,9 +8,11 @@ from pyqtgraph import PlotWidget
 
 class signalViewer(ss.Ui_MainWindow):
     i = 0 # counter represents the chunks size of data to be loaded
-    channel = 1
     filenames = dict()
     channels = dict()
+    chunks = dict()
+    graphs = dict()
+    channel = 1  # Current Channel
 
     def __init__(self, mainwindow, speed):
         '''
@@ -19,6 +21,8 @@ class signalViewer(ss.Ui_MainWindow):
         '''
         super(signalViewer, self).setupUi(mainwindow)
         self.speed = speed
+        self.filename, self.format = None, None
+
         # Plot Configurations
         # Pen color
         self.pen1 = pg.mkPen(color=(0, 255, 0))
@@ -30,39 +34,27 @@ class signalViewer(ss.Ui_MainWindow):
         # Grid
         self.widget.plotItem.showGrid(True, True, alpha=0.8)
         self.widget.plotItem.setLabel('bottom', text='Time (ms)')
-        self.view = self.widget.plotItem.getViewBox()
         # TODO : Set Auto Panning
-
+        self.plot()
         # Load Button connector
         self.load_bt.clicked.connect(self.load_file)
+
+        self.timer()
+
 
     def load_file(self):
         self.filename , self.format= QtWidgets.QFileDialog.getOpenFileName(None, 'Load Signal','/home', "*.csv;;"
                                                                                                         " *.txt;;"
                                                                                                         "*.mat")
+
+        print('File :', self.filename)
         if self.filename in signalViewer.filenames:
             print("You Already choosed that file ")
         else:
             signalViewer.filenames[self.filename] = self.format
-        print(self.filename)
+
         # self.signal_file = self.filename.split("/")[-1]
         self.checkFileExt(signalViewer.filenames)
-
-    # Plotting Functions
-    def plotSignal_csv(self, filename):
-        self.load_csv_data(filename)
-        self.plot()
-        self.timer()
-
-    def plotSignal_mat(self, filename):
-        self.load_mat_data(filename)
-        self.plot()
-        self.timer()
-
-    def plotSignal_txt(self, filename):
-        self.load_txt_data(filename)
-        self.plot()
-        self.timer()
 
     # Reading Files Functions
     def load_csv_data(self, file_name):
@@ -70,18 +62,32 @@ class signalViewer(ss.Ui_MainWindow):
         load the data from user
         :return:
         '''
-        self.data = pd.read_csv(file_name)
-        self.y = self.data.iloc[:1, 1]
-        # self.x = self.data.iloc[:1, 2] # TODO : Convert to dictionary holding all channels
+        if file_name in signalViewer.channels :
+            print("You Already Loaded this file1")
+        else:
+            signalViewer.channels[file_name] = pd.read_csv(file_name)
+            signalViewer.chunks[file_name] = signalViewer.channels[file_name].iloc[:1,1]
+            print(signalViewer.chunks)
+            print(signalViewer.channels)
+            # self.x = self.data.iloc[:1, 2] # TODO : Convert to dictionary holding all channels
 
     def load_mat_data(self, file_name):
-        mat_file = loadmat(file_name)
-        self.data = pd.DataFrame(mat_file['F'])
-        self.y = self.data.iloc[:1, 1]
+        if file_name in signalViewer.channels:
+            print("You already loaded this file2")
+        else:
+            mat_file = loadmat(file_name)
+            # signalViewer.channels[file_name] = pd.DataFrame(mat_file['F'])
+            # self.y = self.data.iloc[:1, 1]
+            signalViewer.channels[file_name] = pd.DataFrame(mat_file['F'])
+            signalViewer.chunks[file_name] = signalViewer.channels[file_name].iloc[:1, 1]
 
     def load_txt_data(self, file_name):
-        self.data = pd.read_csv(file_name, skiprows=[i for i in range(500,7657)])
-        self.y = self.data.iloc[:1, 2]
+        if file_name in signalViewer.channels:
+            print("You already loaded this file3")
+        else :
+            signalViewer.channels[file_name] = pd.read_csv(file_name, skiprows=[i for i in range(500,7657)])
+            # self.y = self.data.iloc[:1, 2]
+            signalViewer.chunks[file_name] = signalViewer.channels[file_name].iloc[:1, 2]
 
     def plot(self):
         '''
@@ -89,7 +95,12 @@ class signalViewer(ss.Ui_MainWindow):
         :return:
         '''
         # TODO : Adapt to plot all channels in channels dict
-        self.data_line1 = self.widget.plotItem.plot(self.y, pen=self.pen1, name='y')
+        # self.data_line1 = self.widget.plotItem.plot(self.y, pen=self.pen1, name='y')
+        for channel in signalViewer.chunks :
+            name = channel.split('/')[-1]
+            signalViewer.graphs[channel] = self.widget.plotItem.plot(signalViewer.chunks[channel], name=name)
+
+
 
     def update_plot_data(self):
         '''
@@ -97,8 +108,14 @@ class signalViewer(ss.Ui_MainWindow):
         :return:
         '''
         signalViewer.i += 30
-        self.y = pd.concat([self.y, self.data.iloc[signalViewer.i:signalViewer.i+self.speed, 1]], axis=0, sort=True)
-        self.data_line1.setData(self.y)
+
+        for chunk in signalViewer.graphs:  # graph ->> file_name
+            # self.y = pd.concat([self.y, self.data.iloc[signalViewer.i:signalViewer.i+self.speed, 1]], axis=0, sort=True)
+            # self.data_line1.setData(self.y)
+            signalViewer.chunks[chunk] = pd.concat([signalViewer.chunks[chunk],
+                                                    signalViewer.channels[chunk].iloc[signalViewer.i:signalViewer.i+self.speed, 1]],
+                                                   axis=0,sort=True)
+
 
     def timer(self):
         self.timer = QtCore.QTimer()
@@ -131,13 +148,12 @@ class signalViewer(ss.Ui_MainWindow):
 
     def checkFileExt(self, file):
         for i in file.items():
-            print(i)
             if i[1] == '*.csv':
-                self.plotSignal_csv(i[0])
+                self.load_csv_data(i[0])
             elif i[1] == '*.txt':
-                self.plotSignal_txt(i[0])
+                self.load_txt_data(i[0])
             elif i[1] == '*.mat':
-                self.plotSignal_mat(i[0])
+                self.load_mat_data(i[0])
 
 
 def main():
