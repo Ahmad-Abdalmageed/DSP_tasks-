@@ -4,7 +4,6 @@ import startstop3 as ss
 import pandas as pd
 from scipy.io import loadmat
 import sys
-from pyqtgraph import PlotWidget
 
 class signalViewer(ss.Ui_MainWindow):
     i = 0 # counter represents the chunks size of data to be loaded
@@ -22,9 +21,18 @@ class signalViewer(ss.Ui_MainWindow):
         super(signalViewer, self).setupUi(mainwindow)
         self.speed = speed
         self.filename, self.format = None, None
-
         # Plot Configurations
-        # Pen color
+        self.plot_conf()
+        # Load Button connector
+        self.load_bt.clicked.connect(self.load_file)
+
+        self.timer()
+
+    def plot_conf(self):
+        """
+        Sets the plotting configurations
+        :return:
+        """
         self.pen1 = pg.mkPen(color=(0, 255, 0))
         # Setting ranges of the x and y axis
         self.widget.setXRange(min=0, max=4000)
@@ -35,71 +43,73 @@ class signalViewer(ss.Ui_MainWindow):
         # Grid
         self.widget.plotItem.showGrid(True, True, alpha=0.8)
         self.widget.plotItem.setLabel('bottom', text='Time (ms)')
-        # TODO : Set Auto Panning
-        # Load Button connector
-        self.load_bt.clicked.connect(self.load_file)
-
-        self.timer()
 
 
     def load_file(self):
+        """
+        Load the File from User and add it to files dictionary
+        :return:
+        """
         self.filename , self.format= QtWidgets.QFileDialog.getOpenFileName(None, 'Load Signal','/home', "*.csv;;"
                                                                                                         " *.txt;;"
                                                                                                         "*.mat")
-
         print('File :', self.filename)
         if self.filename in signalViewer.filenames:
             print("You Already choosed that file ")
         else:
             signalViewer.filenames[self.filename] = self.format
-
-        # self.signal_file = self.filename.split("/")[-1]
         self.checkFileExt(signalViewer.filenames)
 
     # Reading Files Functions
     def load_csv_data(self, file_name):
-        '''
-        load the data from user
+        """
+        load the data from user if the file format is a .csv format
+        :param file_name: file path ... string
         :return:
-        '''
+        """
         if file_name in signalViewer.channels :
             print("You Already Loaded this file1")
         else:
             signalViewer.channels[file_name] = pd.read_csv(file_name)
             signalViewer.chunks[file_name] = signalViewer.channels[file_name].iloc[:1,1]
-            print(signalViewer.chunks)
-            print(signalViewer.channels)
             self.plot(file_name, signalViewer.chunks[file_name])
 
-            # self.x = self.data.iloc[:1, 2] # TODO : Convert to dictionary holding all channels
-
     def load_mat_data(self, file_name):
+        """
+        load the data from user if the file format is a .mat format
+        :param file_name: file path ... string
+        :return:
+        """
         if file_name in signalViewer.channels:
             print("You already loaded this file2")
         else:
             mat_file = loadmat(file_name)
-            # signalViewer.channels[file_name] = pd.DataFrame(mat_file['F'])
-            # self.y = self.data.iloc[:1, 1]
             signalViewer.channels[file_name] = pd.DataFrame(mat_file['F'])
             signalViewer.chunks[file_name] = signalViewer.channels[file_name].iloc[:1, 1]
+            self.plot(file_name, signalViewer.chunks[file_name])
 
     def load_txt_data(self, file_name):
+        """
+        load the data from user if the file format is a .txt format
+        :param file_name: file path ... string
+        :return:
+        """
         if file_name in signalViewer.channels:
             print("You already loaded this file3")
         else :
             signalViewer.channels[file_name] = pd.read_csv(file_name, skiprows=[i for i in range(500,7657)])
             # self.y = self.data.iloc[:1, 2]
             signalViewer.chunks[file_name] = signalViewer.channels[file_name].iloc[:1, 2]
+            self.plot(file_name, signalViewer.chunks[file_name])
+
 
     def plot(self, file_name, chunk):
         '''
         main plotting function
         :return:
         '''
-        # TODO : Adapt to plot all channels in channels dict
-        print('Here')
         name = file_name.split('/')[-1]
-        signalViewer.graphs[file_name] = self.widget.plotItem.plot(chunk, name=name, pen=self.pen1)
+        signalViewer.graphs[file_name] = self.widget.plotItem.plot(chunk, name=name)
 
 
     def update_plot_data(self):
@@ -107,20 +117,18 @@ class signalViewer(ss.Ui_MainWindow):
         update function .... add chunks to self.y from loaded data self.data
         :return:
         '''
-
         signalViewer.i += 30
-
         for chunk in signalViewer.chunks:  # graph ->> file_name
-            # self.y = pd.concat([self.y, self.data.iloc[signalViewer.i:signalViewer.i+self.speed, 1]], axis=0, sort=True)
-            # self.data_line1.setData(self.y)
             signalViewer.chunks[chunk] = pd.concat([signalViewer.chunks[chunk],
                                                     signalViewer.channels[chunk].iloc[signalViewer.i:signalViewer.i+self.speed, 1]],
                                                    axis=0,sort=True)
             signalViewer.graphs[chunk].setData(signalViewer.chunks[chunk])
-            # print(signalViewer.chunks[chunk])
-
 
     def timer(self):
+        """
+        Timer function that executes the data updating for every n ms
+        :return:
+        """
         self.timer = QtCore.QTimer()
         self.timer.setInterval(50)
         self.timer.timeout.connect(self.update_plot_data)
@@ -141,15 +149,12 @@ class signalViewer(ss.Ui_MainWindow):
         '''
         self.pause_bt.clicked.connect(self.timer.stop)
 
-    # def checkFileExt(self, file):
-    #     if file.endswith('.csv'):
-    #         self.plotSignal_csv(file)
-    #     elif file.endswith('.txt'):
-    #         self.plotSignal_txt(file)
-    #     elif file.endswith('.mat'):
-    #         self.plotSignal_mat(file)
-
     def checkFileExt(self, file):
+        """
+        Checks the file format loaded by the user and maps to appropriate function
+        :param file: File dictionary updated by the load function
+        :return:
+        """
         for i in file.items():
             if i[1] == '*.csv':
                 self.load_csv_data(i[0])
@@ -157,7 +162,6 @@ class signalViewer(ss.Ui_MainWindow):
                 self.load_txt_data(i[0])
             elif i[1] == '*.mat':
                 self.load_mat_data(i[0])
-
 
 def main():
     '''
