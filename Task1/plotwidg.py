@@ -5,6 +5,7 @@ import startstop3 as ss
 import pandas as pd
 from scipy.io import loadmat
 import sys
+
 class signalViewer(ss.Ui_MainWindow):
     i = 0 # counter represents the chunks size of data to be loaded
     filenames = dict()
@@ -42,6 +43,7 @@ class signalViewer(ss.Ui_MainWindow):
         self.pen4 = pg.mkPen(color=(200, 87, 125))
         self.pen5 = pg.mkPen(color=(123, 34, 203))
 
+        # Channel 1
         # Setting ranges of the x and y axis
         self.widget.setXRange(min=0, max=4000)
         self.widget.setYRange(min=-1, max=1)
@@ -52,6 +54,49 @@ class signalViewer(ss.Ui_MainWindow):
         self.widget.plotItem.showGrid(True, True, alpha=0.8)
         self.widget.plotItem.setLabel('bottom', text='Time (ms)')
 
+        # Channel 2
+        # Setting ranges of the x and y axis
+        self.widget_2.setXRange(min=0, max=4000)
+        self.widget_2.setYRange(min=-1, max=1)
+        # setwidget_2 and add legend
+        self.widget_2.plotItem.setTitle("Main Window")
+        self.widget_2.plotItem.addLegend(size=(2, 3))
+        #widget_2
+        self.widget_2.plotItem.showGrid(True, True, alpha=0.8)
+        self.widget_2.plotItem.setLabel('bottom', text='Time (ms)')
+
+        # Channel 3
+        # Setting ranges of the x and y axis
+        self.widget_3.setXRange(min=0, max=4000)
+        self.widget_3.setYRange(min=-1, max=1)
+        # setwidget_3 and add legend
+        self.widget_3.plotItem.setTitle("Main Window")
+        self.widget_3.plotItem.addLegend(size=(2, 3))
+       # widget_3d0
+        self.widget_3.plotItem.showGrid(True, True, alpha=0.8)
+        self.widget_3.plotItem.setLabel('bottom', text='Time (ms)')
+
+        # Channel 4
+        # Setting ranges of the x and y axis
+        self.widget_4.setXRange(min=0, max=4000)
+        self.widget_4.setYRange(min=-1, max=1)
+        # setwidget_4 and add legend
+        self.widget_4.plotItem.setTitle("Main Window")
+        self.widget_4.plotItem.addLegend(size=(2, 3))
+        #widget_4
+        self.widget_4.plotItem.showGrid(True, True, alpha=0.8)
+        self.widget_4.plotItem.setLabel('bottom', text='Time (ms)')
+
+        # Channel 5
+        # Setting ranges of the x and y axis
+        self.widget_5.setXRange(min=0, max=4000)
+        self.widget_5.setYRange(min=-1, max=1)
+        # setwidget_5 and add legend
+        self.widget_5.plotItem.setTitle("Main Window")
+        self.widget_5.plotItem.addLegend(size=(2, 3))
+        # Grid0
+        self.widget_5.plotItem.showGrid(True, True, alpha=0.8)
+        self.widget_5.plotItem.setLabel('bottom', text='Time (ms)')
 
     def load_file(self):
         """
