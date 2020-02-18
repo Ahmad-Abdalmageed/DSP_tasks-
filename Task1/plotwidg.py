@@ -1,6 +1,7 @@
 from PyQt5 import QtWidgets, uic, QtCore, QtGui
 import pyqtgraph as pg
 import startstop3 as ss
+#import run as ss
 import pandas as pd
 from scipy.io import loadmat
 import sys
