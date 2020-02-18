@@ -24,7 +24,7 @@ class signalViewer(ss.Ui_MainWindow):
         # Plot Configurations
         self.plot_conf()
         # Load Button connector
-        self.actionAdd.triggered.connect(self.newPanelConfig)
+        # self.actionAdd.triggered.connect(self.newPanelConfig)
         self.actionReset.triggered.connect(self.resetAllPanels)
         self.actionLoad.triggered.connect(self.load_file)
 
@@ -58,6 +58,16 @@ class signalViewer(ss.Ui_MainWindow):
         Load the File from User and add it to files dictionary
         :return:
         """
+        signalViewer.i = 0
+        print("Adding new panel..")
+
+        # Reset the dict to accept new file
+        signalViewer.chunks = dict()
+
+        # Stop timer for waiting to upload new file
+        self.timer.stop()
+
+        # Open File
         self.filename , self.format= QtWidgets.QFileDialog.getOpenFileName(None, 'Load Signal','/home', "*.csv;;"
                                                                                                         " *.txt;;"
                                                                                                         "*.mat")
@@ -182,15 +192,7 @@ class signalViewer(ss.Ui_MainWindow):
             elif i[1] == '*.mat':
                 self.load_mat_data(i[0])
 
-    def newPanelConfig(self):
-        signalViewer.i = 0
-        print("Adding new panel..")
-
-        # Reset the dict to accept new file
-        signalViewer.chunks = dict()
-
-        # Stop timer for waiting to upload new file
-        self.timer.stop()
+    # def newPanelConfig(self)
 
     def resetAllPanels(self):
         self.widget.plotItem
