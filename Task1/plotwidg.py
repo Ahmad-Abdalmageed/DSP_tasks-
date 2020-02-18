@@ -24,9 +24,9 @@ class signalViewer(ss.Ui_MainWindow):
         # Plot Configurations
         self.plot_conf()
         # Load Button connector
-        self.addPanel.clicked.connect(self.newPanelConfig)
-        self.reset_bt.clicked.connect(self.resetAllPanels)
-        self.load_bt.clicked.connect(self.load_file)
+        self.actionAdd.triggered.connect(self.newPanelConfig)
+        self.actionReset.triggered.connect(self.resetAllPanels)
+        self.actionLoad.triggered.connect(self.load_file)
 
         self.timer()
         # self.timer2()
@@ -159,14 +159,14 @@ class signalViewer(ss.Ui_MainWindow):
         Event of clicking the start button which starts the signal plotting
         :return:
         '''
-        self.start_bt.clicked.connect(self.timer.start)
+        self.actionStart.triggered.connect(self.timer.start)
 
     def pause_timer(self):
         '''
         Event of clicking the stop button which stops the signal plotting
         :return:
         '''
-        self.pause_bt.clicked.connect(self.timer.stop)
+        self.actionPause.triggered.connect(self.timer.stop)
 
     def checkFileExt(self, file):
         """
