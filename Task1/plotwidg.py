@@ -29,7 +29,7 @@ class signalViewer(ss.Ui_MainWindow):
         # Plot Configurations
         self.plot_conf()
         # Load Button connectorchecked
-        # self.actionAdd.triggered.connect(self.newPanelConfig)
+        self.actionAdd.triggered.connect(self.addNewPanel)
         self.channel1_chk.toggled.connect(self.hideChannel_1)
         self.channel2_chk.toggled.connect(self.hideChannel_2)
         self.channel3_chk.toggled.connect(self.hideChannel_3)
@@ -249,6 +249,15 @@ class signalViewer(ss.Ui_MainWindow):
 
     def resetAllPanels(self):
         print("Deleting panels...")
+
+    def addNewPanel(self):
+        spacerItem6 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.verticalLayout.addItem(spacerItem6)
+        self.widget_6 = pg.PlotWidget(self.scrollAreaWidgetContents)
+        self.widget_6.setEnabled(True)
+        self.widget_6.setMinimumSize(QtCore.QSize(500, 300))
+        self.widget_6.setObjectName("widget_3")
+        self.verticalLayout.addWidget(self.widget_6)
 
     def hideChannel_1(self):
         self.widget.setHidden(not self.widget.isHidden())
