@@ -30,8 +30,9 @@ class signalViewer(ss.Ui_MainWindow):
         self.widget_2 = None
         self.widget_3 = None
         self.widget_4 = None
-        self.widget_5 = None,
+        self.widget_5 = None
         self.widgets = [self.widget, self.widget_2, self.widget_3, self.widget_4, self.widget_5]
+
         self.pens = [pg.mkPen(color=(255, 0, 0)),pg.mkPen(color=(0, 255, 0)),
                      pg.mkPen(color=(0, 0, 255)), pg.mkPen(color=(200, 87, 125)),
                      pg.mkPen(color=(123, 34, 203))]
@@ -211,7 +212,7 @@ class signalViewer(ss.Ui_MainWindow):
     def addNewPanel(self):
         if signalViewer.numOfPanels > 3:
             print("No more than 5 plots")
-            self.show_popup()
+            self.show_popup("Maximum number of channels is 5", "You can't add more than 5 channels, you have to delete one first")
         else:
             signalViewer.numOfPanels += 1
             spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -228,30 +229,46 @@ class signalViewer(ss.Ui_MainWindow):
             self.widgets[signalViewer.numOfPanels].plotItem.showGrid(True, True, alpha=0.8)
             self.widgets[signalViewer.numOfPanels].plotItem.setLabel('bottom', text='Time (ms)')
             self.verticalLayout.addWidget(self.widgets[signalViewer.numOfPanels])
-
+            print(self.widgets[1])
+            print(self.widgets[2])
     def hideChannel_1(self):
-        self.widget.setHidden(not self.widget.isHidden())
+        self.widgets[0].setHidden(not self.widget.isHidden())
 
     def hideChannel_2(self):
-        self.widget_2.setHidden(not self.widget_2.isHidden())
+        if self.widgets[1] is None :
+            self.show_popup("Channel Doesn`t exist", "You didn`t add this channel")
+        else:
+            self.widgets[1].setHidden(not self.widgets[1].isHidden())
 
     def hideChannel_3(self):
-        self.widget_3.setHidden(not self.widget_3.isHidden())
+        if self.widgets[2] is None :
+            self.show_popup("Channel Doesn`t exist", "You didn`t add this channel")
+        else:
+            self.widget_3.setHidden(not self.widgets[2].isHidden())
 
     def hideChannel_4(self):
-        self.widget_4.setHidden(not self.widget_4.isHidden())
+        if self.widgets[3] is None :
+            self.show_popup("Channel Doesn`t exist", "You didn`t add this channel")
+        else :
+            self.widget_4.setHidden(not self.widgets[2].isHidden())
 
     def hideChannel_5(self):
-        self.widget_5.setHidden(not self.widget_5.isHidden())
+        if self.widgets[4] is None :
 
-    def show_popup(self):
+            self.show_popup("Channel Doesn`t exist", "You didn`t add this channel")
+        else:
+            self.widget_5.setHidden(not self.widgets[2].isHidden())
+
+
+
+    def show_popup(self, message, info):
         msg = QMessageBox()
         msg.setWindowTitle("Popup Message")
-        msg.setText("Maximum number of channels is 5")
+        msg.setText(message)
         msg.setIcon(QMessageBox.Warning)
         msg.setStandardButtons(QMessageBox.Cancel | QMessageBox.Retry | QMessageBox.Ignore)
         msg.setDefaultButton(QMessageBox.Ignore)
-        msg.setInformativeText("You can't add more than 5 channels, you have to delete one first")
+        msg.setInformativeText(info)
         msg.setDetailedText("details")
         msg.buttonClicked.connect(self.popup_button)
         x = msg.exec_()
