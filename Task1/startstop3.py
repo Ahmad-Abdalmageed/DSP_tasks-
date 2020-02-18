@@ -2,18 +2,16 @@
 
 # Form implementation generated from reading ui file 'startstop.ui'
 #
-# Created by: PyQt5 UI code generator 5.12.3
+# Created by: PyQt5 UI code generator 5.9.2
 #
 # WARNING! All changes made in this file will be lost!
 
-
 from PyQt5 import QtCore, QtGui, QtWidgets
-
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(646, 464)
+        MainWindow.resize(1061, 857)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout(self.centralwidget)
@@ -21,10 +19,11 @@ class Ui_MainWindow(object):
         self.verticalLayout_5 = QtWidgets.QVBoxLayout()
         self.verticalLayout_5.setObjectName("verticalLayout_5")
         self.widget = PlotWidget(self.centralwidget)
+        self.widget.setEnabled(True)
         self.widget.setMinimumSize(QtCore.QSize(500, 300))
         self.widget.setObjectName("widget")
         self.verticalLayout_5.addWidget(self.widget)
-        self.hplotorizontalLayout_5.addLayout(self.verticalLayout_5)
+        self.horizontalLayout_5.addLayout(self.verticalLayout_5)
         self.groupBox = QtWidgets.QGroupBox(self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -43,6 +42,11 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.load_bt.sizePolicy().hasHeightForWidth())
         self.load_bt.setSizePolicy(sizePolicy)
+        self.load_bt.setCheckable(False)
+        self.load_bt.setPopupMode(QtWidgets.QToolButton.DelayedPopup)
+        self.load_bt.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
+        self.load_bt.setAutoRaise(False)
+        self.load_bt.setArrowType(QtCore.Qt.NoArrow)
         self.load_bt.setObjectName("load_bt")
         self.verticalLayout_3.addWidget(self.load_bt)
         self.start_bt = QtWidgets.QToolButton(self.groupBox)
@@ -73,6 +77,7 @@ class Ui_MainWindow(object):
         self.addPanel.setObjectName("addPanel")
         self.verticalLayout_3.addWidget(self.addPanel)
         self.channel1_chk = QtWidgets.QCheckBox(self.groupBox)
+        self.channel1_chk.setTristate(False)
         self.channel1_chk.setObjectName("channel1_chk")
         self.verticalLayout_3.addWidget(self.channel1_chk)
         self.channel2_chk = QtWidgets.QCheckBox(self.groupBox)
@@ -90,12 +95,37 @@ class Ui_MainWindow(object):
         self.horizontalLayout_5.addWidget(self.groupBox)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 646, 22))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1061, 22))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
+        self.toolBar = QtWidgets.QToolBar(MainWindow)
+        self.toolBar.setMovable(False)
+        self.toolBar.setFloatable(True)
+        self.toolBar.setObjectName("toolBar")
+        MainWindow.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar)
+        self.actionStart = QtWidgets.QAction(MainWindow)
+        self.actionStart.setEnabled(True)
+        self.actionStart.setObjectName("actionStart")
+        self.actionPause = QtWidgets.QAction(MainWindow)
+        self.actionPause.setObjectName("actionPause")
+        self.actionAdd = QtWidgets.QAction(MainWindow)
+        self.actionAdd.setObjectName("actionAdd")
+        self.actionReset = QtWidgets.QAction(MainWindow)
+        self.actionReset.setObjectName("actionReset")
+        self.actionDelete = QtWidgets.QAction(MainWindow)
+        self.actionDelete.setObjectName("actionDelete")
+        self.actionLoad = QtWidgets.QAction(MainWindow)
+        self.actionLoad.setObjectName("actionLoad")
+        self.toolBar.addAction(self.actionStart)
+        self.toolBar.addAction(self.actionPause)
+        self.toolBar.addAction(self.actionReset)
+        self.toolBar.addSeparator()
+        self.toolBar.addAction(self.actionAdd)
+        self.toolBar.addAction(self.actionDelete)
+        self.toolBar.addAction(self.actionLoad)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -114,9 +144,21 @@ class Ui_MainWindow(object):
         self.channel3_chk.setText(_translate("MainWindow", "Channel 3"))
         self.channel4_chk.setText(_translate("MainWindow", "Channel 4"))
         self.channel5_chk.setText(_translate("MainWindow", "Channel 5 "))
+        self.toolBar.setWindowTitle(_translate("MainWindow", "toolBar"))
+        self.actionStart.setText(_translate("MainWindow", "Start"))
+        self.actionStart.setToolTip(_translate("MainWindow", "Play Signal"))
+        self.actionPause.setText(_translate("MainWindow", "Pause"))
+        self.actionPause.setToolTip(_translate("MainWindow", "Pause Signal"))
+        self.actionAdd.setText(_translate("MainWindow", "Add Panel"))
+        self.actionAdd.setToolTip(_translate("MainWindow", "Add Panel"))
+        self.actionReset.setText(_translate("MainWindow", "Reset"))
+        self.actionReset.setToolTip(_translate("MainWindow", "Reset Signal from Beginning"))
+        self.actionDelete.setText(_translate("MainWindow", "Delete"))
+        self.actionDelete.setToolTip(_translate("MainWindow", "Remove Signal"))
+        self.actionLoad.setText(_translate("MainWindow", "Load"))
+        self.actionLoad.setToolTip(_translate("MainWindow", "Load Signal"))
 
 from pyqtgraph import PlotWidget
-
 
 if __name__ == "__main__":
     import sys
@@ -126,3 +168,4 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
+
