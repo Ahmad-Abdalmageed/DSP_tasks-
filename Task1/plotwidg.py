@@ -23,6 +23,9 @@ class signalViewer(ss.Ui_MainWindow):
         self.speed = speed
         self.filename, self.format = None, None
         self.widgets = [self.widget, self.widget_2, self.widget_3, self.widget_4, self.widget_5]
+        self.pens = [pg.mkPen(color=(255, 0, 0)),pg.mkPen(color=(0, 255, 0)),
+                     pg.mkPen(color=(0, 0, 255)), pg.mkPen(color=(200, 87, 125)),
+                     pg.mkPen(color=(123, 34, 203))]
         # Plot Configurations
         self.plot_conf()
         # Load Button connector
@@ -38,12 +41,6 @@ class signalViewer(ss.Ui_MainWindow):
         Sets the plotting configurations
         :return:
         """
-        self.pen1 = pg.mkPen(color=(255, 0, 0))
-        self.pen2 = pg.mkPen(color=(0, 255, 0))
-        self.pen3 = pg.mkPen(color=(0, 0, 255))
-        self.pen4 = pg.mkPen(color=(200, 87, 125))
-        self.pen5 = pg.mkPen(color=(123, 34, 203))
-
         # Channel 1
         # Setting ranges of the x and y axis
         self.widget.setXRange(min=0, max=4000)
@@ -117,12 +114,15 @@ class signalViewer(ss.Ui_MainWindow):
         self.filename , self.format= QtWidgets.QFileDialog.getOpenFileName(None, 'Load Signal','/home', "*.csv;;"
                                                                                                         " *.txt;;"
                                                                                                         "*.mat")
-        print('File :', self.filename)
+
+        if self.filename == '' :
+            pass
+        else: signalViewer.channel += 1
+
         if self.filename in signalViewer.filenames:
             print("You Already choosed that file ")
         else:
             signalViewer.filenames[self.filename] = self.format
-        signalViewer.channel += 1
         self.checkFileExt(signalViewer.filenames)
 
     # Reading Files Functions
@@ -181,7 +181,8 @@ class signalViewer(ss.Ui_MainWindow):
         # File name
         name = file_name.split('/')[-1]
 
-        signalViewer.graphs[file_name] = self.widgets[signalViewer.channel].plotItem.plot(chunk, name=name, pen=self.pen2)
+        signalViewer.graphs[file_name] = self.widgets[signalViewer.channel].plotItem.plot(chunk, name=name,
+                                                                                          pen=self.pens[signalViewer.channel])
 
 
     def update_plot_data(self):
