@@ -24,23 +24,31 @@ class signalViewer(ss.Ui_MainWindow):
         # Plot Configurations
         self.plot_conf()
         # Load Button connector
+        self.addPanel.clicked.connect(self.newPanelConfig)
+        self.reset_bt.clicked.connect(self.resetAllPanels)
         self.load_bt.clicked.connect(self.load_file)
 
         self.timer()
+        # self.timer2()
 
     def plot_conf(self):
         """
         Sets the plotting configurations
         :return:
         """
-        self.pen1 = pg.mkPen(color=(0, 255, 0))
+        self.pen1 = pg.mkPen(color=(255, 0, 0))
+        self.pen2 = pg.mkPen(color=(0, 255, 0))
+        self.pen3 = pg.mkPen(color=(0, 0, 255))
+        self.pen4 = pg.mkPen(color=(200, 87, 125))
+        self.pen5 = pg.mkPen(color=(123, 34, 203))
+
         # Setting ranges of the x and y axis
         self.widget.setXRange(min=0, max=4000)
         self.widget.setYRange(min=-1, max=1)
         # set title and add legend
         self.widget.plotItem.setTitle("Main Window")
         self.widget.plotItem.addLegend(size=(2, 3))
-        # Grid
+        # Grid0
         self.widget.plotItem.showGrid(True, True, alpha=0.8)
         self.widget.plotItem.setLabel('bottom', text='Time (ms)')
 
@@ -70,8 +78,13 @@ class signalViewer(ss.Ui_MainWindow):
         if file_name in signalViewer.channels :
             print("You Already Loaded this file1")
         else:
+            # Return dataFrame (data)
             signalViewer.channels[file_name] = pd.read_csv(file_name)
+
+            # Return y chunk (data line)
             signalViewer.chunks[file_name] = signalViewer.channels[file_name].iloc[:1,1]
+
+            # Plot chunk
             self.plot(file_name, signalViewer.chunks[file_name])
 
     def load_mat_data(self, file_name):
@@ -108,8 +121,10 @@ class signalViewer(ss.Ui_MainWindow):
         main plotting function
         :return:
         '''
+        # File name
         name = file_name.split('/')[-1]
-        signalViewer.graphs[file_name] = self.widget.plotItem.plot(chunk, name=name)
+
+        signalViewer.graphs[file_name] = self.widget.plotItem.plot(chunk, name=name, pen=self.pen2)
 
 
     def update_plot_data(self):
@@ -117,12 +132,15 @@ class signalViewer(ss.Ui_MainWindow):
         update function .... add chunks to self.y from loaded data self.data
         :return:
         '''
-        signalViewer.i += 30
+
         for chunk in signalViewer.chunks:  # graph ->> file_name
+            signalViewer.i += 30
             signalViewer.chunks[chunk] = pd.concat([signalViewer.chunks[chunk],
                                                     signalViewer.channels[chunk].iloc[signalViewer.i:signalViewer.i+self.speed, 1]],
                                                    axis=0,sort=True)
+
             signalViewer.graphs[chunk].setData(signalViewer.chunks[chunk])
+
 
     def timer(self):
         """
@@ -134,6 +152,7 @@ class signalViewer(ss.Ui_MainWindow):
         self.timer.timeout.connect(self.update_plot_data)
         self.start_timer()
         self.pause_timer()
+
 
     def start_timer(self):
         '''
@@ -162,6 +181,21 @@ class signalViewer(ss.Ui_MainWindow):
                 self.load_txt_data(i[0])
             elif i[1] == '*.mat':
                 self.load_mat_data(i[0])
+
+    def newPanelConfig(self):
+        signalViewer.i = 0
+        print("Adding new panel..")
+
+        # Reset the dict to accept new file
+        signalViewer.chunks = dict()
+
+        # Stop timer for waiting to upload new file
+        self.timer.stop()
+
+    def resetAllPanels(self):
+        print("Deleting panels...")
+
+
 
 def main():
     '''

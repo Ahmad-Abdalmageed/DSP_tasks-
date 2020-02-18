@@ -2,11 +2,13 @@
 
 # Form implementation generated from reading ui file 'startstop.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.2
+# Created by: PyQt5 UI code generator 5.12.3
 #
 # WARNING! All changes made in this file will be lost!
 
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -22,7 +24,7 @@ class Ui_MainWindow(object):
         self.widget.setMinimumSize(QtCore.QSize(500, 300))
         self.widget.setObjectName("widget")
         self.verticalLayout_5.addWidget(self.widget)
-        self.horizontalLayout_5.addLayout(self.verticalLayout_5)
+        self.hplotorizontalLayout_5.addLayout(self.verticalLayout_5)
         self.groupBox = QtWidgets.QGroupBox(self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -67,6 +69,9 @@ class Ui_MainWindow(object):
         self.reset_bt.setSizePolicy(sizePolicy)
         self.reset_bt.setObjectName("reset_bt")
         self.verticalLayout_3.addWidget(self.reset_bt)
+        self.addPanel = QtWidgets.QPushButton(self.groupBox)
+        self.addPanel.setObjectName("addPanel")
+        self.verticalLayout_3.addWidget(self.addPanel)
         self.channel1_chk = QtWidgets.QCheckBox(self.groupBox)
         self.channel1_chk.setObjectName("channel1_chk")
         self.verticalLayout_3.addWidget(self.channel1_chk)
@@ -103,6 +108,7 @@ class Ui_MainWindow(object):
         self.start_bt.setText(_translate("MainWindow", "Start"))
         self.pause_bt.setText(_translate("MainWindow", "Pause"))
         self.reset_bt.setText(_translate("MainWindow", "Reset"))
+        self.addPanel.setText(_translate("MainWindow", "Add Panel"))
         self.channel1_chk.setText(_translate("MainWindow", "Channel 1"))
         self.channel2_chk.setText(_translate("MainWindow", "Channel 2 "))
         self.channel3_chk.setText(_translate("MainWindow", "Channel 3"))
@@ -110,6 +116,7 @@ class Ui_MainWindow(object):
         self.channel5_chk.setText(_translate("MainWindow", "Channel 5 "))
 
 from pyqtgraph import PlotWidget
+
 
 if __name__ == "__main__":
     import sys
@@ -119,4 +126,3 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
-

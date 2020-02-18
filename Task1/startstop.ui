@@ -103,6 +103,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="addPanel">
+         <property name="text">
+          <string>Add Panel</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QCheckBox" name="channel1_chk">
          <property name="text">
           <string>Channel 1</string>
