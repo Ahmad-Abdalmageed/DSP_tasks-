@@ -7,6 +7,8 @@ import pandas as pd
 from scipy.io import loadmat
 import sys
 
+
+
 class signalViewer(ss.Ui_MainWindow):
     i = 0 # counter represents the chunks size of data to be loaded
     filenames = dict()
@@ -15,6 +17,7 @@ class signalViewer(ss.Ui_MainWindow):
     graphs = dict()
     channel = -1  # Current Channel
     numOfPanels = 0
+
 
     def __init__(self, mainwindow, speed):
         '''
@@ -32,6 +35,7 @@ class signalViewer(ss.Ui_MainWindow):
         self.pens = [pg.mkPen(color=(255, 0, 0)),pg.mkPen(color=(0, 255, 0)),
                      pg.mkPen(color=(0, 0, 255)), pg.mkPen(color=(200, 87, 125)),
                      pg.mkPen(color=(123, 34, 203))]
+
         # Plot Configurations
         self.plot_conf()
         # Load Button connectorchecked
@@ -41,12 +45,34 @@ class signalViewer(ss.Ui_MainWindow):
         self.channel3_chk.toggled.connect(self.hideChannel_3)
         self.channel4_chk.toggled.connect(self.hideChannel_4)
         self.channel5_chk.toggled.connect(self.hideChannel_5)
-
         self.actionReset.triggered.connect(self.resetAllPanels)
         self.actionLoad.triggered.connect(self.load_file)
-
         self.timer()
-        # self.timer2()
+
+    def load_file(self):
+        """
+        Load the File from User and add it to files dictionary
+        :return:
+        """
+        signalViewer.i = 0
+        print("Adding new panel..")
+        # Reset the dict to accept new file
+        signalViewer.chunks = dict()
+        # Stop timer for waiting to upload new file
+        self.timer.stop()
+        # Open File
+        self.filename , self.format= QtWidgets.QFileDialog.getOpenFileName(None, 'Load Signal','/home', "*.csv;;"
+                                                                                                        " *.txt;;"
+                                                                                                        "*.mat")
+        if self.filename == '' :
+            pass
+        else: signalViewer.channel += 1
+
+        if self.filename in signalViewer.filenames:
+            print("You Already choosed that file ")
+        else:
+            signalViewer.filenames[self.filename] = self.format
+        self.checkFileExt(signalViewer.filenames)
 
     def plot_conf(self):
         """
@@ -57,43 +83,12 @@ class signalViewer(ss.Ui_MainWindow):
         # Setting ranges of the x and y axis
         self.widget.setXRange(min=0, max=4000)
         self.widget.setYRange(min=-1, max=1)
-        # self.widget.
-        # set title and add legend
+        self.widget.setMouseEnabled(x=False, y=False)
         self.widget.plotItem.setTitle("Main Window")
         self.widget.plotItem.addLegend(size=(2, 3))
-        # Grid0
         self.widget.plotItem.showGrid(True, True, alpha=0.8)
         self.widget.plotItem.setLabel('bottom', text='Time (ms)')
 
-
-    def load_file(self):
-        """
-        Load the File from User and add it to files dictionary
-        :return:
-        """
-        signalViewer.i = 0
-        print("Adding new panel..")
-
-        # Reset the dict to accept new file
-        signalViewer.chunks = dict()
-
-        # Stop timer for waiting to upload new file
-        self.timer.stop()
-
-        # Open File
-        self.filename , self.format= QtWidgets.QFileDialog.getOpenFileName(None, 'Load Signal','/home', "*.csv;;"
-                                                                                                        " *.txt;;"
-                                                                                                        "*.mat")
-
-        if self.filename == '' :
-            pass
-        else: signalViewer.channel += 1
-
-        if self.filename in signalViewer.filenames:
-            print("You Already choosed that file ")
-        else:
-            signalViewer.filenames[self.filename] = self.format
-        self.checkFileExt(signalViewer.filenames)
 
     # Reading Files Functions
     def load_csv_data(self, file_name):
@@ -225,19 +220,14 @@ class signalViewer(ss.Ui_MainWindow):
             self.widgets[signalViewer.numOfPanels].setEnabled(True)
             self.widgets[signalViewer.numOfPanels].setMinimumSize(QtCore.QSize(500, 300))
             self.widgets[signalViewer.numOfPanels].setObjectName("widget_3")
-            self.verticalLayout.addWidget(self.widgets[signalViewer.numOfPanels])
-
             self.widgets[signalViewer.numOfPanels].setXRange(min=0, max=4000)
             self.widgets[signalViewer.numOfPanels].setYRange(min=-1, max=1)
-            # self.widget.
-            # set title and add legend
+            self.widgets[signalViewer.numOfPanels].setMouseEnabled(x=False, y=False)
             self.widgets[signalViewer.numOfPanels].plotItem.setTitle("Main Window")
             self.widgets[signalViewer.numOfPanels].plotItem.addLegend(size=(2, 3))
-            # Grid0
             self.widgets[signalViewer.numOfPanels].plotItem.showGrid(True, True, alpha=0.8)
             self.widgets[signalViewer.numOfPanels].plotItem.setLabel('bottom', text='Time (ms)')
-
-
+            self.verticalLayout.addWidget(self.widgets[signalViewer.numOfPanels])
 
     def hideChannel_1(self):
         self.widget.setHidden(not self.widget.isHidden())
@@ -262,16 +252,11 @@ class signalViewer(ss.Ui_MainWindow):
         msg.setStandardButtons(QMessageBox.Cancel | QMessageBox.Retry | QMessageBox.Ignore)
         msg.setDefaultButton(QMessageBox.Ignore)
         msg.setInformativeText("You can't add more than 5 channels, you have to delete one first")
-
         msg.setDetailedText("details")
-
         msg.buttonClicked.connect(self.popup_button)
-
         x = msg.exec_()
-
     def popup_button(self, i):
         print(i.text())
-
 
 def main():
     '''
@@ -283,8 +268,5 @@ def main():
     ui = signalViewer(MainWindow, speed=50)
     MainWindow.show()
     sys.exit(app.exec_())
-
-
-
 if __name__ == '__main__':
     main()
