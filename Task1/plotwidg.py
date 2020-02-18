@@ -13,6 +13,7 @@ class signalViewer(ss.Ui_MainWindow):
     chunks = dict()
     graphs = dict()
     channel = -1  # Current Channel
+    numOfChannels = 1
 
     def __init__(self, mainwindow, speed):
         '''
@@ -22,7 +23,7 @@ class signalViewer(ss.Ui_MainWindow):
         super(signalViewer, self).setupUi(mainwindow)
         self.speed = speed
         self.filename, self.format = None, None
-        self.widgets = [self.widget, self.widget_2, self.widget_3, self.widget_4, self.widget_5]
+        self.widgets = [self.widget]
         self.pens = [pg.mkPen(color=(255, 0, 0)),pg.mkPen(color=(0, 255, 0)),
                      pg.mkPen(color=(0, 0, 255)), pg.mkPen(color=(200, 87, 125)),
                      pg.mkPen(color=(123, 34, 203))]
@@ -60,48 +61,48 @@ class signalViewer(ss.Ui_MainWindow):
         self.widget.plotItem.setLabel('bottom', text='Time (ms)')
 
         # Channel 2
-        # Setting ranges of the x and y axis
-        self.widget_2.setXRange(min=0, max=4000)
-        self.widget_2.setYRange(min=-1, max=1)
-        # setwidget_2 and add legend
-        self.widget_2.plotItem.setTitle("Main Window")
-        self.widget_2.plotItem.addLegend(size=(2, 3))
-        #widget_2
-        self.widget_2.plotItem.showGrid(True, True, alpha=0.8)
-        self.widget_2.plotItem.setLabel('bottom', text='Time (ms)')
-
-        # Channel 3
-        # Setting ranges of the x and y axis
-        self.widget_3.setXRange(min=0, max=4000)
-        self.widget_3.setYRange(min=-1, max=1)
-        # setwidget_3 and add legend
-        self.widget_3.plotItem.setTitle("Main Window")
-        self.widget_3.plotItem.addLegend(size=(2, 3))
-       # widget_3d0
-        self.widget_3.plotItem.showGrid(True, True, alpha=0.8)
-        self.widget_3.plotItem.setLabel('bottom', text='Time (ms)')
-
-        # Channel 4
-        # Setting ranges of the x and y axis
-        self.widget_4.setXRange(min=0, max=4000)
-        self.widget_4.setYRange(min=-1, max=1)
-        # setwidget_4 and add legend
-        self.widget_4.plotItem.setTitle("Main Window")
-        self.widget_4.plotItem.addLegend(size=(2, 3))
-        #widget_4
-        self.widget_4.plotItem.showGrid(True, True, alpha=0.8)
-        self.widget_4.plotItem.setLabel('bottom', text='Time (ms)')
-
-        # Channel 5
-        # Setting ranges of the x and y axis
-        self.widget_5.setXRange(min=0, max=4000)
-        self.widget_5.setYRange(min=-1, max=1)
-        # setwidget_5 and add legend
-        self.widget_5.plotItem.setTitle("Main Window")
-        self.widget_5.plotItem.addLegend(size=(2, 3))
-        # Grid0
-        self.widget_5.plotItem.showGrid(True, True, alpha=0.8)
-        self.widget_5.plotItem.setLabel('bottom', text='Time (ms)')
+       #  # Setting ranges of the x and y axis
+       #  self.widget_2.setXRange(min=0, max=4000)
+       #  self.widget_2.setYRange(min=-1, max=1)
+       #  # setwidget_2 and add legend
+       #  self.widget_2.plotItem.setTitle("Main Window")
+       #  self.widget_2.plotItem.addLegend(size=(2, 3))
+       #  #widget_2
+       #  self.widget_2.plotItem.showGrid(True, True, alpha=0.8)
+       #  self.widget_2.plotItem.setLabel('bottom', text='Time (ms)')
+       #
+       #  # Channel 3
+       #  # Setting ranges of the x and y axis
+       #  self.widget_3.setXRange(min=0, max=4000)
+       #  self.widget_3.setYRange(min=-1, max=1)
+       #  # setwidget_3 and add legend
+       #  self.widget_3.plotItem.setTitle("Main Window")
+       #  self.widget_3.plotItem.addLegend(size=(2, 3))
+       # # widget_3d0
+       #  self.widget_3.plotItem.showGrid(True, True, alpha=0.8)
+       #  self.widget_3.plotItem.setLabel('bottom', text='Time (ms)')
+       #
+       #  # Channel 4
+       #  # Setting ranges of the x and y axis
+       #  self.widget_4.setXRange(min=0, max=4000)
+       #  self.widget_4.setYRange(min=-1, max=1)
+       #  # setwidget_4 and add legend
+       #  self.widget_4.plotItem.setTitle("Main Window")
+       #  self.widget_4.plotItem.addLegend(size=(2, 3))
+       #  #widget_4
+       #  self.widget_4.plotItem.showGrid(True, True, alpha=0.8)
+       #  self.widget_4.plotItem.setLabel('bottom', text='Time (ms)')
+       #
+       #  # Channel 5
+       #  # Setting ranges of the x and y axis
+       #  self.widget_5.setXRange(min=0, max=4000)
+       #  self.widget_5.setYRange(min=-1, max=1)
+       #  # setwidget_5 and add legend
+       #  self.widget_5.plotItem.setTitle("Main Window")
+       #  self.widget_5.plotItem.addLegend(size=(2, 3))
+       #  # Grid0
+       #  self.widget_5.plotItem.showGrid(True, True, alpha=0.8)
+       #  self.widget_5.plotItem.setLabel('bottom', text='Time (ms)')
 
     def load_file(self):
         """
@@ -251,6 +252,7 @@ class signalViewer(ss.Ui_MainWindow):
         print("Deleting panels...")
 
     def addNewPanel(self):
+        signalViewer.numOfChannels += 1
         spacerItem6 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.verticalLayout.addItem(spacerItem6)
         self.widget_6 = pg.PlotWidget(self.scrollAreaWidgetContents)
@@ -258,6 +260,16 @@ class signalViewer(ss.Ui_MainWindow):
         self.widget_6.setMinimumSize(QtCore.QSize(500, 300))
         self.widget_6.setObjectName("widget_3")
         self.verticalLayout.addWidget(self.widget_6)
+
+        self.widget.setXRange(min=0, max=4000)
+        self.widget.setYRange(min=-1, max=1)
+        # self.widget.
+        # set title and add legend
+        self.widget.plotItem.setTitle("Main Window")
+        self.widget.plotItem.addLegend(size=(2, 3))
+        # Grid0
+        self.widget.plotItem.showGrid(True, True, alpha=0.8)
+        self.widget.plotItem.setLabel('bottom', text='Time (ms)')
 
     def hideChannel_1(self):
         self.widget.setHidden(not self.widget.isHidden())
