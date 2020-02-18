@@ -12,7 +12,7 @@ class signalViewer(ss.Ui_MainWindow):
     channels = dict()
     chunks = dict()
     graphs = dict()
-    channel = 1  # Current Channel
+    channel = -1  # Current Channel
 
     def __init__(self, mainwindow, speed):
         '''
@@ -22,6 +22,7 @@ class signalViewer(ss.Ui_MainWindow):
         super(signalViewer, self).setupUi(mainwindow)
         self.speed = speed
         self.filename, self.format = None, None
+        self.widgets = [self.widget, self.widget_2, self.widget_3, self.widget_4, self.widget_5]
         # Plot Configurations
         self.plot_conf()
         # Load Button connector
@@ -121,6 +122,7 @@ class signalViewer(ss.Ui_MainWindow):
             print("You Already choosed that file ")
         else:
             signalViewer.filenames[self.filename] = self.format
+        signalViewer.channel += 1
         self.checkFileExt(signalViewer.filenames)
 
     # Reading Files Functions
@@ -179,7 +181,7 @@ class signalViewer(ss.Ui_MainWindow):
         # File name
         name = file_name.split('/')[-1]
 
-        signalViewer.graphs[file_name] = self.widget.plotItem.plot(chunk, name=name, pen=self.pen2)
+        signalViewer.graphs[file_name] = self.widgets[signalViewer.channel].plotItem.plot(chunk, name=name, pen=self.pen2)
 
 
     def update_plot_data(self):
