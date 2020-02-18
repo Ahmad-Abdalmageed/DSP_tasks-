@@ -5,7 +5,6 @@ import startstop3 as ss
 import pandas as pd
 from scipy.io import loadmat
 import sys
-
 class signalViewer(ss.Ui_MainWindow):
     i = 0 # counter represents the chunks size of data to be loaded
     filenames = dict()
@@ -194,6 +193,8 @@ class signalViewer(ss.Ui_MainWindow):
         self.timer.stop()
 
     def resetAllPanels(self):
+        self.widget.plotItem
+
         print("Deleting panels...")
 
 
