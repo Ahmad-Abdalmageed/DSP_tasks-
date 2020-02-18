@@ -2,11 +2,13 @@
 
 # Form implementation generated from reading ui file 'startstop.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.2
+# Created by: PyQt5 UI code generator 5.12.3
 #
 # WARNING! All changes made in this file will be lost!
 
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -74,20 +76,25 @@ class Ui_MainWindow(object):
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.groupBox)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.channel1_chk = QtWidgets.QCheckBox(self.groupBox)
+        self.channel1_chk.setChecked(True)
         self.channel1_chk.setTristate(False)
         self.channel1_chk.setObjectName("channel1_chk")
         self.verticalLayout_3.addWidget(self.channel1_chk)
         self.channel2_chk = QtWidgets.QCheckBox(self.groupBox)
         self.channel2_chk.setEnabled(True)
+        self.channel2_chk.setChecked(True)
         self.channel2_chk.setObjectName("channel2_chk")
         self.verticalLayout_3.addWidget(self.channel2_chk)
         self.channel3_chk = QtWidgets.QCheckBox(self.groupBox)
+        self.channel3_chk.setChecked(True)
         self.channel3_chk.setObjectName("channel3_chk")
         self.verticalLayout_3.addWidget(self.channel3_chk)
         self.channel4_chk = QtWidgets.QCheckBox(self.groupBox)
+        self.channel4_chk.setChecked(True)
         self.channel4_chk.setObjectName("channel4_chk")
         self.verticalLayout_3.addWidget(self.channel4_chk)
         self.channel5_chk = QtWidgets.QCheckBox(self.groupBox)
+        self.channel5_chk.setChecked(True)
         self.channel5_chk.setObjectName("channel5_chk")
         self.verticalLayout_3.addWidget(self.channel5_chk)
         self.horizontalLayout_5.addWidget(self.groupBox)
@@ -150,8 +157,8 @@ class Ui_MainWindow(object):
         self.actionDelete.setToolTip(_translate("MainWindow", "Remove Signal"))
         self.actionLoad.setText(_translate("MainWindow", "Load"))
         self.actionLoad.setToolTip(_translate("MainWindow", "Load Signal"))
-
 from pyqtgraph import PlotWidget
+
 
 if __name__ == "__main__":
     import sys
@@ -161,4 +168,3 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
-

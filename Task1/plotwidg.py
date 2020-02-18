@@ -28,8 +28,14 @@ class signalViewer(ss.Ui_MainWindow):
                      pg.mkPen(color=(123, 34, 203))]
         # Plot Configurations
         self.plot_conf()
-        # Load Button connector
+        # Load Button connectorchecked
         # self.actionAdd.triggered.connect(self.newPanelConfig)
+        self.channel1_chk.toggled.connect(self.hideChannel_1)
+        self.channel2_chk.toggled.connect(self.hideChannel_2)
+        self.channel3_chk.toggled.connect(self.hideChannel_3)
+        self.channel4_chk.toggled.connect(self.hideChannel_4)
+        self.channel5_chk.toggled.connect(self.hideChannel_5)
+
         self.actionReset.triggered.connect(self.resetAllPanels)
         self.actionLoad.triggered.connect(self.load_file)
 
@@ -241,13 +247,23 @@ class signalViewer(ss.Ui_MainWindow):
             elif i[1] == '*.mat':
                 self.load_mat_data(i[0])
 
-    # def newPanelConfig(self)
-
     def resetAllPanels(self):
-        self.widget.plotItem
-
         print("Deleting panels...")
 
+    def hideChannel_1(self):
+        self.widget.setHidden(not self.widget.isHidden())
+
+    def hideChannel_2(self):
+        self.widget_2.setHidden(not self.widget_2.isHidden())
+
+    def hideChannel_3(self):
+        self.widget_3.setHidden(not self.widget_3.isHidden())
+
+    def hideChannel_4(self):
+        self.widget_4.setHidden(not self.widget_4.isHidden())
+
+    def hideChannel_5(self):
+        self.widget_5.setHidden(not self.widget_5.isHidden())
 
 
 def main():
