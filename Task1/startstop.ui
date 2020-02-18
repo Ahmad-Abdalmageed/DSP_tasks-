@@ -160,92 +160,18 @@
        </sizepolicy>
       </property>
       <property name="title">
-       <string>Tools</string>
+       <string>Active Channel</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignBottom|Qt::AlignHCenter</set>
       </property>
       <property name="flat">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="checkable">
        <bool>false</bool>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_3">
-       <item>
-        <widget class="QToolButton" name="load_bt">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>Load</string>
-         </property>
-         <property name="checkable">
-          <bool>false</bool>
-         </property>
-         <property name="popupMode">
-          <enum>QToolButton::DelayedPopup</enum>
-         </property>
-         <property name="toolButtonStyle">
-          <enum>Qt::ToolButtonIconOnly</enum>
-         </property>
-         <property name="autoRaise">
-          <bool>false</bool>
-         </property>
-         <property name="arrowType">
-          <enum>Qt::NoArrow</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QToolButton" name="start_bt">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>Start</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QToolButton" name="pause_bt">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>Pause</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QToolButton" name="reset_bt">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>Reset</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="addPanel">
-         <property name="text">
-          <string>Add Panel</string>
-         </property>
-        </widget>
-       </item>
        <item>
         <widget class="QCheckBox" name="channel1_chk">
          <property name="text">
