@@ -45,6 +45,7 @@ class signalViewer(ss.Ui_MainWindow):
         # Setting ranges of the x and y axis
         self.widget.setXRange(min=0, max=4000)
         self.widget.setYRange(min=-1, max=1)
+        # self.widget.
         # set title and add legend
         self.widget.plotItem.setTitle("Main Window")
         self.widget.plotItem.addLegend(size=(2, 3))
