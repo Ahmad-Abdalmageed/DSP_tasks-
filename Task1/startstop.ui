@@ -17,6 +17,12 @@
    <layout class="QHBoxLayout" name="horizontalLayout_5">
     <item>
      <widget class="QScrollArea" name="scrollArea">
+      <property name="mouseTracking">
+       <bool>false</bool>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::StrongFocus</enum>
+      </property>
       <property name="widgetResizable">
        <bool>true</bool>
       </property>
@@ -184,6 +190,9 @@
        </item>
        <item>
         <widget class="QCheckBox" name="channel2_chk">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
          <property name="text">
           <string>Channel 2 </string>
          </property>
@@ -306,7 +315,7 @@
   <customwidget>
    <class>PlotWidget</class>
    <extends>QWidget</extends>
-   <header>plotwidget.h</header>
+   <header location="global">plotwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
