@@ -87,7 +87,7 @@ class signalViewer(ss.Ui_MainWindow):
             signalViewer.i = 0
             print("Adding new panel..")
             # Reset the dict to accept new filek
-            signalViewer.chunks = dict()
+            # signalViewer.chunks = dict()
             # Stop timer for waiting to upload new file
             self.timer.stop()
             # Open File
@@ -96,25 +96,26 @@ class signalViewer(ss.Ui_MainWindow):
                                                                                                             "*.mat")
             if self.filename == '' :
                 pass
-            else: signalViewer.channel += 1
-
-            if signalViewer.channel > 4:
-                signalViewer.channel = 0
-                if not self.find(signalViewer.channel):
-                    signalViewer.channel += 1
-
-            if (not self.find(signalViewer.channel+1)):
-                #self.addNewPanel()
-                signalViewer.channel -= 1
-                self.show_popup('Error','Add a new channel first')
-                pass
             else:
-                if self.filename in signalViewer.filenames:
-                    print("You Already choosed that file ")
+                signalViewer.channel += 1
+
+                if signalViewer.channel > 4:
+                    signalViewer.channel = 0
+                    if not self.find(signalViewer.channel):
+                        signalViewer.channel += 1
+
+                if (not self.find(signalViewer.channel+1)):
+                    #self.addNewPanel()
+                    signalViewer.channel -= 1
+                    self.show_popup('Error','Add a new channel first')
+                    pass
                 else:
-                    signalViewer.filenames[self.filename] = self.format
-                    signalViewer.CurUsedFile[signalViewer.channel] = self.filename
-                    self.checkFileExt(signalViewer.filenames)
+                    if self.filename in signalViewer.filenames:
+                        print("You Already choosed that file ")
+                    else:
+                        signalViewer.filenames[self.filename] = self.format
+                        signalViewer.CurUsedFile[signalViewer.channel] = self.filename
+                        self.checkFileExt(signalViewer.filenames)
 
     def plot_conf(self):
         """
@@ -201,16 +202,14 @@ class signalViewer(ss.Ui_MainWindow):
         update function .... add chunks to self.y from loaded data self.data
         :return:
         '''
-        #print("numofpanels: ", signalViewer.numOfPanels)
-
+        print("numofpanels: ", signalViewer.numOfPanels)
         for chunk in signalViewer.chunks:  # graph ->> file_name
             signalViewer.i += 30
             signalViewer.chunks[chunk] = pd.concat([signalViewer.chunks[chunk],
                                                     signalViewer.channels[chunk].iloc[signalViewer.i:signalViewer.i+self.speed, 1]],
                                                    axis=0,sort=True)
-
+            print(len(signalViewer.chunks))
             signalViewer.graphs[chunk].setData(signalViewer.chunks[chunk])
-
 
     def timer(self):
         """
