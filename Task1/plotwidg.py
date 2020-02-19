@@ -1,8 +1,8 @@
+# Importing Packages
 from PyQt5 import QtWidgets, uic, QtCore, QtGui
 from PyQt5.QtWidgets import QMessageBox
 import pyqtgraph as pg
 import startstop3 as ss
-#import run as ss
 import pandas as pd
 from scipy.io import loadmat
 import sys
@@ -10,18 +10,38 @@ import os
 import queue as Q
 from sortedcontainers import SortedList
 
+# MainClass of the application
 class signalViewer(ss.Ui_MainWindow):
-    i = 0 # counter represents the chunks size of data to be loaded
+    # counter represents the chunks size of data to be loaded
+    i = 0
+
+    # Dictionaries for files configuration
+    # Contains file path (key) and extension (value)
     filenames = dict()
+
+    # Contains file path (key) and DataFrame of the file
     channels = dict()
+
+    # Contains file path (key) and
     chunks = dict()
+
+    # Contains file path (key) and data lines of plotItem
     graphs = dict()
-    channel = -1  # Current Channel
+
+    # Current Channel to start from 0 when adding one in the first time
+    channel = -1
+
+    # Number of Panels, start from 0 at the start
     numOfPanels = 0
+
+    # Queues for tracing the available and shown panels
     AvPanels = Q.PriorityQueue(5)
     ShownPanels = Q.PriorityQueue(5)
-    #AvPanels = SortedList()
+
+    # Sorted list, used in queue operations
     LsShownPanels = SortedList()
+
+    # Contains keys of the channels (1 - 5) and the file path for each channel
     CurUsedFile = dict()
 
     def __init__(self, mainwindow, speed):
@@ -30,12 +50,19 @@ class signalViewer(ss.Ui_MainWindow):
         :param mainwindow: QMainWindow Object
         '''
         super(signalViewer, self).setupUi(mainwindow)
+        # Speed of changing the rows of the data
         self.speed = speed
+
+        # Reset filename if existed already
         self.filename, self.format = None, None
+
+        # Initialize the widgets to be none
         self.widget_2 = None
         self.widget_3 = None
         self.widget_4 = None
         self.widget_5 = None
+
+        # list of the widgets
         self.widgets = [self.widget, self.widget_2, self.widget_3, self.widget_4, self.widget_5]
 
         # Setup Queus
@@ -44,15 +71,16 @@ class signalViewer(ss.Ui_MainWindow):
         self.AvPanels.put(4)
         self.AvPanels.put(5)
         self.ShownPanels.put(1)
-        #self.LsShownPanels.add(1)
 
+        # pens configurations
         self.pens = [pg.mkPen(color=(255, 0, 0)),pg.mkPen(color=(0, 255, 0)),
                      pg.mkPen(color=(0, 0, 255)), pg.mkPen(color=(200, 87, 125)),
                      pg.mkPen(color=(123, 34, 203))]
 
         # Plot Configurations
         self.plot_conf()
-        # Load Button connectorchecked
+
+        # Load Button connector checked
         self.actionAdd.triggered.connect(self.addNewPanel)
         self.channel1_chk.toggled.connect(self.hideChannel_1)
         self.channel2_chk.toggled.connect(self.hideChannel_2)
@@ -63,19 +91,21 @@ class signalViewer(ss.Ui_MainWindow):
         self.actionDelete.triggered.connect(self.startDeletingProcess)
         self.actionStop.triggered.connect(self.stopSignal)
         self.actionLoad.triggered.connect(self.load_file)
+        # Timer Configurations
         self.timer()
         self.view = self.widget.plotItem.getViewBox()
+
+        # Zoom Buttons Configuration
         self.actionZoomIn.triggered.connect(self.zoomin)
         self.actionZoomOut.triggered.connect(self.zoomout)
-        #self.actionDelete.triggered.connect(self.delete)
-        print(self.view)
 
-
+    # Zoom in Configurations
     def zoomin(self):
         self.view.scaleBy(0.3)
     def zoomout(self):
         self.view.scaleBy(1.3)
 
+    # Load File
     def load_file(self):
         """
         Load the File from User and add it to files dictionary
@@ -85,11 +115,10 @@ class signalViewer(ss.Ui_MainWindow):
             self.show_popup("No visible plots","First Add a plot")
         else:    
             signalViewer.i = 0
-            print("Adding new panel..")
-            # Reset the dict to accept new filek
-            # signalViewer.chunks = dict()
+
             # Stop timer for waiting to upload new file
             self.timer.stop()
+
             # Open File
             self.filename , self.format= QtWidgets.QFileDialog.getOpenFileName(None, 'Load Signal','/home', "*.csv;;"
                                                                                                             " *.txt;;"
@@ -104,14 +133,14 @@ class signalViewer(ss.Ui_MainWindow):
                     if not self.find(signalViewer.channel):
                         signalViewer.channel += 1
 
+                # Check if the channel is found in the ShownPanel Queue
                 if (not self.find(signalViewer.channel+1)):
-                    #self.addNewPanel()
                     signalViewer.channel -= 1
                     self.show_popup('Error','Add a new channel first')
                     pass
                 else:
                     if self.filename in signalViewer.filenames:
-                        print("You Already choosed that file ")
+                        self.show_popup("File Existed", "You already uploaded this file before")
                     else:
                         signalViewer.filenames[self.filename] = self.format
                         signalViewer.CurUsedFile[signalViewer.channel] = self.filename
@@ -128,7 +157,7 @@ class signalViewer(ss.Ui_MainWindow):
         # self.widget.setYRange(min=-1, max=1)
         # self.widget.setMouseEnabled(x=False, y=False)
         self.widget.setMinimumSize(QtCore.QSize(500, 200))
-        self.widget.plotItem.setTitle("Main Window")
+        self.widget.plotItem.setTitle("Channel 1")
         self.widget.plotItem.addLegend(size=(2, 3))
         self.widget.plotItem.showGrid(True, True, alpha=0.8)
         self.widget.plotItem.setLabel('bottom', text='Time (ms)')
@@ -178,8 +207,7 @@ class signalViewer(ss.Ui_MainWindow):
         if file_name in signalViewer.channels:
             print("You already loaded this file3")
         else :
-            signalViewer.channels[file_name] = pd.read_csv(file_name, skiprows=[i for i in range(500,7657)])
-            # self.y = self.data.iloc[:1, 2]
+            signalViewer.channels[file_name] = pd.read_csv(file_name, skiprows=[i for i in range(1500,7657)])
             signalViewer.chunks[file_name] = signalViewer.channels[file_name].iloc[:1, 2]
             self.plot(file_name, signalViewer.chunks[file_name])
 
@@ -202,13 +230,13 @@ class signalViewer(ss.Ui_MainWindow):
         update function .... add chunks to self.y from loaded data self.data
         :return:
         '''
-        print("numofpanels: ", signalViewer.numOfPanels)
-        for chunk in signalViewer.chunks:  # graph ->> file_name
+        # Iterate over keys (chunk) in chnuks dictionary
+        for chunk in signalViewer.chunks:
             signalViewer.i += 30
             signalViewer.chunks[chunk] = pd.concat([signalViewer.chunks[chunk],
                                                     signalViewer.channels[chunk].iloc[signalViewer.i:signalViewer.i+self.speed, 1]],
                                                    axis=0,sort=True)
-            print(len(signalViewer.chunks))
+            # graph ->> file_name is the key
             signalViewer.graphs[chunk].setData(signalViewer.chunks[chunk])
 
     def timer(self):
@@ -410,5 +438,7 @@ def main():
     ui = signalViewer(MainWindow, speed=50)
     MainWindow.show()
     sys.exit(app.exec_())
+
+
 if __name__ == '__main__':
     main()
