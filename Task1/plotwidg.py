@@ -37,7 +37,8 @@ class signalViewer(ss.Ui_MainWindow):
         self.widget_4 = None
         self.widget_5 = None
         self.widgets = [self.widget, self.widget_2, self.widget_3, self.widget_4, self.widget_5]
-        
+
+        # Setup Queus
         self.AvPanels.put(2)
         self.AvPanels.put(3)
         self.AvPanels.put(4)
@@ -297,10 +298,13 @@ class signalViewer(ss.Ui_MainWindow):
         else:
             #signalViewer.numOfPanels += 1
             #if not signalViewer.AvPanels.empty() :
+            # Adjusting Queues
             signalViewer.numOfPanels = signalViewer.AvPanels.get()
             signalViewer.ShownPanels.put(signalViewer.numOfPanels)
             signalViewer.numOfPanels -= 1
             signalViewer.channel = signalViewer.numOfPanels - 1
+
+            # Setup Plot Configuration
             self.widgets[signalViewer.numOfPanels] = pg.PlotWidget()
             self.widgets[signalViewer.numOfPanels].setEnabled(True)
             self.widgets[signalViewer.numOfPanels].setObjectName("widget_3")
