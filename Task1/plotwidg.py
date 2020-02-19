@@ -62,7 +62,7 @@ class signalViewer(ss.Ui_MainWindow):
         self.view = self.widget.plotItem.getViewBox()
         self.actionZoomIn.triggered.connect(self.zoomin)
         self.actionZoomOut.triggered.connect(self.zoomout)
-        self.actionDelete.triggered.connect(self.delete)
+        #self.actionDelete.triggered.connect(self.delete)
         print(self.view)
 
 
