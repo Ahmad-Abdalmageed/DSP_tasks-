@@ -6,6 +6,7 @@ import startstop3 as ss
 import pandas as pd
 from scipy.io import loadmat
 import sys
+import os 
 
 
 
@@ -218,7 +219,13 @@ class signalViewer(ss.Ui_MainWindow):
                 self.load_mat_data(i[0])
 
     def resetAllPanels(self):
+        
+        """Restarts the current program.
+        Note: this function does not return. Any cleanup action (like
+        saving data) must be done before calling this function."""
         print("Deleting panels...")
+        python = sys.executable
+        os.execl(python, python, * sys.argv)
 
     def addNewPanel(self):
         if signalViewer.numOfPanels > 3:
