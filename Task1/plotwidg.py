@@ -7,7 +7,7 @@ import pandas as pd
 from scipy.io import loadmat
 import sys
 import os 
-
+import queue as Q
 
 
 class signalViewer(ss.Ui_MainWindow):
@@ -18,7 +18,9 @@ class signalViewer(ss.Ui_MainWindow):
     graphs = dict()
     channel = -1  # Current Channel
     numOfPanels = 0
-
+    AvPanels = Q.PriorityQueue(5)
+    ShownPanels = Q.PriorityQueue(5)
+    
 
     def __init__(self, mainwindow, speed):
         '''
@@ -33,6 +35,12 @@ class signalViewer(ss.Ui_MainWindow):
         self.widget_4 = None
         self.widget_5 = None
         self.widgets = [self.widget, self.widget_2, self.widget_3, self.widget_4, self.widget_5]
+        
+        self.AvPanels.put(2)
+        self.AvPanels.put(3)
+        self.AvPanels.put(4)
+        self.AvPanels.put(5)
+        self.ShownPanels.put(1)
 
         self.pens = [pg.mkPen(color=(255, 0, 0)),pg.mkPen(color=(0, 255, 0)),
                      pg.mkPen(color=(0, 0, 255)), pg.mkPen(color=(200, 87, 125)),
@@ -53,6 +61,7 @@ class signalViewer(ss.Ui_MainWindow):
         self.view = self.widget.plotItem.getViewBox()
         self.actionZoomIn.triggered.connect(self.zoomin)
         self.actionZoomOut.triggered.connect(self.zoomout)
+        self.actionDelete.triggered.connect(self.delete)
         print(self.view)
 
 
@@ -220,19 +229,35 @@ class signalViewer(ss.Ui_MainWindow):
 
     def resetAllPanels(self):
         
-        """Restarts the current program.
+        """
+        Restarts the current program.
         Note: this function does not return. Any cleanup action (like
-        saving data) must be done before calling this function."""
+        saving data) must be done before calling this function.
+        """
         print("Deleting panels...")
         python = sys.executable
         os.execl(python, python, * sys.argv)
-
+    def delete(self):
+        if signalViewer.ShownPanels.empty():
+            print("No plots to delete")
+            self.show_popup("No plots to delete","Add some plot first")
+        else:
+            signalViewer.numOfPanels = signalViewer.ShownPanels.get()
+            signalViewer.AvPanels.put(signalViewer.numOfPanels)
+            signalViewer.numOfPanels -= 1
+            self.widgets[signalViewer.numOfPanels].close()
+            self.widgets[signalViewer.numOfPanels] = None
     def addNewPanel(self):
-        if signalViewer.numOfPanels > 3:
+        if signalViewer.AvPanels.empty():
+            #signalViewer.numOfPanels > 3:
             print("No more than 5 plots")
             self.show_popup("Maximum number of channels is 5", "You can't add more than 5 channels, you have to delete one first")
         else:
-            signalViewer.numOfPanels += 1
+            #signalViewer.numOfPanels += 1
+            #if not signalViewer.AvPanels.empty() :
+            signalViewer.numOfPanels = signalViewer.AvPanels.get()
+            signalViewer.ShownPanels.put(signalViewer.numOfPanels)
+            signalViewer.numOfPanels -= 1
             self.widgets[signalViewer.numOfPanels] = pg.PlotWidget()
             self.widgets[signalViewer.numOfPanels].setEnabled(True)
             self.widgets[signalViewer.numOfPanels].setObjectName("widget_3")
@@ -246,7 +271,10 @@ class signalViewer(ss.Ui_MainWindow):
 
 
     def hideChannel_1(self):
-        self.widgets[0].setHidden(not self.widget.isHidden())
+        if self.widgets[0] is None :
+            self.show_popup("Channel Doesn`t exist", "You didn`t add this channel")
+        else:
+            self.widgets[0].setHidden(not self.widget.isHidden())
 
     def hideChannel_2(self):
         if self.widgets[1] is None :
