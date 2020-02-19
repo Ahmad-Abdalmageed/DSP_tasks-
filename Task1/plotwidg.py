@@ -226,22 +226,18 @@ class signalViewer(ss.Ui_MainWindow):
             self.show_popup("Maximum number of channels is 5", "You can't add more than 5 channels, you have to delete one first")
         else:
             signalViewer.numOfPanels += 1
-            # spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-            # self.verticalLayout.addItem(spacerItem)
             self.widgets[signalViewer.numOfPanels] = pg.PlotWidget()
             self.widgets[signalViewer.numOfPanels].setEnabled(True)
-            # self.widgets[signalViewer.numOfPanels].setMinimumSize(QtCore.QSize(500, 300))
             self.widgets[signalViewer.numOfPanels].setObjectName("widget_3")
             self.widgets[signalViewer.numOfPanels].setXRange(min=0, max=4000)
             self.widgets[signalViewer.numOfPanels].setYRange(min=-1, max=1)
-            # self.widgets[signalViewer.numOfPanels].setMouseEnabled(x=False, y=False)
             self.widgets[signalViewer.numOfPanels].plotItem.setTitle("Main Window")
             self.widgets[signalViewer.numOfPanels].plotItem.addLegend(size=(2, 3))
             self.widgets[signalViewer.numOfPanels].plotItem.showGrid(True, True, alpha=0.8)
             self.widgets[signalViewer.numOfPanels].plotItem.setLabel('bottom', text='Time (ms)')
             self.verticalLayout.addWidget(self.widgets[signalViewer.numOfPanels])
-            print(self.widgets[1])
-            print(self.widgets[2])
+
+
     def hideChannel_1(self):
         self.widgets[0].setHidden(not self.widget.isHidden())
 
@@ -255,19 +251,19 @@ class signalViewer(ss.Ui_MainWindow):
         if self.widgets[2] is None :
             self.show_popup("Channel Doesn`t exist", "You didn`t add this channel")
         else:
-            self.widget_3.setHidden(not self.widgets[2].isHidden())
+            self.widgets[2].setHidden(not self.widgets[2].isHidden())
 
     def hideChannel_4(self):
         if self.widgets[3] is None :
             self.show_popup("Channel Doesn`t exist", "You didn`t add this channel")
         else :
-            self.widget_4.setHidden(not self.widgets[3].isHidden())
+            self.widgets[3].setHidden(not self.widgets[3].isHidden())
 
     def hideChannel_5(self):
         if self.widgets[4] is None :
             self.show_popup("Channel Doesn`t exist", "You didn`t add this channel")
         else:
-            self.widget_5.setHidden(not self.widgets[4].isHidden())
+            self.widgets[4].setHidden(not self.widgets[4].isHidden())
 
 
 
@@ -282,6 +278,7 @@ class signalViewer(ss.Ui_MainWindow):
         msg.setDetailedText("details")
         msg.buttonClicked.connect(self.popup_button)
         x = msg.exec_()
+
     def popup_button(self, i):
         print(i.text())
 
