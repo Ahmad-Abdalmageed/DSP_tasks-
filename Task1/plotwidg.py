@@ -59,6 +59,7 @@ class signalViewer(ss.Ui_MainWindow):
         self.channel5_chk.toggled.connect(self.hideChannel_5)
         self.actionReset.triggered.connect(self.resetAllPanels)
         self.actionDelete.triggered.connect(self.startDeletingProcess)
+        self.actionStop.triggered.connect(self.stopSignal)
         self.actionLoad.triggered.connect(self.load_file)
         self.timer()
         self.view = self.widget.plotItem.getViewBox()
@@ -215,6 +216,11 @@ class signalViewer(ss.Ui_MainWindow):
         :return:
         '''
         self.actionPause.triggered.connect(self.timer.stop)
+
+    def stopSignal(self):
+        signalViewer.i = 0
+        signalViewer.chunks = dict()
+        self.show_popup("Signal has stopped", "You have terminated the signal.. upload it again to view it")
 
     def checkFileExt(self, file):
         """
