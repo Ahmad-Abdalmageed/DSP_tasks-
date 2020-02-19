@@ -50,13 +50,15 @@ class signalViewer(ss.Ui_MainWindow):
         self.actionLoad.triggered.connect(self.load_file)
         self.timer()
         self.view = self.widget.plotItem.getViewBox()
-        self.zoom.clicked.connect(self.zoomf)
-
+        self.actionZoomIn.triggered.connect(self.zoomin)
+        self.actionZoomOut.triggered.connect(self.zoomout)
         print(self.view)
 
 
-    def zoomf(self):
+    def zoomin(self):
         self.view.scaleBy(0.3)
+    def zoomout(self):
+        self.view.scaleBy(1.3)
 
     def load_file(self):
         """
