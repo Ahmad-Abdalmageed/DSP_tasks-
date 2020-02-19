@@ -65,7 +65,7 @@ class signalViewer(ss.Ui_MainWindow):
         """
         signalViewer.i = 0
         print("Adding new panel..")
-        # Reset the dict to accept new file
+        # Reset the dict to accept new filek
         signalViewer.chunks = dict()
         # Stop timer for waiting to upload new file
         self.timer.stop()
