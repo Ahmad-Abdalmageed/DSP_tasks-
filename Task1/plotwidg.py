@@ -102,12 +102,18 @@ class signalViewer(ss.Ui_MainWindow):
                 if not self.find(signalViewer.channel):
                     signalViewer.channel += 1
 
-            if self.filename in signalViewer.filenames:
-                print("You Already choosed that file ")
+            if (not self.find(signalViewer.channel+1)):
+                #self.addNewPanel()
+                signalViewer.channel -= 1
+                self.show_popup('Error','Add a new channel first')
+                pass
             else:
-                signalViewer.filenames[self.filename] = self.format
-                signalViewer.CurUsedFile[signalViewer.channel] = self.filename
-            self.checkFileExt(signalViewer.filenames)
+                if self.filename in signalViewer.filenames:
+                    print("You Already choosed that file ")
+                else:
+                    signalViewer.filenames[self.filename] = self.format
+                    signalViewer.CurUsedFile[signalViewer.channel] = self.filename
+                    self.checkFileExt(signalViewer.filenames)
 
     def plot_conf(self):
         """
@@ -192,7 +198,7 @@ class signalViewer(ss.Ui_MainWindow):
         update function .... add chunks to self.y from loaded data self.data
         :return:
         '''
-        print("numofpanels: ", signalViewer.numOfPanels)
+        #print("numofpanels: ", signalViewer.numOfPanels)
 
         for chunk in signalViewer.chunks:  # graph ->> file_name
             signalViewer.i += 30
@@ -232,7 +238,7 @@ class signalViewer(ss.Ui_MainWindow):
     def stopSignal(self):
         signalViewer.i = 0
         signalViewer.chunks = dict()
-        self.show_popup("Signal has stopped", "You have terminated the signal.. upload it again to view it")
+        #self.show_popup("Signal has stopped", "You have terminated the signal.. upload it again to view it")
 
     def checkFileExt(self, file):
         """
@@ -278,6 +284,7 @@ class signalViewer(ss.Ui_MainWindow):
                 del signalViewer.filenames[signalViewer.CurUsedFile[num]]
                 del signalViewer.channels[signalViewer.CurUsedFile[num]]
                 del signalViewer.CurUsedFile[num]
+            self.stopSignal()
             for x in range(signalViewer.LsShownPanels.__len__()) :
                 signalViewer.ShownPanels.put(signalViewer.LsShownPanels.pop())
     
@@ -300,7 +307,9 @@ class signalViewer(ss.Ui_MainWindow):
             signalViewer.numOfPanels = signalViewer.AvPanels.get()
             signalViewer.ShownPanels.put(signalViewer.numOfPanels)
             signalViewer.numOfPanels -= 1
+            
             signalViewer.channel = signalViewer.numOfPanels - 1
+          
             self.widgets[signalViewer.numOfPanels] = pg.PlotWidget()
             self.widgets[signalViewer.numOfPanels].setEnabled(True)
             self.widgets[signalViewer.numOfPanels].setObjectName("widget_3")
