@@ -8,7 +8,7 @@ from scipy.io import loadmat
 import sys
 import os 
 import queue as Q
-
+from sortedcontainers import SortedList
 
 class signalViewer(ss.Ui_MainWindow):
     i = 0 # counter represents the chunks size of data to be loaded
@@ -20,7 +20,8 @@ class signalViewer(ss.Ui_MainWindow):
     numOfPanels = 0
     AvPanels = Q.PriorityQueue(5)
     ShownPanels = Q.PriorityQueue(5)
-    
+    #AvPanels = SortedList()
+    LsShownPanels = SortedList()
 
     def __init__(self, mainwindow, speed):
         '''
@@ -41,6 +42,7 @@ class signalViewer(ss.Ui_MainWindow):
         self.AvPanels.put(4)
         self.AvPanels.put(5)
         self.ShownPanels.put(1)
+        #self.LsShownPanels.add(1)
 
         self.pens = [pg.mkPen(color=(255, 0, 0)),pg.mkPen(color=(0, 255, 0)),
                      pg.mkPen(color=(0, 0, 255)), pg.mkPen(color=(200, 87, 125)),
@@ -238,16 +240,24 @@ class signalViewer(ss.Ui_MainWindow):
         print("Deleting panels...")
         python = sys.executable
         os.execl(python, python, * sys.argv)
-    def delete(self):
-        if signalViewer.ShownPanels.empty():
+    
+    def delete(self,panel):
+        num = int(panel.text())
+        signalViewer.LsShownPanels.clear()
+        while not signalViewer.ShownPanels.empty():
+            signalViewer.LsShownPanels.add(signalViewer.ShownPanels.get())
+        if not signalViewer.LsShownPanels.__contains__(num):
             print("No plots to delete")
-            self.show_popup("No plots to delete","Add some plot first")
+            self.show_popup("Channel doesn't exist","Choose an existing panel")
         else:
-            signalViewer.numOfPanels = signalViewer.ShownPanels.get()
-            signalViewer.AvPanels.put(signalViewer.numOfPanels)
-            signalViewer.numOfPanels -= 1
-            self.widgets[signalViewer.numOfPanels].close()
-            self.widgets[signalViewer.numOfPanels] = None
+            #signalViewer.numOfPanels = signalViewer.ShownPanels.get()
+            signalViewer.AvPanels.put(num)
+            num -= 1
+            self.widgets[num].close()
+            self.widgets[num] = None
+            for x in signalViewer.LsShownPanels.islice() :
+                signalViewer.ShownPanels.put(signalViewer.LsShownPanels.pop())
+    
     def addNewPanel(self):
         if signalViewer.AvPanels.empty():
             #signalViewer.numOfPanels > 3:

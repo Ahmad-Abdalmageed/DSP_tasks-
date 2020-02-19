@@ -146,6 +146,7 @@
    </attribute>
    <addaction name="actionStart"/>
    <addaction name="actionPause"/>
+   <addaction name="actionStop"/>
    <addaction name="actionReset"/>
    <addaction name="separator"/>
    <addaction name="actionAdd"/>
@@ -220,6 +221,14 @@
    </property>
    <property name="toolTip">
     <string>Zoom Out</string>
+   </property>
+  </action>
+  <action name="actionStop">
+   <property name="text">
+    <string>Stop</string>
+   </property>
+   <property name="toolTip">
+    <string>Stop</string>
    </property>
   </action>
  </widget>

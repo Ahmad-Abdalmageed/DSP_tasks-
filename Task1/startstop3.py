@@ -98,8 +98,11 @@ class Ui_MainWindow(object):
         self.actionZoomOut = QtWidgets.QAction(MainWindow)
         self.actionZoomOut.setIcon(QtGui.QIcon('Icons/magnifying-glass-with-minus-sign'))
         self.actionZoomOut.setObjectName("actionZoomOut")
+        self.actionStop = QtWidgets.QAction(MainWindow)
+        self.actionStop.setObjectName("actionStop")
         self.toolBar.addAction(self.actionStart)
         self.toolBar.addAction(self.actionPause)
+        self.toolBar.addAction(self.actionStop)
         self.toolBar.addAction(self.actionReset)
         self.toolBar.addSeparator()
         self.toolBar.addAction(self.actionAdd)
@@ -138,6 +141,8 @@ class Ui_MainWindow(object):
         self.actionZoomIn.setToolTip(_translate("MainWindow", "Zoom In"))
         self.actionZoomOut.setText(_translate("MainWindow", "ZoomOut"))
         self.actionZoomOut.setToolTip(_translate("MainWindow", "Zoom Out"))
+        self.actionStop.setText(_translate("MainWindow", "Stop"))
+        self.actionStop.setToolTip(_translate("MainWindow", "Stop"))
 
 from pyqtgraph import PlotWidget
 
