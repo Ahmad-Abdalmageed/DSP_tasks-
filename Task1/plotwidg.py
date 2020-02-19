@@ -181,16 +181,18 @@ class signalViewer(ss.Ui_MainWindow):
         '''
         # File name
         name = file_name.split('/')[-1]
-
+        # if signalViewer.numOfPanels == 0:
         signalViewer.graphs[file_name] = self.widgets[signalViewer.channel].plotItem.plot(chunk, name=name,
                                                                                           pen=self.pens[signalViewer.channel])
-
+        # else:
+        #     print("You need to add more panels ")
 
     def update_plot_data(self):
         '''
         update function .... add chunks to self.y from loaded data self.data
         :return:
         '''
+        print("numofpanels: ", signalViewer.numOfPanels)
 
         for chunk in signalViewer.chunks:  # graph ->> file_name
             signalViewer.i += 30
@@ -320,24 +322,29 @@ class signalViewer(ss.Ui_MainWindow):
     def hideChannel_2(self):
         if self.widgets[1] is None :
             self.show_popup("Channel Doesn`t exist", "You didn`t add this channel")
+            self.channel2_chk.setChecked(True)
         else:
             self.widgets[1].setHidden(not self.widgets[1].isHidden())
 
     def hideChannel_3(self):
         if self.widgets[2] is None :
             self.show_popup("Channel Doesn`t exist", "You didn`t add this channel")
+            self.channel3_chk.setChecked(True)
+
         else:
             self.widgets[2].setHidden(not self.widgets[2].isHidden())
 
     def hideChannel_4(self):
         if self.widgets[3] is None :
             self.show_popup("Channel Doesn`t exist", "You didn`t add this channel")
+            self.channel4_chk.setChecked(True)
         else :
             self.widgets[3].setHidden(not self.widgets[3].isHidden())
 
     def hideChannel_5(self):
         if self.widgets[4] is None :
             self.show_popup("Channel Doesn`t exist", "You didn`t add this channel")
+            self.channel5_chk.setChecked(True)
         else:
             self.widgets[4].setHidden(not self.widgets[4].isHidden())
 
