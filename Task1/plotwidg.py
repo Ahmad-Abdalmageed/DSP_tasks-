@@ -118,14 +118,16 @@ class signalViewer(ss.Ui_MainWindow):
         # Channel 1
         # Setting ranges of the x and y axis
         self.widget.setXRange(min=0, max=4000)
-        self.widget.setYRange(min=-1, max=1)
+        # self.widget.setYRange(min=-1, max=1)
         # self.widget.setMouseEnabled(x=False, y=False)
         self.widget.setMinimumSize(QtCore.QSize(200, 200))
         self.widget.plotItem.setTitle("Main Window")
         self.widget.plotItem.addLegend(size=(2, 3))
         self.widget.plotItem.showGrid(True, True, alpha=0.8)
         self.widget.plotItem.setLabel('bottom', text='Time (ms)')
-
+        self.widget.plotItem.enableAutoScale()
+        self.box = self.widget.plotItem.getViewBox()
+        self.box.setAutoPan(x=True)
 
     # Reading Files Functions
     def load_csv_data(self, file_name):
@@ -307,7 +309,7 @@ class signalViewer(ss.Ui_MainWindow):
             # Setup Plot Configuration
             self.widgets[signalViewer.numOfPanels] = pg.PlotWidget()
             self.widgets[signalViewer.numOfPanels].setEnabled(True)
-            self.widgets[signalViewer.numOfPanels].setObjectName("widget_3")
+            # self.widgets[signalViewer.numOfPanels].setObjectName("widget_3")
             self.widgets[signalViewer.numOfPanels].setXRange(min=0, max=4000)
             self.widgets[signalViewer.numOfPanels].setYRange(min=-1, max=1)
             self.widgets[signalViewer.numOfPanels].plotItem.setTitle("Channel "+str(signalViewer.numOfPanels+1))
@@ -315,6 +317,7 @@ class signalViewer(ss.Ui_MainWindow):
             self.widgets[signalViewer.numOfPanels].plotItem.showGrid(True, True, alpha=0.8)
             self.widgets[signalViewer.numOfPanels].plotItem.setLabel('bottom', text='Time (ms)')
             self.verticalLayout.addWidget(self.widgets[signalViewer.numOfPanels])
+            self.widgets[signalViewer.numOfPanels].plotItem.getViewBox().setAutoPan(x=True)
 
 
     def hideChannel_1(self):
@@ -367,14 +370,6 @@ class signalViewer(ss.Ui_MainWindow):
 
     def startDeletingProcess(self):
         self.showDeleteList("Delete a channel", "Choose the channel you want to delete")
-
-   # def deletePanel(self, panel):
-        #num = int(panel.text())
-       # if (signalViewer.numOfPanels + 1 < num):
-      #      print("Channel not exists")
-     #   else:
-     #       self.widgets[num - 1].deleteLater()
-    #        signalViewer.numOfPanels -= 1
 
     def showDeleteList(self, message, info):
         msg = QMessageBox()
