@@ -272,9 +272,10 @@ class signalViewer(ss.Ui_MainWindow):
             num -= 1
             self.widgets[num].close()
             self.widgets[num] = None
-            del signalViewer.filenames[signalViewer.CurUsedFile[num]]
-            del signalViewer.channels[signalViewer.CurUsedFile[num]]
-            del signalViewer.CurUsedFile[num]
+            if num in signalViewer.CurUsedFile:
+                del signalViewer.filenames[signalViewer.CurUsedFile[num]]
+                del signalViewer.channels[signalViewer.CurUsedFile[num]]
+                del signalViewer.CurUsedFile[num]
             for x in range(signalViewer.LsShownPanels.__len__()) :
                 signalViewer.ShownPanels.put(signalViewer.LsShownPanels.pop())
     
