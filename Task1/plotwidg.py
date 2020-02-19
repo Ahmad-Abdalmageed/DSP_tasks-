@@ -316,8 +316,9 @@ class signalViewer(ss.Ui_MainWindow):
     def hideChannel_1(self):
         if self.widgets[0] is None :
             self.show_popup("Channel Doesn`t exist", "You didn`t add this channel")
+            self.channel1_chk.setChecked(True)
         else:
-            self.widgets[0].setHidden(not self.widget.isHidden())
+            self.widgets[0].setHidden(not self.widgets[0].isHidden())
 
     def hideChannel_2(self):
         if self.widgets[1] is None :
