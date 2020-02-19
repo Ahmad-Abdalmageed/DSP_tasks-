@@ -49,6 +49,14 @@ class signalViewer(ss.Ui_MainWindow):
         self.actionReset.triggered.connect(self.resetAllPanels)
         self.actionLoad.triggered.connect(self.load_file)
         self.timer()
+        self.view = self.widget.plotItem.getViewBox()
+        self.zoom.clicked.connect(self.zoomf)
+
+        print(self.view)
+
+
+    def zoomf(self):
+        self.view.scaleBy(0.3)
 
     def load_file(self):
         """
@@ -250,14 +258,13 @@ class signalViewer(ss.Ui_MainWindow):
         if self.widgets[3] is None :
             self.show_popup("Channel Doesn`t exist", "You didn`t add this channel")
         else :
-            self.widget_4.setHidden(not self.widgets[2].isHidden())
+            self.widget_4.setHidden(not self.widgets[3].isHidden())
 
     def hideChannel_5(self):
         if self.widgets[4] is None :
-
             self.show_popup("Channel Doesn`t exist", "You didn`t add this channel")
         else:
-            self.widget_5.setHidden(not self.widgets[2].isHidden())
+            self.widget_5.setHidden(not self.widgets[4].isHidden())
 
 
 

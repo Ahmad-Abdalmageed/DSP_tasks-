@@ -108,8 +108,11 @@
          <property name="text">
           <string>Channel 2 </string>
          </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
          <property name="checked">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -119,7 +122,7 @@
           <string>Channel 3</string>
          </property>
          <property name="checked">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -129,7 +132,7 @@
           <string>Channel 4</string>
          </property>
          <property name="checked">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -139,7 +142,14 @@
           <string>Channel 5 </string>
          </property>
          <property name="checked">
-          <bool>false</bool>
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="zoom">
+         <property name="text">
+          <string>zoom</string>
          </property>
         </widget>
        </item>
