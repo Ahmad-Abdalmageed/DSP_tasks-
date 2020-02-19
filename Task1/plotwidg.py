@@ -56,6 +56,7 @@ class signalViewer(ss.Ui_MainWindow):
         self.channel4_chk.toggled.connect(self.hideChannel_4)
         self.channel5_chk.toggled.connect(self.hideChannel_5)
         self.actionReset.triggered.connect(self.resetAllPanels)
+        self.actionDelete.triggered.connect(self.startDeletingProcess)
         self.actionLoad.triggered.connect(self.load_file)
         self.timer()
         self.view = self.widget.plotItem.getViewBox()
@@ -300,8 +301,6 @@ class signalViewer(ss.Ui_MainWindow):
         else:
             self.widgets[4].setHidden(not self.widgets[4].isHidden())
 
-
-
     def show_popup(self, message, info):
         msg = QMessageBox()
         msg.setWindowTitle("Popup Message")
@@ -311,11 +310,39 @@ class signalViewer(ss.Ui_MainWindow):
         msg.setDefaultButton(QMessageBox.Ignore)
         msg.setInformativeText(info)
         msg.setDetailedText("details")
-        msg.buttonClicked.connect(self.popup_button)
+        # msg.buttonClicked.connect(self.popup_button)
         x = msg.exec_()
 
-    def popup_button(self, i):
-        print(i.text())
+    def startDeletingProcess(self):
+        self.showDeleteList("Delete a channel", "Choose the channel you want to delete")
+
+    def deletePanel(self, panel):
+        num = int(panel.text())
+        if (signalViewer.numOfPanels + 1 < num):
+            print("Channel not exists")
+        else:
+            self.widgets[num - 1].deleteLater()
+            signalViewer.numOfPanels -= 1
+
+    def showDeleteList(self, message, info):
+        msg = QMessageBox()
+        msg.setWindowTitle("Popup Message")
+        msg.setText(message)
+        msg.setIcon(QMessageBox.Warning)
+        msg.setStandardButtons(QMessageBox.Cancel)
+        msg.setDefaultButton(QMessageBox.Cancel)
+        msg.setInformativeText(info)
+
+        # Custome btns
+        msg.setWindowModality(QtCore.Qt.NonModal)
+        panel1 = msg.addButton("1", msg.ActionRole)
+        panel2 = msg.addButton("2", msg.ActionRole)
+        panel3 = msg.addButton("3", msg.ActionRole)
+        panel4 = msg.addButton("4", msg.ActionRole)
+        panel5 = msg.addButton("5", msg.ActionRole)
+
+        msg.buttonClicked.connect(self.deletePanel)
+        x = msg.exec_()
 
 def main():
     '''
