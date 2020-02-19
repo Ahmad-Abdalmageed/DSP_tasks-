@@ -106,6 +106,12 @@ class Ui_MainWindow(object):
         self.actionLoad = QtWidgets.QAction(MainWindow)
         self.actionLoad.setIcon(QtGui.QIcon('Icons/open-black-folder-interface-symbol'))
         self.actionLoad.setObjectName("actionLoad")
+        self.actionZoomIn = QtWidgets.QAction(MainWindow)
+        self.actionZoomIn.setIcon(QtGui.QIcon("Icons/plus-zoom-magnifying-glass-interface-symbol"))
+        self.actionZoomIn.setObjectName("actionZoomIn")
+        self.actionZoomOut = QtWidgets.QAction(MainWindow)
+        self.actionZoomOut.setIcon(QtGui.QIcon('Icons/magnifying-glass-with-minus-sign'))
+        self.actionZoomOut.setObjectName("actionZoomOut")
         self.toolBar.addAction(self.actionStart)
         self.toolBar.addAction(self.actionPause)
         self.toolBar.addAction(self.actionReset)
@@ -113,6 +119,9 @@ class Ui_MainWindow(object):
         self.toolBar.addAction(self.actionAdd)
         self.toolBar.addAction(self.actionDelete)
         self.toolBar.addAction(self.actionLoad)
+        self.toolBar.addSeparator()
+        self.toolBar.addAction(self.actionZoomIn)
+        self.toolBar.addAction(self.actionZoomOut)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -140,6 +149,10 @@ class Ui_MainWindow(object):
         self.actionDelete.setToolTip(_translate("MainWindow", "Remove Signal"))
         self.actionLoad.setText(_translate("MainWindow", "Load"))
         self.actionLoad.setToolTip(_translate("MainWindow", "Load Signal"))
+        self.actionZoomIn.setText(_translate("MainWindow", "ZoomIn"))
+        self.actionZoomIn.setToolTip(_translate("MainWindow", "Zoom In"))
+        self.actionZoomOut.setText(_translate("MainWindow", "ZoomOut"))
+        self.actionZoomOut.setToolTip(_translate("MainWindow", "Zoom Out"))
 
 from pyqtgraph import PlotWidget
 
