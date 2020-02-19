@@ -99,6 +99,7 @@ class Ui_MainWindow(object):
         self.actionZoomOut.setIcon(QtGui.QIcon('Icons/magnifying-glass-with-minus-sign'))
         self.actionZoomOut.setObjectName("actionZoomOut")
         self.actionStop = QtWidgets.QAction(MainWindow)
+        self.actionStop.setIcon(QtGui.QIcon('Icons/square-of-rounded-corners'))
         self.actionStop.setObjectName("actionStop")
         self.toolBar.addAction(self.actionStart)
         self.toolBar.addAction(self.actionPause)
@@ -117,7 +118,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Wave Yeeter"))
         self.groupBox.setTitle(_translate("MainWindow", "Active Channel"))
         self.channel1_chk.setText(_translate("MainWindow", "Channel 1"))
         self.channel2_chk.setText(_translate("MainWindow", "Channel 2 "))

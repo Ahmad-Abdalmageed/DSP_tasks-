@@ -22,6 +22,7 @@ class signalViewer(ss.Ui_MainWindow):
     ShownPanels = Q.PriorityQueue(5)
     #AvPanels = SortedList()
     LsShownPanels = SortedList()
+    CurUsedFile = dict()
 
     def __init__(self, mainwindow, speed):
         '''
@@ -105,6 +106,7 @@ class signalViewer(ss.Ui_MainWindow):
                 print("You Already choosed that file ")
             else:
                 signalViewer.filenames[self.filename] = self.format
+                signalViewer.CurUsedFile[signalViewer.channel] = self.filename
             self.checkFileExt(signalViewer.filenames)
 
     def plot_conf(self):
@@ -270,6 +272,9 @@ class signalViewer(ss.Ui_MainWindow):
             num -= 1
             self.widgets[num].close()
             self.widgets[num] = None
+            del signalViewer.filenames[signalViewer.CurUsedFile[num]]
+            del signalViewer.channels[signalViewer.CurUsedFile[num]]
+            del signalViewer.CurUsedFile[num]
             for x in range(signalViewer.LsShownPanels.__len__()) :
                 signalViewer.ShownPanels.put(signalViewer.LsShownPanels.pop())
     
