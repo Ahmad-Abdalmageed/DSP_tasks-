@@ -79,25 +79,33 @@ class signalViewer(ss.Ui_MainWindow):
         Load the File from User and add it to files dictionary
         :return:
         """
-        signalViewer.i = 0
-        print("Adding new panel..")
-        # Reset the dict to accept new filek
-        signalViewer.chunks = dict()
-        # Stop timer for waiting to upload new file
-        self.timer.stop()
-        # Open File
-        self.filename , self.format= QtWidgets.QFileDialog.getOpenFileName(None, 'Load Signal','/home', "*.csv;;"
-                                                                                                        " *.txt;;"
-                                                                                                        "*.mat")
-        if self.filename == '' :
-            pass
-        else: signalViewer.channel += 1
+        if signalViewer.ShownPanels.empty():
+            self.show_popup("No visible plots","First Add a plot")
+        else:    
+            signalViewer.i = 0
+            print("Adding new panel..")
+            # Reset the dict to accept new filek
+            signalViewer.chunks = dict()
+            # Stop timer for waiting to upload new file
+            self.timer.stop()
+            # Open File
+            self.filename , self.format= QtWidgets.QFileDialog.getOpenFileName(None, 'Load Signal','/home', "*.csv;;"
+                                                                                                            " *.txt;;"
+                                                                                                            "*.mat")
+            if self.filename == '' :
+                pass
+            else: signalViewer.channel += 1
 
-        if self.filename in signalViewer.filenames:
-            print("You Already choosed that file ")
-        else:
-            signalViewer.filenames[self.filename] = self.format
-        self.checkFileExt(signalViewer.filenames)
+            if signalViewer.channel > 4:
+                signalViewer.channel = 0
+                if not self.find(signalViewer.channel):
+                    signalViewer.channel += 1
+
+            if self.filename in signalViewer.filenames:
+                print("You Already choosed that file ")
+            else:
+                signalViewer.filenames[self.filename] = self.format
+            self.checkFileExt(signalViewer.filenames)
 
     def plot_conf(self):
         """
@@ -265,6 +273,14 @@ class signalViewer(ss.Ui_MainWindow):
             for x in range(signalViewer.LsShownPanels.__len__()) :
                 signalViewer.ShownPanels.put(signalViewer.LsShownPanels.pop())
     
+    def find(self,num):
+        while not signalViewer.ShownPanels.empty():
+            signalViewer.LsShownPanels.add(signalViewer.ShownPanels.get())
+        found = signalViewer.LsShownPanels.__contains__(num)
+        for x in range(signalViewer.LsShownPanels.__len__()) :
+                signalViewer.ShownPanels.put(signalViewer.LsShownPanels.pop())
+        return found
+
     def addNewPanel(self):
         if signalViewer.AvPanels.empty():
             #signalViewer.numOfPanels > 3:
@@ -276,12 +292,13 @@ class signalViewer(ss.Ui_MainWindow):
             signalViewer.numOfPanels = signalViewer.AvPanels.get()
             signalViewer.ShownPanels.put(signalViewer.numOfPanels)
             signalViewer.numOfPanels -= 1
+            signalViewer.channel = signalViewer.numOfPanels - 1
             self.widgets[signalViewer.numOfPanels] = pg.PlotWidget()
             self.widgets[signalViewer.numOfPanels].setEnabled(True)
             self.widgets[signalViewer.numOfPanels].setObjectName("widget_3")
             self.widgets[signalViewer.numOfPanels].setXRange(min=0, max=4000)
             self.widgets[signalViewer.numOfPanels].setYRange(min=-1, max=1)
-            self.widgets[signalViewer.numOfPanels].plotItem.setTitle("Main Window")
+            self.widgets[signalViewer.numOfPanels].plotItem.setTitle("Channel "+str(signalViewer.numOfPanels+1))
             self.widgets[signalViewer.numOfPanels].plotItem.addLegend(size=(2, 3))
             self.widgets[signalViewer.numOfPanels].plotItem.showGrid(True, True, alpha=0.8)
             self.widgets[signalViewer.numOfPanels].plotItem.setLabel('bottom', text='Time (ms)')
