@@ -252,10 +252,11 @@ class signalViewer(ss.Ui_MainWindow):
         else:
             #signalViewer.numOfPanels = signalViewer.ShownPanels.get()
             signalViewer.AvPanels.put(num)
+            signalViewer.LsShownPanels.remove(num)
             num -= 1
             self.widgets[num].close()
             self.widgets[num] = None
-            for x in signalViewer.LsShownPanels.islice() :
+            for x in range(signalViewer.LsShownPanels.__len__()) :
                 signalViewer.ShownPanels.put(signalViewer.LsShownPanels.pop())
     
     def addNewPanel(self):
@@ -326,13 +327,13 @@ class signalViewer(ss.Ui_MainWindow):
     def startDeletingProcess(self):
         self.showDeleteList("Delete a channel", "Choose the channel you want to delete")
 
-    def deletePanel(self, panel):
-        num = int(panel.text())
-        if (signalViewer.numOfPanels + 1 < num):
-            print("Channel not exists")
-        else:
-            self.widgets[num - 1].deleteLater()
-            signalViewer.numOfPanels -= 1
+   # def deletePanel(self, panel):
+        #num = int(panel.text())
+       # if (signalViewer.numOfPanels + 1 < num):
+      #      print("Channel not exists")
+     #   else:
+     #       self.widgets[num - 1].deleteLater()
+    #        signalViewer.numOfPanels -= 1
 
     def showDeleteList(self, message, info):
         msg = QMessageBox()
@@ -351,7 +352,8 @@ class signalViewer(ss.Ui_MainWindow):
         panel4 = msg.addButton("4", msg.ActionRole)
         panel5 = msg.addButton("5", msg.ActionRole)
 
-        msg.buttonClicked.connect(self.deletePanel)
+        #msg.buttonClicked.connect(self.deletePanel)
+        msg.buttonClicked.connect(self.delete)
         x = msg.exec_()
 
 def main():
