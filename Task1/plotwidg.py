@@ -1,6 +1,6 @@
 # Importing Packages
-from PyQt5 import QtWidgets, uic, QtCore, QtGui
-from PyQt5.QtCore import QEvent
+from PyQt5 import QtWidgets, QtCore
+from PyQt5.QtCore import pyqtSignal, pyqtSlot
 from PyQt5.QtWidgets import QMessageBox
 import pyqtgraph as pg
 import startstop3 as ss
@@ -13,13 +13,16 @@ from sortedcontainers import SortedList
 from pyqtgraph import  PlotWidget
 
 class myPlotWidget(PlotWidget):
+    signal = pyqtSignal()
     def __init__(self, parent, id, background='default', **kwargs):
         super(myPlotWidget, self).__init__(parent=parent, background=background, **kwargs)
-        self.sceneObj.sigMouseClicked.connect(self.select_event)
         self.id = id
+        self.clicked = False
+        self.sceneObj.sigMouseClicked.connect(self.select_event)
 
     def select_event(self):
         print("The Current Selected widget is: ", self.id )
+        self.clicked = True
 
 
 # MainClass of the application
@@ -55,6 +58,9 @@ class signalViewer(ss.Ui_MainWindow):
 
     # Contains keys of the channels (1 - 5) and the file path for each channel
     CurUsedFile = dict()
+
+    # Current selected widget by the user
+    currentSelected = 0
 
     def __init__(self, mainwindow, speed):
         '''
@@ -105,14 +111,21 @@ class signalViewer(ss.Ui_MainWindow):
         self.actionStop.triggered.connect(self.stopSignal)
         self.actionLoad.triggered.connect(self.load_file)
         # Timer Configurations
+        self.get_current_selected()
         self.timer()
         self.view = self.widget.plotItem.getViewBox()
-        # self.view.keyPressEvent(QEvent.MouseButtonPress)
+
 
         # Zoom Buttons Configuration
         self.actionZoomIn.triggered.connect(self.zoomin)
         self.actionZoomOut.triggered.connect(self.zoomout)
 
+    def get_current_selected(self):
+        for i in self.widgets:
+            if i is not None :
+                if i.clicked == True:
+                    self.currentSelected = i.id
+        print('Current selected ', self.currentSelected)
 
     # Zoom in Configurations
     def zoomin(self):
@@ -334,7 +347,7 @@ class signalViewer(ss.Ui_MainWindow):
             self.stopSignal()
             for x in range(signalViewer.LsShownPanels.__len__()) :
                 signalViewer.ShownPanels.put(signalViewer.LsShownPanels.pop())
-    
+
     def find(self,num):
         while not signalViewer.ShownPanels.empty():
             signalViewer.LsShownPanels.add(signalViewer.ShownPanels.get())
@@ -445,9 +458,6 @@ class signalViewer(ss.Ui_MainWindow):
         #msg.buttonClicked.connect(self.deletePanel)
         msg.buttonClicked.connect(self.delete)
         x = msg.exec_()
-    def widget_selected(self):
-        sender = self.sender()
-        print("Widget %s pressed"%sender)
 
 def main():
     '''
