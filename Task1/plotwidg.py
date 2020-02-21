@@ -15,7 +15,7 @@ from pyqtgraph import  PlotWidget
 class myPlotWidget(PlotWidget):
     def __init__(self, parent, id, background='default', **kwargs):
         super(myPlotWidget, self).__init__(parent=parent, background=background, **kwargs)
-        self.scene().sigMouseClicked.connect(self.select_event)
+        self.sceneObj.sigMouseClicked.connect(self.select_event)
         self.id = id
 
     def select_event(self):
