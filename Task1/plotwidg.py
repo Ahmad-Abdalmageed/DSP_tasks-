@@ -359,7 +359,8 @@ class signalViewer(ss.Ui_MainWindow):
             signalViewer.channel = signalViewer.numOfPanels - 1
 
             # Setup Plot Configuration
-            self.widgets[signalViewer.numOfPanels] = pg.PlotWidget()
+            self.widgets[signalViewer.numOfPanels] = myPlotWidget(self.centralwidget, id=signalViewer.AvPanels.get())
+            self.verticalLayout.addWidget(self.widgets[signalViewer.numOfPanels])
             self.widgets[signalViewer.numOfPanels].setEnabled(True)
             # self.widgets[signalViewer.numOfPanels].setObjectName("widget_3")
             self.widgets[signalViewer.numOfPanels].setMinimumSize(QtCore.QSize(500, 200))
