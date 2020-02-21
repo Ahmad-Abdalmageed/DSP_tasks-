@@ -359,7 +359,7 @@ class signalViewer(ss.Ui_MainWindow):
             signalViewer.channel = signalViewer.numOfPanels - 1
 
             # Setup Plot Configuration
-            self.widgets[signalViewer.numOfPanels] = myPlotWidget(self.centralwidget, id=signalViewer.AvPanels.get())
+            self.widgets[signalViewer.numOfPanels] = myPlotWidget(self.centralwidget, id=signalViewer.numOfPanels+1)
             self.verticalLayout.addWidget(self.widgets[signalViewer.numOfPanels])
             self.widgets[signalViewer.numOfPanels].setEnabled(True)
             # self.widgets[signalViewer.numOfPanels].setObjectName("widget_3")
