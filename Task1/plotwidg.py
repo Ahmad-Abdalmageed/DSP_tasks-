@@ -1,5 +1,6 @@
 # Importing Packages
 from PyQt5 import QtWidgets, uic, QtCore, QtGui
+from PyQt5.QtCore import QEvent
 from PyQt5.QtWidgets import QMessageBox
 import pyqtgraph as pg
 import startstop3 as ss
@@ -9,6 +10,17 @@ import sys
 import os 
 import queue as Q
 from sortedcontainers import SortedList
+from pyqtgraph import  PlotWidget
+
+class myPlotWidget(PlotWidget):
+    def __init__(self, parent, id, background='default', **kwargs):
+        super(myPlotWidget, self).__init__(parent=parent, background=background, **kwargs)
+        self.scene().sigMouseClicked.connect(self.select_event)
+        self.id = id
+
+    def select_event(self):
+        print("The Current Selected widget is: ", self.id )
+
 
 # MainClass of the application
 class signalViewer(ss.Ui_MainWindow):
@@ -61,11 +73,12 @@ class signalViewer(ss.Ui_MainWindow):
         self.widget_3 = None
         self.widget_4 = None
         self.widget_5 = None
+        self.widget = myPlotWidget(self.centralwidget, id=1)
 
         # list of the widgets
         self.widgets = [self.widget, self.widget_2, self.widget_3, self.widget_4, self.widget_5]
 
-        # Setup Queus
+        # Setup Queues
         self.AvPanels.put(2)
         self.AvPanels.put(3)
         self.AvPanels.put(4)
@@ -94,16 +107,18 @@ class signalViewer(ss.Ui_MainWindow):
         # Timer Configurations
         self.timer()
         self.view = self.widget.plotItem.getViewBox()
+        # self.view.keyPressEvent(QEvent.MouseButtonPress)
 
         # Zoom Buttons Configuration
         self.actionZoomIn.triggered.connect(self.zoomin)
         self.actionZoomOut.triggered.connect(self.zoomout)
 
+
     # Zoom in Configurations
     def zoomin(self):
         self.view.scaleBy(0.3)
     def zoomout(self):
-        self.view.scaleBy(1.3)
+        self.view.scaleBy(1/0.3)
 
     # Load File
     def load_file(self):
@@ -153,6 +168,7 @@ class signalViewer(ss.Ui_MainWindow):
         """
         # Channel 1
         # Setting ranges of the x and y axis
+        self.verticalLayout.addWidget(self.widget)
         self.widget.setXRange(min=0, max=4000)
         # self.widget.setYRange(min=-1, max=1)
         # self.widget.setMouseEnabled(x=False, y=False)
@@ -162,6 +178,7 @@ class signalViewer(ss.Ui_MainWindow):
         self.widget.plotItem.showGrid(True, True, alpha=0.8)
         self.widget.plotItem.setLabel('bottom', text='Time (ms)')
         self.widget.plotItem.enableAutoScale()
+        # self.widget.mousePressEvent(QEvent.GraphicsSceneMouseDoubleClick)
         self.box = self.widget.plotItem.getViewBox()
         self.box.setAutoPan(x=True)
 
@@ -427,6 +444,9 @@ class signalViewer(ss.Ui_MainWindow):
         #msg.buttonClicked.connect(self.deletePanel)
         msg.buttonClicked.connect(self.delete)
         x = msg.exec_()
+    def widget_selected(self):
+        sender = self.sender()
+        print("Widget %s pressed"%sender)
 
 def main():
     '''
