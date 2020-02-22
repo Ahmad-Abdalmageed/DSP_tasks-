@@ -82,10 +82,10 @@ class signalViewer(ss.Ui_MainWindow):
         self.filename, self.format = None, None
 
         # Initialize the widgets to be none
-        self.widget_2 = None
-        self.widget_3 = None
-        self.widget_4 = None
-        self.widget_5 = None
+        self.widget_2 = myPlotWidget(self.centralwidget, id=2)
+        self.widget_3 = myPlotWidget(self.centralwidget, id=3)
+        self.widget_4 = myPlotWidget(self.centralwidget, id=4)
+        self.widget_5 = myPlotWidget(self.centralwidget, id=5)
         self.widget = myPlotWidget(self.centralwidget, id=1)
 
         # list of the widgets
@@ -123,6 +123,10 @@ class signalViewer(ss.Ui_MainWindow):
 
         # Connector slot to the signal from myplotwidget
         self.widget.signal.connect(self.hi)
+        self.widget_2.signal.connect(self.hi)
+        self.widget_3.signal.connect(self.hi)
+        self.widget_4.signal.connect(self.hi)
+        self.widget_5.signal.connect(self.hi)
 
         # Zoom Buttons Configuration
         self.actionZoomIn.triggered.connect(self.zoomin)
@@ -192,19 +196,17 @@ class signalViewer(ss.Ui_MainWindow):
         """
         # Channel 1
         # Setting ranges of the x and y axis
-        self.verticalLayout.addWidget(self.widget)
         self.widget.setXRange(min=0, max=4000)
-        # self.widget.setYRange(min=-1, max=1)
-        # self.widget.setMouseEnabled(x=False, y=False)
         self.widget.setMinimumSize(QtCore.QSize(500, 200))
         self.widget.plotItem.setTitle("Channel 1")
         self.widget.plotItem.addLegend(size=(2, 3))
         self.widget.plotItem.showGrid(True, True, alpha=0.8)
         self.widget.plotItem.setLabel('bottom', text='Time (ms)')
         self.widget.plotItem.enableAutoScale()
-        # self.widget.mousePressEvent(QEvent.GraphicsSceneMouseDoubleClick)
-        self.box = self.widget.plotItem.getViewBox()
-        self.box.setAutoPan(x=True)
+        self.widget.plotItem.getViewBox().setAutoPan(x=True)
+        self.verticalLayout.addWidget(self.widget)
+
+
 
     # Reading Files Functions
     def load_csv_data(self, file_name):
@@ -260,11 +262,9 @@ class signalViewer(ss.Ui_MainWindow):
         '''
         # File name
         name = file_name.split('/')[-1]
-        # if signalViewer.numOfPanels == 0:
         signalViewer.graphs[file_name] = self.widgets[signalViewer.channel].plotItem.plot(chunk, name=name,
                                                                                           pen=self.pens[signalViewer.channel])
-        # else:
-        #     print("You need to add more panels ")
+
 
     def update_plot_data(self):
         '''
@@ -335,10 +335,6 @@ class signalViewer(ss.Ui_MainWindow):
         print("Deleting panels...")
         python = sys.executable
         os.execl(python, python, * sys.argv)
-    #
-    # def delete2(self):
-    #     self.widgets[signalViewer.currentSelected].close()
-    #     self.widgets[signalViewer.currentSelected] = None
 
     def delete(self):
         print('the current is ', signalViewer.currentSelected)
@@ -374,7 +370,6 @@ class signalViewer(ss.Ui_MainWindow):
 
     def addNewPanel(self):
         if signalViewer.AvPanels.empty():
-            #signalViewer.numOfPanels > 3:
             print("No more than 5 plots")
             self.show_popup("Maximum number of channels is 5", "You can't add more than 5 channels, you have to delete one first")
         else:
@@ -384,22 +379,22 @@ class signalViewer(ss.Ui_MainWindow):
             signalViewer.numOfPanels = signalViewer.AvPanels.get()
             signalViewer.ShownPanels.put(signalViewer.numOfPanels)
             signalViewer.numOfPanels -= 1
-            
+
             signalViewer.channel = signalViewer.numOfPanels - 1
 
             # Setup Plot Configuration
-            self.widgets[signalViewer.numOfPanels] = myPlotWidget(self.centralwidget, id=signalViewer.numOfPanels+1)
-            self.verticalLayout.addWidget(self.widgets[signalViewer.numOfPanels])
-            self.widgets[signalViewer.numOfPanels].setEnabled(True)
-            # self.widgets[signalViewer.numOfPanels].setObjectName("widget_3")
+            self.widgets[signalViewer.numOfPanels] = myPlotWidget(self.centralwidget, id=signalViewer.numOfPanels + 1)
+            # self.widgets[signalViewer.numOfPanels].setEnabled(True)
             self.widgets[signalViewer.numOfPanels].setMinimumSize(QtCore.QSize(500, 200))
             self.widgets[signalViewer.numOfPanels].setXRange(min=0, max=4000)
             self.widgets[signalViewer.numOfPanels].setYRange(min=-1, max=1)
-            self.widgets[signalViewer.numOfPanels].plotItem.setTitle("Channel "+str(signalViewer.numOfPanels+1))
+            self.widgets[signalViewer.numOfPanels].plotItem.setTitle("Channel " + str(signalViewer.numOfPanels + 1))
             self.widgets[signalViewer.numOfPanels].plotItem.addLegend(size=(2, 3))
             self.widgets[signalViewer.numOfPanels].plotItem.showGrid(True, True, alpha=0.8)
             self.widgets[signalViewer.numOfPanels].plotItem.setLabel('bottom', text='Time (ms)')
             self.widgets[signalViewer.numOfPanels].plotItem.getViewBox().setAutoPan(x=True)
+
+            self.verticalLayout.addWidget(self.widgets[signalViewer.numOfPanels])
 
 
     def hideChannel_1(self):
