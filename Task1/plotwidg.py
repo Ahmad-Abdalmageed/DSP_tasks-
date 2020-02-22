@@ -143,9 +143,13 @@ class signalViewer(ss.Ui_MainWindow):
 
     # Zoom in Configurations
     def zoomin(self):
-        self.widgets[signalViewer.currentSelected-1].plotItem.getViewBox().scaleBy(0.3)
+        if signalViewer.currentSelected == 0: pass
+        else :
+            self.widgets[signalViewer.currentSelected-1].plotItem.getViewBox().scaleBy(0.3)
     def zoomout(self):
-        self.widgets[signalViewer.currentSelected-1].plotItem.getViewBox().scaleBy(1/0.3)
+        if signalViewer.currentSelected == 0: pass
+        else :
+            self.widgets[signalViewer.currentSelected-1].plotItem.getViewBox().scaleBy(1/0.3)
 
     # Load File
     def load_file(self):
