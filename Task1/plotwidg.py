@@ -1,19 +1,22 @@
 # Importing Packages
-from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtCore import pyqtSignal, pyqtSlot
+from PyQt5 import QtWidgets, uic, QtCore, QtGui
+from PyQt5.QtCore import pyqtSignal, pyqtSlot, QObject
 from PyQt5.QtWidgets import QMessageBox
 import pyqtgraph as pg
 import startstop3 as ss
 import pandas as pd
 from scipy.io import loadmat
 import sys
-import os 
+import os
 import queue as Q
 from sortedcontainers import SortedList
-from pyqtgraph import  PlotWidget
+from pyqtgraph import PlotWidget
+
 
 class myPlotWidget(PlotWidget):
-    signal = pyqtSignal()
+    signal = pyqtSignal(int)  # Signal to send to other slots, containing int which identifies the exct type of the sent
+
+    # data
     def __init__(self, parent, id, background='default', **kwargs):
         super(myPlotWidget, self).__init__(parent=parent, background=background, **kwargs)
         self.id = id
@@ -21,8 +24,13 @@ class myPlotWidget(PlotWidget):
         self.sceneObj.sigMouseClicked.connect(self.select_event)
 
     def select_event(self):
-        print("The Current Selected widget is: ", self.id )
+        """
+        the sender function which is connected to the clicking event of the plotwidget
+        :emit: id of the last clicked widget
+        """
+        # print("The Current Selected widget is: ", self.id )
         self.clicked = True
+        self.signal.emit(self.id)
 
 
 # MainClass of the application
@@ -75,14 +83,16 @@ class signalViewer(ss.Ui_MainWindow):
         self.filename, self.format = None, None
 
         # Initialize the widgets to be none
-        self.widget_2 = None
-        self.widget_3 = None
-        self.widget_4 = None
-        self.widget_5 = None
+        self.widget_2 = myPlotWidget(self.centralwidget, id=2).close()
+        self.widget_3 = myPlotWidget(self.centralwidget, id=3).close()
+        self.widget_4 = myPlotWidget(self.centralwidget, id=4).close()
+        self.widget_5 = myPlotWidget(self.centralwidget, id=5).close()
         self.widget = myPlotWidget(self.centralwidget, id=1)
 
         # list of the widgets
         self.widgets = [self.widget, self.widget_2, self.widget_3, self.widget_4, self.widget_5]
+        self.chkbx = [self.channel1_chk, self.channel2_chk, self.channel3_chk,
+                      self.channel4_chk, self.channel5_chk]
 
         # Setup Queues
         self.AvPanels.put(2)
@@ -92,7 +102,7 @@ class signalViewer(ss.Ui_MainWindow):
         self.ShownPanels.put(1)
 
         # pens configurations
-        self.pens = [pg.mkPen(color=(255, 0, 0)),pg.mkPen(color=(0, 255, 0)),
+        self.pens = [pg.mkPen(color=(255, 0, 0)), pg.mkPen(color=(0, 255, 0)),
                      pg.mkPen(color=(0, 0, 255)), pg.mkPen(color=(200, 87, 125)),
                      pg.mkPen(color=(123, 34, 203))]
 
@@ -107,31 +117,42 @@ class signalViewer(ss.Ui_MainWindow):
         self.channel4_chk.toggled.connect(self.hideChannel_4)
         self.channel5_chk.toggled.connect(self.hideChannel_5)
         self.actionReset.triggered.connect(self.resetAllPanels)
-        self.actionDelete.triggered.connect(self.startDeletingProcess)
+        self.actionDelete.triggered.connect(self.delete)
         self.actionStop.triggered.connect(self.stopSignal)
         self.actionLoad.triggered.connect(self.load_file)
         # Timer Configurations
-        self.get_current_selected()
         self.timer()
         self.view = self.widget.plotItem.getViewBox()
 
+        # Connector slot to the signal from myplotwidget
+        self.widget.signal.connect(self.hi)
 
         # Zoom Buttons Configuration
         self.actionZoomIn.triggered.connect(self.zoomin)
         self.actionZoomOut.triggered.connect(self.zoomout)
 
-    def get_current_selected(self):
-        for i in self.widgets:
-            if i is not None :
-                if i.clicked == True:
-                    self.currentSelected = i.id
-        print('Current selected ', self.currentSelected)
+    def hi(self, data):
+        """
+        testing function to demonstrate how two classes can communicate with each other
+        :param data: sent from myplotwidget
+        :return:  None
+        """
+        print("hi")
+        print('This is the data sent', data)
+        signalViewer.currentSelected = data
 
     # Zoom in Configurations
     def zoomin(self):
-        self.view.scaleBy(0.3)
+        if signalViewer.currentSelected == 0:
+            pass
+        else:
+            self.widgets[signalViewer.currentSelected - 1].plotItem.getViewBox().scaleBy(0.3)
+
     def zoomout(self):
-        self.view.scaleBy(1/0.3)
+        if signalViewer.currentSelected == 0:
+            pass
+        else:
+            self.widgets[signalViewer.currentSelected - 1].plotItem.getViewBox().scaleBy(1 / 0.3)
 
     # Load File
     def load_file(self):
@@ -139,40 +160,42 @@ class signalViewer(ss.Ui_MainWindow):
         Load the File from User and add it to files dictionary
         :return:
         """
-        if signalViewer.ShownPanels.empty():
-            self.show_popup("No visible plots","First Add a plot")
-        else:    
+
+        if signalViewer.currentSelected == 0:
+            self.show_popup('No Selected Pannel', 'First Select a Panel by clicking on it')
+            pass
+        else:
             signalViewer.i = 0
 
             # Stop timer for waiting to upload new file
             self.timer.stop()
 
             # Open File
-            self.filename , self.format= QtWidgets.QFileDialog.getOpenFileName(None, 'Load Signal','/home', "*.csv;;"
-                                                                                                            " *.txt;;"
-                                                                                                            "*.mat")
-            if self.filename == '' :
+            self.filename, self.format = QtWidgets.QFileDialog.getOpenFileName(None, 'Load Signal', '/home', "*.csv;;"
+                                                                                                             " *.txt;;"
+                                                                                                             "*.mat")
+            if self.filename == '':
                 pass
             else:
-                signalViewer.channel += 1
-
-                if signalViewer.channel > 4:
-                    signalViewer.channel = 0
-                    if not self.find(signalViewer.channel):
-                        signalViewer.channel += 1
-
-                # Check if the channel is found in the ShownPanel Queue
-                if (not self.find(signalViewer.channel+1)):
-                    signalViewer.channel -= 1
-                    self.show_popup('Error','Add a new channel first')
-                    pass
+                # signalViewer.channel += 1
+                #
+                # if signalViewer.channel > 4:
+                #     signalViewer.channel = 0
+                #     if not self.find(signalViewer.channel):
+                #         signalViewer.channel += 1
+                #
+                # # Check if the channel is found in the ShownPanel Queue
+                # if (not self.find(signalViewer.channel+1)):
+                #     signalViewer.channel -= 1
+                #     self.show_popup('Error','Add a new channel first')
+                #     pass
+                # else:
+                if self.filename in signalViewer.filenames:
+                    self.show_popup("File Existed", "You already uploaded this file before")
                 else:
-                    if self.filename in signalViewer.filenames:
-                        self.show_popup("File Existed", "You already uploaded this file before")
-                    else:
-                        signalViewer.filenames[self.filename] = self.format
-                        signalViewer.CurUsedFile[signalViewer.channel] = self.filename
-                        self.checkFileExt(signalViewer.filenames)
+                    signalViewer.filenames[self.filename] = self.format
+                    signalViewer.CurUsedFile[signalViewer.channel] = self.filename
+                    self.checkFileExt(signalViewer.filenames)
 
     def plot_conf(self):
         """
@@ -181,19 +204,15 @@ class signalViewer(ss.Ui_MainWindow):
         """
         # Channel 1
         # Setting ranges of the x and y axis
-        self.verticalLayout.addWidget(self.widget)
         self.widget.setXRange(min=0, max=4000)
-        # self.widget.setYRange(min=-1, max=1)
-        # self.widget.setMouseEnabled(x=False, y=False)
         self.widget.setMinimumSize(QtCore.QSize(500, 200))
         self.widget.plotItem.setTitle("Channel 1")
         self.widget.plotItem.addLegend(size=(2, 3))
         self.widget.plotItem.showGrid(True, True, alpha=0.8)
         self.widget.plotItem.setLabel('bottom', text='Time (ms)')
         self.widget.plotItem.enableAutoScale()
-        # self.widget.mousePressEvent(QEvent.GraphicsSceneMouseDoubleClick)
-        self.box = self.widget.plotItem.getViewBox()
-        self.box.setAutoPan(x=True)
+        self.widget.plotItem.getViewBox().setAutoPan(x=True)
+        self.verticalLayout.addWidget(self.widget)
 
     # Reading Files Functions
     def load_csv_data(self, file_name):
@@ -202,14 +221,16 @@ class signalViewer(ss.Ui_MainWindow):
         :param file_name: file path ... string
         :return:
         """
-        if file_name in signalViewer.channels :
+        if file_name in signalViewer.channels:
             print("You Already Loaded this file1")
         else:
             # Return dataFrame (data)
             signalViewer.channels[file_name] = pd.read_csv(file_name)
 
             # Return y chunk (data line)
-            signalViewer.chunks[file_name] = signalViewer.channels[file_name].iloc[:1,1]
+            signalViewer.chunks[file_name] = signalViewer.channels[file_name].iloc[:1, 1]
+
+            self.deletePreviousSignal()
 
             # Plot chunk
             self.plot(file_name, signalViewer.chunks[file_name])
@@ -226,6 +247,7 @@ class signalViewer(ss.Ui_MainWindow):
             mat_file = loadmat(file_name)
             signalViewer.channels[file_name] = pd.DataFrame(mat_file['F'])
             signalViewer.chunks[file_name] = signalViewer.channels[file_name].iloc[:1, 1]
+            self.deletePreviousSignal()
             self.plot(file_name, signalViewer.chunks[file_name])
 
     def load_txt_data(self, file_name):
@@ -236,11 +258,11 @@ class signalViewer(ss.Ui_MainWindow):
         """
         if file_name in signalViewer.channels:
             print("You already loaded this file3")
-        else :
-            signalViewer.channels[file_name] = pd.read_csv(file_name, skiprows=[i for i in range(1500,7657)])
+        else:
+            signalViewer.channels[file_name] = pd.read_csv(file_name, skiprows=[i for i in range(1500, 7657)])
             signalViewer.chunks[file_name] = signalViewer.channels[file_name].iloc[:1, 2]
+            self.deletePreviousSignal()
             self.plot(file_name, signalViewer.chunks[file_name])
-
 
     def plot(self, file_name, chunk):
         '''
@@ -249,11 +271,9 @@ class signalViewer(ss.Ui_MainWindow):
         '''
         # File name
         name = file_name.split('/')[-1]
-        # if signalViewer.numOfPanels == 0:
-        signalViewer.graphs[file_name] = self.widgets[signalViewer.channel].plotItem.plot(chunk, name=name,
-                                                                                          pen=self.pens[signalViewer.channel])
-        # else:
-        #     print("You need to add more panels ")
+        signalViewer.graphs[file_name] = self.widgets[signalViewer.currentSelected - 1].plotItem.plot(chunk, name=name,
+                                                                                                      pen=self.pens[
+                                                                                                          signalViewer.currentSelected - 1])
 
     def update_plot_data(self):
         '''
@@ -264,8 +284,9 @@ class signalViewer(ss.Ui_MainWindow):
         for chunk in signalViewer.chunks:
             signalViewer.i += 30
             signalViewer.chunks[chunk] = pd.concat([signalViewer.chunks[chunk],
-                                                    signalViewer.channels[chunk].iloc[signalViewer.i:signalViewer.i+self.speed, 1]],
-                                                   axis=0,sort=True)
+                                                    signalViewer.channels[chunk].iloc[
+                                                    signalViewer.i:signalViewer.i + self.speed, 1]],
+                                                   axis=0, sort=True)
             # graph ->> file_name is the key
             signalViewer.graphs[chunk].setData(signalViewer.chunks[chunk])
 
@@ -279,7 +300,6 @@ class signalViewer(ss.Ui_MainWindow):
         self.timer.timeout.connect(self.update_plot_data)
         self.start_timer()
         self.pause_timer()
-
 
     def start_timer(self):
         '''
@@ -298,7 +318,7 @@ class signalViewer(ss.Ui_MainWindow):
     def stopSignal(self):
         signalViewer.i = 0
         signalViewer.chunks = dict()
-        #self.show_popup("Signal has stopped", "You have terminated the signal.. upload it again to view it")
+        # self.show_popup("Signal has stopped", "You have terminated the signal.. upload it again to view it")
 
     def checkFileExt(self, file):
         """
@@ -315,7 +335,7 @@ class signalViewer(ss.Ui_MainWindow):
                 self.load_mat_data(i[0])
 
     def resetAllPanels(self):
-        
+
         """
         Restarts the current program.
         Note: this function does not return. Any cleanup action (like
@@ -323,86 +343,93 @@ class signalViewer(ss.Ui_MainWindow):
         """
         print("Deleting panels...")
         python = sys.executable
-        os.execl(python, python, * sys.argv)
-    
-    def delete(self,panel):
-        num = int(panel.text())
+        os.execl(python, python, *sys.argv)
+
+    def delete(self):
+        print('the current is ', signalViewer.currentSelected)
+        num = signalViewer.currentSelected
         signalViewer.LsShownPanels.clear()
         while not signalViewer.ShownPanels.empty():
             signalViewer.LsShownPanels.add(signalViewer.ShownPanels.get())
-        if not signalViewer.LsShownPanels.__contains__(num):
-            print("No plots to delete")
-            self.show_popup("Channel doesn't exist","Choose an existing panel")
+        # if not signalViewer.LsShownPanels.__contains__(num):
+        #     print("No plots to delete")
+        #     self.show_popup("Channel doesn't exist","Choose an existing panel")
+        if signalViewer.currentSelected == 0:
+            self.show_popup("No Channel Selected", "Choose an existing panel")
         else:
-            #signalViewer.numOfPanels = signalViewer.ShownPanels.get()
+            # signalViewer.numOfPanels = signalViewer.ShownPanels.get()
             signalViewer.AvPanels.put(num)
-            signalViewer.LsShownPanels.remove(num)
+            # signalViewer.LsShownPanels.remove(num)
             num -= 1
             self.widgets[num].close()
+            self.chkbx[num].setEnabled(False)
             self.widgets[num] = None
             if num in signalViewer.CurUsedFile:
                 del signalViewer.filenames[signalViewer.CurUsedFile[num]]
                 del signalViewer.channels[signalViewer.CurUsedFile[num]]
                 del signalViewer.CurUsedFile[num]
             self.stopSignal()
-            for x in range(signalViewer.LsShownPanels.__len__()) :
+            for x in range(signalViewer.LsShownPanels.__len__()):
                 signalViewer.ShownPanels.put(signalViewer.LsShownPanels.pop())
 
-    def find(self,num):
+            # Return currentSelected to normal state
+            signalViewer.currentSelected = 0
+
+    def find(self, num):
         while not signalViewer.ShownPanels.empty():
             signalViewer.LsShownPanels.add(signalViewer.ShownPanels.get())
         found = signalViewer.LsShownPanels.__contains__(num)
-        for x in range(signalViewer.LsShownPanels.__len__()) :
-                signalViewer.ShownPanels.put(signalViewer.LsShownPanels.pop())
+        for x in range(signalViewer.LsShownPanels.__len__()):
+            signalViewer.ShownPanels.put(signalViewer.LsShownPanels.pop())
         return found
 
     def addNewPanel(self):
         if signalViewer.AvPanels.empty():
-            #signalViewer.numOfPanels > 3:
             print("No more than 5 plots")
-            self.show_popup("Maximum number of channels is 5", "You can't add more than 5 channels, you have to delete one first")
+            self.show_popup("Maximum number of channels is 5",
+                            "You can't add more than 5 channels, you have to delete one first")
         else:
-            #signalViewer.numOfPanels += 1
-            #if not signalViewer.AvPanels.empty() :
+            # signalViewer.numOfPanels += 1
+            # if not signalViewer.AvPanels.empty() :
             # Adjusting Queues
             signalViewer.numOfPanels = signalViewer.AvPanels.get()
             signalViewer.ShownPanels.put(signalViewer.numOfPanels)
             signalViewer.numOfPanels -= 1
-            
+
             signalViewer.channel = signalViewer.numOfPanels - 1
 
             # Setup Plot Configuration
-            self.widgets[signalViewer.numOfPanels] = myPlotWidget(self.centralwidget, id=signalViewer.numOfPanels+1)
-            self.verticalLayout.addWidget(self.widgets[signalViewer.numOfPanels])
+            self.widgets[signalViewer.numOfPanels] = myPlotWidget(self.centralwidget, id=signalViewer.numOfPanels + 1)
             self.widgets[signalViewer.numOfPanels].setEnabled(True)
-            # self.widgets[signalViewer.numOfPanels].setObjectName("widget_3")
             self.widgets[signalViewer.numOfPanels].setMinimumSize(QtCore.QSize(500, 200))
             self.widgets[signalViewer.numOfPanels].setXRange(min=0, max=4000)
             self.widgets[signalViewer.numOfPanels].setYRange(min=-1, max=1)
-            self.widgets[signalViewer.numOfPanels].plotItem.setTitle("Channel "+str(signalViewer.numOfPanels+1))
+            self.widgets[signalViewer.numOfPanels].plotItem.setTitle("Channel " + str(signalViewer.numOfPanels + 1))
             self.widgets[signalViewer.numOfPanels].plotItem.addLegend(size=(2, 3))
             self.widgets[signalViewer.numOfPanels].plotItem.showGrid(True, True, alpha=0.8)
             self.widgets[signalViewer.numOfPanels].plotItem.setLabel('bottom', text='Time (ms)')
-            self.verticalLayout.addWidget(self.widgets[signalViewer.numOfPanels])
+            self.widgets[signalViewer.numOfPanels].plotItem.enableAutoScale()
             self.widgets[signalViewer.numOfPanels].plotItem.getViewBox().setAutoPan(x=True)
-
+            self.widgets[signalViewer.numOfPanels].signal.connect(self.hi)
+            self.verticalLayout.addWidget(self.widgets[signalViewer.numOfPanels])
+            self.chkbx[signalViewer.numOfPanels].setEnabled(True)
 
     def hideChannel_1(self):
-        if self.widgets[0] is None :
+        if self.widgets[0] is None:
             self.show_popup("Channel Doesn`t exist", "You didn`t add this channel")
             self.channel1_chk.setChecked(True)
         else:
             self.widgets[0].setHidden(not self.widgets[0].isHidden())
 
     def hideChannel_2(self):
-        if self.widgets[1] is None :
+        if self.widgets[1] is None:
             self.show_popup("Channel Doesn`t exist", "You didn`t add this channel")
             self.channel2_chk.setChecked(True)
         else:
             self.widgets[1].setHidden(not self.widgets[1].isHidden())
 
     def hideChannel_3(self):
-        if self.widgets[2] is None :
+        if self.widgets[2] is None:
             self.show_popup("Channel Doesn`t exist", "You didn`t add this channel")
             self.channel3_chk.setChecked(True)
 
@@ -410,14 +437,14 @@ class signalViewer(ss.Ui_MainWindow):
             self.widgets[2].setHidden(not self.widgets[2].isHidden())
 
     def hideChannel_4(self):
-        if self.widgets[3] is None :
+        if self.widgets[3] is None:
             self.show_popup("Channel Doesn`t exist", "You didn`t add this channel")
             self.channel4_chk.setChecked(True)
-        else :
+        else:
             self.widgets[3].setHidden(not self.widgets[3].isHidden())
 
     def hideChannel_5(self):
-        if self.widgets[4] is None :
+        if self.widgets[4] is None:
             self.show_popup("Channel Doesn`t exist", "You didn`t add this channel")
             self.channel5_chk.setChecked(True)
         else:
@@ -428,10 +455,9 @@ class signalViewer(ss.Ui_MainWindow):
         msg.setWindowTitle("Popup Message")
         msg.setText(message)
         msg.setIcon(QMessageBox.Warning)
-        msg.setStandardButtons(QMessageBox.Cancel | QMessageBox.Retry | QMessageBox.Ignore)
-        msg.setDefaultButton(QMessageBox.Ignore)
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.setDefaultButton(QMessageBox.Ok)
         msg.setInformativeText(info)
-        msg.setDetailedText("details")
         # msg.buttonClicked.connect(self.popup_button)
         x = msg.exec_()
 
@@ -455,9 +481,16 @@ class signalViewer(ss.Ui_MainWindow):
         panel4 = msg.addButton("4", msg.ActionRole)
         panel5 = msg.addButton("5", msg.ActionRole)
 
-        #msg.buttonClicked.connect(self.deletePanel)
+        # msg.buttonClicked.connect(self.deletePanel)
         msg.buttonClicked.connect(self.delete)
         x = msg.exec_()
+
+
+    def deletePreviousSignal(self):
+        # clear the previous data line
+        self.widgets[signalViewer.currentSelected - 1].plotItem.clear()
+
+        # Remove the legend and add the new one
 
 def main():
     '''
