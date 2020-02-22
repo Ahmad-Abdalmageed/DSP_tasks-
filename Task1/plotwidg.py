@@ -82,10 +82,10 @@ class signalViewer(ss.Ui_MainWindow):
         self.filename, self.format = None, None
 
         # Initialize the widgets to be none
-        self.widget_2 = myPlotWidget(self.centralwidget, id=2)
-        self.widget_3 = myPlotWidget(self.centralwidget, id=3)
-        self.widget_4 = myPlotWidget(self.centralwidget, id=4)
-        self.widget_5 = myPlotWidget(self.centralwidget, id=5)
+        self.widget_2 = myPlotWidget(self.centralwidget, id=2).close()
+        self.widget_3 = myPlotWidget(self.centralwidget, id=3).close()
+        self.widget_4 = myPlotWidget(self.centralwidget, id=4).close()
+        self.widget_5 = myPlotWidget(self.centralwidget, id=5).close()
         self.widget = myPlotWidget(self.centralwidget, id=1)
 
         # list of the widgets
@@ -123,10 +123,7 @@ class signalViewer(ss.Ui_MainWindow):
 
         # Connector slot to the signal from myplotwidget
         self.widget.signal.connect(self.hi)
-        self.widget_2.signal.connect(self.hi)
-        self.widget_3.signal.connect(self.hi)
-        self.widget_4.signal.connect(self.hi)
-        self.widget_5.signal.connect(self.hi)
+
 
         # Zoom Buttons Configuration
         self.actionZoomIn.triggered.connect(self.zoomin)
@@ -384,7 +381,7 @@ class signalViewer(ss.Ui_MainWindow):
 
             # Setup Plot Configuration
             self.widgets[signalViewer.numOfPanels] = myPlotWidget(self.centralwidget, id=signalViewer.numOfPanels + 1)
-            # self.widgets[signalViewer.numOfPanels].setEnabled(True)
+            self.widgets[signalViewer.numOfPanels].setEnabled(True)
             self.widgets[signalViewer.numOfPanels].setMinimumSize(QtCore.QSize(500, 200))
             self.widgets[signalViewer.numOfPanels].setXRange(min=0, max=4000)
             self.widgets[signalViewer.numOfPanels].setYRange(min=-1, max=1)
@@ -393,7 +390,7 @@ class signalViewer(ss.Ui_MainWindow):
             self.widgets[signalViewer.numOfPanels].plotItem.showGrid(True, True, alpha=0.8)
             self.widgets[signalViewer.numOfPanels].plotItem.setLabel('bottom', text='Time (ms)')
             self.widgets[signalViewer.numOfPanels].plotItem.getViewBox().setAutoPan(x=True)
-
+            self.widgets[signalViewer.numOfPanels].signal.connect(self.hi)
             self.verticalLayout.addWidget(self.widgets[signalViewer.numOfPanels])
 
 
