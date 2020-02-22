@@ -1,6 +1,6 @@
 # Importing Packages
-from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtCore import pyqtSignal, pyqtSlot
+from PyQt5 import QtWidgets, uic, QtCore, QtGui
+from PyQt5.QtCore import pyqtSignal, pyqtSlot, QObject
 from PyQt5.QtWidgets import QMessageBox
 import pyqtgraph as pg
 import startstop3 as ss
@@ -13,7 +13,8 @@ from sortedcontainers import SortedList
 from pyqtgraph import  PlotWidget
 
 class myPlotWidget(PlotWidget):
-    signal = pyqtSignal()
+    signal = pyqtSignal(int) # Signal to send to other slots, containing int which identifies the exct type of the sent
+                             # data
     def __init__(self, parent, id, background='default', **kwargs):
         super(myPlotWidget, self).__init__(parent=parent, background=background, **kwargs)
         self.id = id
@@ -21,8 +22,14 @@ class myPlotWidget(PlotWidget):
         self.sceneObj.sigMouseClicked.connect(self.select_event)
 
     def select_event(self):
+        """
+        the sender function which is connected to the clicking event of the plotwidget
+        :emit: id of the last clicked widget
+        """
         print("The Current Selected widget is: ", self.id )
         self.clicked = True
+        self.signal.emit(self.id)
+
 
 
 # MainClass of the application
@@ -107,25 +114,29 @@ class signalViewer(ss.Ui_MainWindow):
         self.channel4_chk.toggled.connect(self.hideChannel_4)
         self.channel5_chk.toggled.connect(self.hideChannel_5)
         self.actionReset.triggered.connect(self.resetAllPanels)
-        self.actionDelete.triggered.connect(self.startDeletingProcess)
+        self.actionDelete.triggered.connect(self.delete)
         self.actionStop.triggered.connect(self.stopSignal)
         self.actionLoad.triggered.connect(self.load_file)
         # Timer Configurations
-        self.get_current_selected()
         self.timer()
         self.view = self.widget.plotItem.getViewBox()
 
+        # Connector slot to the signal from myplotwidget
+        self.widget.signal.connect(self.hi)
 
         # Zoom Buttons Configuration
         self.actionZoomIn.triggered.connect(self.zoomin)
         self.actionZoomOut.triggered.connect(self.zoomout)
 
-    def get_current_selected(self):
-        for i in self.widgets:
-            if i is not None :
-                if i.clicked == True:
-                    self.currentSelected = i.id
-        print('Current selected ', self.currentSelected)
+    def hi(self, data):
+        """
+        testing function to demonstrate how two classes can communicate with each other
+        :param data: sent from myplotwidget
+        :return:  None
+        """
+        print("hi")
+        print('This is the data sent', data)
+        signalViewer.currentSelected = data
 
     # Zoom in Configurations
     def zoomin(self):
@@ -324,9 +335,14 @@ class signalViewer(ss.Ui_MainWindow):
         print("Deleting panels...")
         python = sys.executable
         os.execl(python, python, * sys.argv)
-    
-    def delete(self,panel):
-        num = int(panel.text())
+    #
+    # def delete2(self):
+    #     self.widgets[signalViewer.currentSelected].close()
+    #     self.widgets[signalViewer.currentSelected] = None
+
+    def delete(self):
+        print('the current is ', signalViewer.currentSelected)
+        num = signalViewer.currentSelected
         signalViewer.LsShownPanels.clear()
         while not signalViewer.ShownPanels.empty():
             signalViewer.LsShownPanels.add(signalViewer.ShownPanels.get())
@@ -383,7 +399,6 @@ class signalViewer(ss.Ui_MainWindow):
             self.widgets[signalViewer.numOfPanels].plotItem.addLegend(size=(2, 3))
             self.widgets[signalViewer.numOfPanels].plotItem.showGrid(True, True, alpha=0.8)
             self.widgets[signalViewer.numOfPanels].plotItem.setLabel('bottom', text='Time (ms)')
-            self.verticalLayout.addWidget(self.widgets[signalViewer.numOfPanels])
             self.widgets[signalViewer.numOfPanels].plotItem.getViewBox().setAutoPan(x=True)
 
 
