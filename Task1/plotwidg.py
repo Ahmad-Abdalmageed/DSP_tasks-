@@ -409,7 +409,7 @@ class signalViewer(ss.Ui_MainWindow):
             self.widgets[signalViewer.numOfPanels] = myPlotWidget(self.centralwidget, id=signalViewer.numOfPanels + 1)
             self.widgets[signalViewer.numOfPanels].setEnabled(True)
             self.widgets[signalViewer.numOfPanels].setMinimumSize(QtCore.QSize(500, 200))
-            self.widgets[signalViewer.numOfPanels].setXRange(min=0, max=4000)
+            self.widgets[signalViewer.numOfPanels].setXRange(min=0, max=1000)
             self.widgets[signalViewer.numOfPanels].setYRange(min=-1, max=1)
             self.widgets[signalViewer.numOfPanels].plotItem.setTitle("Channel " + str(signalViewer.numOfPanels + 1))
             self.widgets[signalViewer.numOfPanels].plotItem.addLegend(size=(2, 3))
