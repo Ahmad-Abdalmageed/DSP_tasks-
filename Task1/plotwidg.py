@@ -278,24 +278,26 @@ class signalViewer(ss.Ui_MainWindow):
         '''
         # File name
         name = file_name.split('/')[-1]
-        signalViewer.graphs[file_name] = self.widgets[signalViewer.currentSelected-1].plotItem.plot(chunk, name=name,
-                                                                                          pen=self.pens[signalViewer.currentSelected-1])
+        # signalViewer.graphs[file_name] = self.widgets[signalViewer.currentSelected-1].plotItem.plot(chunk, name=name,
+        #                                                                                   pen=self.pens[signalViewer.currentSelected-1])
+        signalViewer.graphs[name] = self.widgets[signalViewer.currentSelected - 1].plotItem.plot(chunk, name=name,
+                                                                                                      pen=self.pens[
+                                                                                                          signalViewer.currentSelected - 1])
 
-
-    def update_plot_data(self):
-        '''
-        update function .... add chunks to self.y from loaded data self.data
-        :return:
-        '''
-        # Iterate over keys (chunk) in chnuks dictionary
-        for chunk in signalViewer.chunks:
-            signalViewer.i += 30
-            signalViewer.chunks[chunk] = pd.concat([signalViewer.chunks[chunk],
-                                                    signalViewer.channels[chunk].iloc[
-                                                    signalViewer.i:signalViewer.i + self.speed, 1]],
-                                                   axis=0, sort=True)
-            # graph ->> file_name is the key
-            signalViewer.graphs[chunk].setData(signalViewer.chunks[chunk])
+    # def update_plot_data(self):
+    #     '''
+    #     update function .... add chunks to self.y from loaded data self.data
+    #     :return:
+    #     '''
+    #     # Iterate over keys (chunk) in chnuks dictionary
+    #     for chunk in signalViewer.chunks:
+    #         signalViewer.i += 30
+    #         signalViewer.chunks[chunk] = pd.concat([signalViewer.chunks[chunk],
+    #                                                 signalViewer.channels[chunk].iloc[
+    #                                                 signalViewer.i:signalViewer.i + self.speed, 1]],
+    #                                                axis=0, sort=True)
+    #         # graph ->> file_name is the key
+    #         signalViewer.graphs[chunk].setData(signalViewer.chunks[chunk])
 
     # def timer(self):
     #     """
@@ -463,6 +465,11 @@ class signalViewer(ss.Ui_MainWindow):
         msg.buttonClicked.connect(self.delete)
         x = msg.exec_()
 
+    def startMovingView(self):
+        signalViewer.columnLength = self.graphs
+
+
+    # def stopMovingView(self):
 
     def deletePreviousSignal(self):
         # clear the previous data line
