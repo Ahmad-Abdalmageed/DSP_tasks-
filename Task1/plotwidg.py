@@ -207,6 +207,9 @@ class signalViewer(ss.Ui_MainWindow):
         self.widget.setXRange(min=0, max=4000)
         self.widget.setMinimumSize(QtCore.QSize(500, 200))
         self.widget.plotItem.setTitle("Channel 1")
+        # self.legend = pg.LegendItem(size=(2, 3), offset=(80, 80))
+        # self.legend.setParentItem(self.widget.plotItem.graphicsItem())
+        # self.legend.addItem(self.widget.plotItem, "Plot111")
         self.widget.plotItem.addLegend(size=(2, 3))
         self.widget.plotItem.showGrid(True, True, alpha=0.8)
         self.widget.plotItem.setLabel('bottom', text='Time (ms)')
@@ -491,6 +494,10 @@ class signalViewer(ss.Ui_MainWindow):
         self.widgets[signalViewer.currentSelected - 1].plotItem.clear()
 
         # Remove the legend and add the new one
+        # print(self.widgets[signalViewer.currentSelected - 1].getPlotItem().legend.items)
+        # self.widgets[signalViewer.currentSelected - 1].getPlotItem().legend.items = []
+        # print(self.widgets[signalViewer.currentSelected - 1].getPlotItem().legend.items)
+
 
 def main():
     '''
