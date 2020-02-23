@@ -41,6 +41,9 @@
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
         <widget class="QCheckBox" name="channel1_chk">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
          <property name="text">
           <string>Channel 1</string>
          </property>
@@ -55,7 +58,7 @@
        <item>
         <widget class="QCheckBox" name="channel2_chk">
          <property name="enabled">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
          <property name="text">
           <string>Channel 2 </string>
@@ -66,10 +69,16 @@
          <property name="checked">
           <bool>true</bool>
          </property>
+         <property name="tristate">
+          <bool>false</bool>
+         </property>
         </widget>
        </item>
        <item>
         <widget class="QCheckBox" name="channel3_chk">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Channel 3</string>
          </property>
@@ -80,6 +89,9 @@
        </item>
        <item>
         <widget class="QCheckBox" name="channel4_chk">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Channel 4</string>
          </property>
@@ -90,6 +102,9 @@
        </item>
        <item>
         <widget class="QCheckBox" name="channel5_chk">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Channel 5 </string>
          </property>

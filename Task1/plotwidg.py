@@ -33,6 +33,7 @@ class myPlotWidget(PlotWidget):
         self.signal.emit(self.id)
 
 
+
 # MainClass of the application
 class signalViewer(ss.Ui_MainWindow):
     # counter represents the chunks size of data to be loaded
@@ -127,6 +128,7 @@ class signalViewer(ss.Ui_MainWindow):
         # Connector slot to the signal from myplotwidget
         self.widget.signal.connect(self.hi)
 
+
         # Zoom Buttons Configuration
         self.actionZoomIn.triggered.connect(self.zoomin)
         self.actionZoomOut.triggered.connect(self.zoomout)
@@ -217,6 +219,8 @@ class signalViewer(ss.Ui_MainWindow):
         self.widget.plotItem.getViewBox().setAutoPan(x=True)
         self.verticalLayout.addWidget(self.widget)
 
+
+
     # Reading Files Functions
     def load_csv_data(self, file_name):
         """
@@ -274,9 +278,9 @@ class signalViewer(ss.Ui_MainWindow):
         '''
         # File name
         name = file_name.split('/')[-1]
-        signalViewer.graphs[file_name] = self.widgets[signalViewer.currentSelected - 1].plotItem.plot(chunk, name=name,
-                                                                                                      pen=self.pens[
-                                                                                                          signalViewer.currentSelected - 1])
+        signalViewer.graphs[file_name] = self.widgets[signalViewer.currentSelected-1].plotItem.plot(chunk, name=name,
+                                                                                          pen=self.pens[signalViewer.currentSelected-1])
+
 
     def update_plot_data(self):
         '''
