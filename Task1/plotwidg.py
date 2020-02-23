@@ -92,8 +92,7 @@ class signalViewer(ss.Ui_MainWindow):
 
         # list of the widgets
         self.widgets = [self.widget, self.widget_2, self.widget_3, self.widget_4, self.widget_5]
-        self.chkbx = [self.channel1_chk, self.channel2_chk, self.channel3_chk,
-                      self.channel4_chk, self.channel5_chk]
+        self.checkBoxes = [self.channel1_chk, self.channel2_chk, self.channel3_chk, self.channel4_chk, self.channel5_chk]
 
         # Setup Queues
         self.AvPanels.put(2)
@@ -112,17 +111,19 @@ class signalViewer(ss.Ui_MainWindow):
 
         # Load Button connector checked
         self.actionAdd.triggered.connect(self.addNewPanel)
-        self.channel1_chk.toggled.connect(self.hideChannel_1)
-        self.channel2_chk.toggled.connect(self.hideChannel_2)
-        self.channel3_chk.toggled.connect(self.hideChannel_3)
-        self.channel4_chk.toggled.connect(self.hideChannel_4)
-        self.channel5_chk.toggled.connect(self.hideChannel_5)
+
+        self.checkBoxes[0].toggled.connect(lambda: self.hideChannel(0))
+        self.checkBoxes[1].toggled.connect(lambda: self.hideChannel(1))
+        self.checkBoxes[2].toggled.connect(lambda: self.hideChannel(2))
+        self.checkBoxes[3].toggled.connect(lambda: self.hideChannel(3))
+        self.checkBoxes[4].toggled.connect(lambda: self.hideChannel(4))
+
         self.actionReset.triggered.connect(self.resetAllPanels)
         self.actionDelete.triggered.connect(self.delete)
         self.actionStop.triggered.connect(self.stopSignal)
         self.actionLoad.triggered.connect(self.load_file)
         # Timer Configurations
-        self.timer()
+        # self.timer()
         self.view = self.widget.plotItem.getViewBox()
 
         # Connector slot to the signal from myplotwidget
@@ -139,7 +140,6 @@ class signalViewer(ss.Ui_MainWindow):
         :param data: sent from myplotwidget
         :return:  None
         """
-        print("hi")
         print('This is the data sent', data)
         signalViewer.currentSelected = data
 
@@ -170,7 +170,7 @@ class signalViewer(ss.Ui_MainWindow):
             signalViewer.i = 0
 
             # Stop timer for waiting to upload new file
-            self.timer.stop()
+            # self.timer.stop()
 
             # Open File
             self.filename, self.format = QtWidgets.QFileDialog.getOpenFileName(None, 'Load Signal', '/home', "*.csv;;"
@@ -235,7 +235,7 @@ class signalViewer(ss.Ui_MainWindow):
             signalViewer.channels[file_name] = pd.read_csv(file_name)
 
             # Return y chunk (data line)
-            signalViewer.chunks[file_name] = signalViewer.channels[file_name].iloc[:1, 1]
+            signalViewer.chunks[file_name] = signalViewer.channels[file_name].iloc[:, 1]
 
             self.deletePreviousSignal()
 
@@ -253,7 +253,7 @@ class signalViewer(ss.Ui_MainWindow):
         else:
             mat_file = loadmat(file_name)
             signalViewer.channels[file_name] = pd.DataFrame(mat_file['F'])
-            signalViewer.chunks[file_name] = signalViewer.channels[file_name].iloc[:1, 1]
+            signalViewer.chunks[file_name] = signalViewer.channels[file_name].iloc[:, 1]
             self.deletePreviousSignal()
             self.plot(file_name, signalViewer.chunks[file_name])
 
@@ -267,7 +267,7 @@ class signalViewer(ss.Ui_MainWindow):
             print("You already loaded this file3")
         else:
             signalViewer.channels[file_name] = pd.read_csv(file_name, skiprows=[i for i in range(1500, 7657)])
-            signalViewer.chunks[file_name] = signalViewer.channels[file_name].iloc[:1, 2]
+            signalViewer.chunks[file_name] = signalViewer.channels[file_name].iloc[:, 2]
             self.deletePreviousSignal()
             self.plot(file_name, signalViewer.chunks[file_name])
 
@@ -297,30 +297,30 @@ class signalViewer(ss.Ui_MainWindow):
             # graph ->> file_name is the key
             signalViewer.graphs[chunk].setData(signalViewer.chunks[chunk])
 
-    def timer(self):
-        """
-        Timer function that executes the data updating for every n ms
-        :return:
-        """
-        self.timer = QtCore.QTimer()
-        self.timer.setInterval(50)
-        self.timer.timeout.connect(self.update_plot_data)
-        self.start_timer()
-        self.pause_timer()
-
-    def start_timer(self):
-        '''
-        Event of clicking the start button which starts the signal plotting
-        :return:
-        '''
-        self.actionStart.triggered.connect(self.timer.start)
-
-    def pause_timer(self):
-        '''
-        Event of clicking the stop button which stops the signal plotting
-        :return:
-        '''
-        self.actionPause.triggered.connect(self.timer.stop)
+    # def timer(self):
+    #     """
+    #     Timer function that executes the data updating for every n ms
+    #     :return:
+    #     """
+    #     self.timer = QtCore.QTimer()
+    #     self.timer.setInterval(50)
+    #     self.timer.timeout.connect(self.update_plot_data)
+    #     self.start_timer()
+    #     self.pause_timer()
+    #
+    # def start_timer(self):
+    #     '''
+    #     Event of clicking the start button which starts the signal plotting
+    #     :return:
+    #     '''
+    #     self.actionStart.triggered.connect(self.timer.start)
+    #
+    # def pause_timer(self):
+    #     '''
+    #     Event of clicking the stop button which stops the signal plotting
+    #     :return:
+    #     '''
+    #     self.actionPause.triggered.connect(self.timer.stop)
 
     def stopSignal(self):
         signalViewer.i = 0
@@ -369,7 +369,7 @@ class signalViewer(ss.Ui_MainWindow):
             # signalViewer.LsShownPanels.remove(num)
             num -= 1
             self.widgets[num].close()
-            self.chkbx[num].setEnabled(False)
+            self.checkBoxes[num].setEnabled(False)
             self.widgets[num] = None
             if num in signalViewer.CurUsedFile:
                 del signalViewer.filenames[signalViewer.CurUsedFile[num]]
@@ -419,43 +419,14 @@ class signalViewer(ss.Ui_MainWindow):
             self.widgets[signalViewer.numOfPanels].plotItem.getViewBox().setAutoPan(x=True)
             self.widgets[signalViewer.numOfPanels].signal.connect(self.hi)
             self.verticalLayout.addWidget(self.widgets[signalViewer.numOfPanels])
-            self.chkbx[signalViewer.numOfPanels].setEnabled(True)
+            self.checkBoxes[signalViewer.numOfPanels].setEnabled(True)
 
-    def hideChannel_1(self):
-        if self.widgets[0] is None:
+    def hideChannel(self, checkNumber):
+        if self.widgets[checkNumber] is None:
             self.show_popup("Channel Doesn`t exist", "You didn`t add this channel")
-            self.channel1_chk.setChecked(True)
+            self.checkBoxes[checkNumber].setChecked(True)
         else:
-            self.widgets[0].setHidden(not self.widgets[0].isHidden())
-
-    def hideChannel_2(self):
-        if self.widgets[1] is None:
-            self.show_popup("Channel Doesn`t exist", "You didn`t add this channel")
-            self.channel2_chk.setChecked(True)
-        else:
-            self.widgets[1].setHidden(not self.widgets[1].isHidden())
-
-    def hideChannel_3(self):
-        if self.widgets[2] is None:
-            self.show_popup("Channel Doesn`t exist", "You didn`t add this channel")
-            self.channel3_chk.setChecked(True)
-
-        else:
-            self.widgets[2].setHidden(not self.widgets[2].isHidden())
-
-    def hideChannel_4(self):
-        if self.widgets[3] is None:
-            self.show_popup("Channel Doesn`t exist", "You didn`t add this channel")
-            self.channel4_chk.setChecked(True)
-        else:
-            self.widgets[3].setHidden(not self.widgets[3].isHidden())
-
-    def hideChannel_5(self):
-        if self.widgets[4] is None:
-            self.show_popup("Channel Doesn`t exist", "You didn`t add this channel")
-            self.channel5_chk.setChecked(True)
-        else:
-            self.widgets[4].setHidden(not self.widgets[4].isHidden())
+            self.widgets[checkNumber].setHidden(not self.widgets[checkNumber].isHidden())
 
     def show_popup(self, message, info):
         msg = QMessageBox()
