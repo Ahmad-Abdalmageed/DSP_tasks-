@@ -3,7 +3,7 @@ from PyQt5 import QtWidgets, uic, QtCore, QtGui
 from PyQt5.QtCore import pyqtSignal, pyqtSlot, QObject
 from PyQt5.QtWidgets import QMessageBox
 import pyqtgraph as pg
-import startstop3 as ss
+import testScroll as ss
 import pandas as pd
 from scipy.io import loadmat
 import sys
@@ -12,7 +12,6 @@ import queue as Q
 from sortedcontainers import SortedList
 from pyqtgraph import PlotWidget
 
-
 class myPlotWidget(PlotWidget):
     signal = pyqtSignal(int)  # Signal to send to other slots, containing int which identifies the exct type of the sent
 
@@ -20,18 +19,17 @@ class myPlotWidget(PlotWidget):
     def __init__(self, parent, id, background='default', **kwargs):
         super(myPlotWidget, self).__init__(parent=parent, background=background, **kwargs)
         self.id = id
-        self.clicked = False
         self.sceneObj.sigMouseClicked.connect(self.select_event)
-
+        # self.sceneObj.sigMouseHover.connect(self.hover)
     def select_event(self):
         """
         the sender function which is connected to the clicking event of the plotwidget
         :emit: id of the last clicked widget
         """
-        # print("The Current Selected widget is: ", self.id )
-        self.clicked = True
         self.signal.emit(self.id)
 
+    # def hover(self):
+    #     print("hovering")
 
 
 # MainClass of the application
@@ -122,6 +120,8 @@ class signalViewer(ss.Ui_MainWindow):
         self.actionDelete.triggered.connect(self.delete)
         self.actionStop.triggered.connect(self.stopSignal)
         self.actionLoad.triggered.connect(self.load_file)
+        self.actionStart.triggered.connect(self.start)
+        # self.actionPause.triggered.connect(self.pause)
         # Timer Configurations
         # self.timer()
         self.view = self.widget.plotItem.getViewBox()
@@ -129,10 +129,24 @@ class signalViewer(ss.Ui_MainWindow):
         # Connector slot to the signal from myplotwidget
         self.widget.signal.connect(self.hi)
 
-
         # Zoom Buttons Configuration
         self.actionZoomIn.triggered.connect(self.zoomin)
         self.actionZoomOut.triggered.connect(self.zoomout)
+
+    def start(self):
+        if self.widgets[signalViewer.currentSelected-1] == None:
+            pass
+        else:
+            print(self.widget.plotItem.items)
+            for x in range(10000):
+                self.widgets[signalViewer.currentSelected-1].setXRange(10+x, 700+x)
+                QtWidgets.QApplication.processEvents()
+    #
+    # def pause(self):
+    #     range = self.widgets[signalViewer.currentSelected-1].plotItem.getAxis('bottom').range
+    #     print(range)
+    #     self.widgets[signalViewer.currentSelected - 1].setXRange(range[0], range[1])
+    #     QtWidgets.QApplication.processEvents()
 
     def hi(self, data):
         """
@@ -206,12 +220,10 @@ class signalViewer(ss.Ui_MainWindow):
         """
         # Channel 1
         # Setting ranges of the x and y axis
-        self.widget.setXRange(min=0, max=4000)
+        self.widget.setXRange(min=0, max=1000)
+        self.widget.setYRange(min=-1, max=1)
         self.widget.setMinimumSize(QtCore.QSize(500, 200))
         self.widget.plotItem.setTitle("Channel 1")
-        # self.legend = pg.LegendItem(size=(2, 3), offset=(80, 80))
-        # self.legend.setParentItem(self.widget.plotItem.graphicsItem())
-        # self.legend.addItem(self.widget.plotItem, "Plot111")
         self.widget.plotItem.addLegend(size=(2, 3))
         self.widget.plotItem.showGrid(True, True, alpha=0.8)
         self.widget.plotItem.setLabel('bottom', text='Time (ms)')
@@ -417,8 +429,8 @@ class signalViewer(ss.Ui_MainWindow):
             self.widgets[signalViewer.numOfPanels].plotItem.addLegend(size=(2, 3))
             self.widgets[signalViewer.numOfPanels].plotItem.showGrid(True, True, alpha=0.8)
             self.widgets[signalViewer.numOfPanels].plotItem.setLabel('bottom', text='Time (ms)')
-            self.widgets[signalViewer.numOfPanels].plotItem.enableAutoScale()
-            self.widgets[signalViewer.numOfPanels].plotItem.getViewBox().setAutoPan(x=True)
+            # self.widgets[signalViewer.numOfPanels].plotItem.enableAutoScale()
+            # self.widgets[signalViewer.numOfPanels].plotItem.getViewBox().setAutoPan(x=True)
             self.widgets[signalViewer.numOfPanels].signal.connect(self.hi)
             self.verticalLayout.addWidget(self.widgets[signalViewer.numOfPanels])
             self.checkBoxes[signalViewer.numOfPanels].setEnabled(True)
