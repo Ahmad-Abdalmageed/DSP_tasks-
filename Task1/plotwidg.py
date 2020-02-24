@@ -162,7 +162,7 @@ class signalViewer(ss.Ui_MainWindow):
     def startMoving(self):
         # Reset default to not be paused ---- case of start for first time
         signalViewer.pauseCalled = False
-
+        selectedWidget = signalViewer.currentSelected
         print(self.widgets[signalViewer.currentSelected-1])
 
         # Check if the widget is None ----- if it is not existed
@@ -172,6 +172,10 @@ class signalViewer(ss.Ui_MainWindow):
         else:
             # Start the moving loop
             for x in range(10000):
+                # Check if we changed the widget during moving
+                if signalViewer.currentSelected != selectedWidget:
+                    break
+
                 # If it was pause previously ---- Not the first time
                 if signalViewer.mainRange != [0, 1100]:
                     if self.widgets[signalViewer.currentSelected - 1] == None:
