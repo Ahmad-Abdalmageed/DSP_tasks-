@@ -156,7 +156,6 @@ class signalViewer(ss.Ui_MainWindow):
         # Connector slot to the signal from myPlotWidget
         self.widget.signal.connect(self.receiveData)
 
-
     def startMoving(self):
         # Reset default to not be paused ---- case of start for first time
         signalViewer.pauseCalled = False
@@ -248,7 +247,6 @@ class signalViewer(ss.Ui_MainWindow):
         Load the File from User and add it to files dictionary
         :return:
         """
-        self.clearPreviousSignal()
         if signalViewer.currentSelected == 0:
             self.show_popup('No Selected Pannel', 'First Select a Panel by clicking on it')
             pass
@@ -276,14 +274,13 @@ class signalViewer(ss.Ui_MainWindow):
         # Channel 1
         # Setting ranges of the x and y axis
         self.widget.setXRange(min=0, max=1000)
-        self.widget.setYRange(min=-1, max=1)
+        # self.widget.setYRange(min=-1, max=1)
         self.widget.setMinimumSize(QtCore.QSize(500, 200))
         self.widget.plotItem.setTitle("Channel 1")
-        self.widget.plotItem.addLegend(size=(2, 3))
+        # self.widget.plotItem.addLegend(size=(2, 3))
         self.widget.plotItem.showGrid(True, True, alpha=0.8)
         self.widget.plotItem.setLabel('bottom', text='Time (ms)')
         self.verticalLayout.addWidget(self.widget)
-
 
     def scrollAreaConfiguration(self):
         self.scrollArea = Scroller()
@@ -317,10 +314,13 @@ class signalViewer(ss.Ui_MainWindow):
             # Return y chunk (data line)
             signalViewer.chunks[file_name] = signalViewer.channels[file_name].iloc[:, 1]
 
+            # Clear the plotting area and remove the previous legend
             self.clearPreviousSignal()
+            self.clearPreviousLegend()
 
             # Plot chunk
             self.plotInitialize(file_name, signalViewer.chunks[file_name])
+
 
     def load_mat_data(self, file_name):
         """
@@ -335,6 +335,7 @@ class signalViewer(ss.Ui_MainWindow):
             signalViewer.channels[file_name] = pd.DataFrame(mat_file['F'])
             signalViewer.chunks[file_name] = signalViewer.channels[file_name].iloc[:, 1]
             self.clearPreviousSignal()
+            self.clearPreviousLegend()
             self.plotInitialize(file_name, signalViewer.chunks[file_name])
 
     def load_txt_data(self, file_name):
@@ -349,6 +350,7 @@ class signalViewer(ss.Ui_MainWindow):
             signalViewer.channels[file_name] = pd.read_csv(file_name, skiprows=[i for i in range(1500, 7657)])
             signalViewer.chunks[file_name] = signalViewer.channels[file_name].iloc[:, 2]
             self.clearPreviousSignal()
+            self.clearPreviousLegend()
             self.plotInitialize(file_name, signalViewer.chunks[file_name])
 
     def plotInitialize(self, file_name, chunk):
@@ -357,6 +359,7 @@ class signalViewer(ss.Ui_MainWindow):
         :return:
         '''
         # File name
+        self.widgets[signalViewer.currentSelected - 1].plotItem.addLegend(size=(2, 3))
         name = file_name.split('/')[-1]
         signalViewer.graphs[name] = self.widgets[signalViewer.currentSelected - 1].plotItem.plot(chunk, name=name, pen=self.pens[signalViewer.currentSelected - 1])
 
@@ -483,15 +486,27 @@ class signalViewer(ss.Ui_MainWindow):
         # msg.buttonClicked.connect(self.popup_button)
         x = msg.exec_()
 
-
     def clearPreviousSignal(self):
         # # clear the previous data line
         self.widgets[signalViewer.currentSelected - 1].plotItem.clear()
 
+    def clearPreviousLegend(self):
         # Remove the legend and add the new one
-        # print(self.widgets[signalViewer.currentSelected - 1].getPlotItem().legend.items)
+        # legendData = self.widgets[signalViewer.currentSelected - 1].plotItem.legend
+        # print("Legend before deleting: ", legendData)
+
+        # # Load for the first time
+        if self.widgets[signalViewer.currentSelected - 1].plotItem.legend == None:
+            pass
+        else:
+        # print(self.widgets[signalViewer.currentSelected - 1].plotItem.legend.scene())
+            self.widgets[signalViewer.currentSelected - 1].plotItem.legend.scene().removeItem(self.widgets[signalViewer.currentSelected - 1].plotItem.legend)
+        # self.widgets[signalViewer.currentSelected - 1].plotItem.removeItem(self.widgets[signalViewer.currentSelected - 1].plotItem.legend.items)
+        # self.widgets[signalViewer.currentSelected - 1].plotItem.legend = None
+        # print("Legend after deleting: ", self.widgets[signalViewer.currentSelected - 1].plotItem.legend)
         # self.widgets[signalViewer.currentSelected - 1].getPlotItem().legend.items = []
         # print(self.widgets[signalViewer.currentSelected - 1].getPlotItem().legend.items)
+
         # pass
 
 
