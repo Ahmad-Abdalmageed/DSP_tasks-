@@ -248,6 +248,7 @@ class signalViewer(ss.Ui_MainWindow):
         Load the File from User and add it to files dictionary
         :return:
         """
+        self.clearPreviousSignal()
         if signalViewer.currentSelected == 0:
             self.show_popup('No Selected Pannel', 'First Select a Panel by clicking on it')
             pass
@@ -319,7 +320,7 @@ class signalViewer(ss.Ui_MainWindow):
             self.clearPreviousSignal()
 
             # Plot chunk
-            self.plot(file_name, signalViewer.chunks[file_name])
+            self.plotInitialize(file_name, signalViewer.chunks[file_name])
 
     def load_mat_data(self, file_name):
         """
@@ -334,7 +335,7 @@ class signalViewer(ss.Ui_MainWindow):
             signalViewer.channels[file_name] = pd.DataFrame(mat_file['F'])
             signalViewer.chunks[file_name] = signalViewer.channels[file_name].iloc[:, 1]
             self.clearPreviousSignal()
-            self.plot(file_name, signalViewer.chunks[file_name])
+            self.plotInitialize(file_name, signalViewer.chunks[file_name])
 
     def load_txt_data(self, file_name):
         """
@@ -348,9 +349,9 @@ class signalViewer(ss.Ui_MainWindow):
             signalViewer.channels[file_name] = pd.read_csv(file_name, skiprows=[i for i in range(1500, 7657)])
             signalViewer.chunks[file_name] = signalViewer.channels[file_name].iloc[:, 2]
             self.clearPreviousSignal()
-            self.plot(file_name, signalViewer.chunks[file_name])
+            self.plotInitialize(file_name, signalViewer.chunks[file_name])
 
-    def plot(self, file_name, chunk):
+    def plotInitialize(self, file_name, chunk):
         '''
         main plotting function
         :return:
@@ -484,13 +485,14 @@ class signalViewer(ss.Ui_MainWindow):
 
 
     def clearPreviousSignal(self):
-        # clear the previous data line
+        # # clear the previous data line
         self.widgets[signalViewer.currentSelected - 1].plotItem.clear()
 
         # Remove the legend and add the new one
         # print(self.widgets[signalViewer.currentSelected - 1].getPlotItem().legend.items)
         # self.widgets[signalViewer.currentSelected - 1].getPlotItem().legend.items = []
         # print(self.widgets[signalViewer.currentSelected - 1].getPlotItem().legend.items)
+        # pass
 
 
 def main():
