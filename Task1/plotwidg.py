@@ -113,11 +113,8 @@ class signalViewer(ss.Ui_MainWindow):
         self.filename, self.format = None, None
 
         # Initialize the widgets to be none
-        self.widget_2 = myPlotWidget(self.centralwidget, id=2).close()
-        self.widget_3 = myPlotWidget(self.centralwidget, id=3).close()
-        self.widget_4 = myPlotWidget(self.centralwidget, id=4).close()
-        self.widget_5 = myPlotWidget(self.centralwidget, id=5).close()
-        self.widget = myPlotWidget(self.centralwidget, id=1)
+        self.widgetsInitializing()
+
 
         # list of the widgets
         self.widgets = [
@@ -180,6 +177,15 @@ class signalViewer(ss.Ui_MainWindow):
         # Zoom Buttons Configuration
         self.actionZoomIn.triggered.connect(self.zoomin)
         self.actionZoomOut.triggered.connect(self.zoomout)
+
+
+    def widgetsInitializing(self):
+        self.widget_2 = myPlotWidget(self.centralwidget, id=2).close()
+        self.widget_3 = myPlotWidget(self.centralwidget, id=3).close()
+        self.widget_4 = myPlotWidget(self.centralwidget, id=4).close()
+        self.widget_5 = myPlotWidget(self.centralwidget, id=5).close()
+        self.widget = myPlotWidget(self.centralwidget, id=1)
+
 
     def startMoving(self):
         # Reset default to not be paused ---- case of start for first time
@@ -245,6 +251,8 @@ class signalViewer(ss.Ui_MainWindow):
         """
         print("This is the data sent", data)
         signalViewer.currentSelected = data
+        self.widgets[data-1].setMinimumSize(QtCore.QSize(500, 200))
+
         # signalViewer.previousSelectedWidget = data
         signalViewer.borderList.append(data)
 
@@ -324,9 +332,9 @@ class signalViewer(ss.Ui_MainWindow):
         self.widget.plotItem.setTitle("Channel 1")
         self.widget.plotItem.addLegend(size=(2, 3))
         self.widget.plotItem.showGrid(True, True, alpha=0.8)
-        self.widget.plotItem.setLabel("bottom", text="Time (ms)")
-        self.widget.plotItem.enableAutoScale()
-        self.widget.plotItem.getViewBox().setAutoPan(x=True)
+        self.widget.plotItem.setLabel('bottom', text='Time (ms)')
+        # self.widget.plotItem.enableAutoScale()
+        # self.widget.plotItem.getViewBox().setAutoPan(x=True)
         self.verticalLayout.addWidget(self.widget)
 
     def scrollAreaConfiguration(self):
@@ -360,7 +368,7 @@ class signalViewer(ss.Ui_MainWindow):
             # Return y chunk (data line)
             signalViewer.chunks[file_name] = signalViewer.channels[file_name].iloc[:, 1]
 
-            self.deletePreviousSignal()
+            self.clearPreviousSignal()
 
             # Plot chunk
             self.plot(file_name, signalViewer.chunks[file_name])
@@ -377,7 +385,7 @@ class signalViewer(ss.Ui_MainWindow):
             mat_file = loadmat(file_name)
             signalViewer.channels[file_name] = pd.DataFrame(mat_file["F"])
             signalViewer.chunks[file_name] = signalViewer.channels[file_name].iloc[:, 1]
-            self.deletePreviousSignal()
+            self.clearPreviousSignal()
             self.plot(file_name, signalViewer.chunks[file_name])
 
     def load_txt_data(self, file_name):
@@ -393,7 +401,7 @@ class signalViewer(ss.Ui_MainWindow):
                 file_name, skiprows=[i for i in range(1500, 7657)]
             )
             signalViewer.chunks[file_name] = signalViewer.channels[file_name].iloc[:, 2]
-            self.deletePreviousSignal()
+            self.clearPreviousSignal()
             self.plot(file_name, signalViewer.chunks[file_name])
 
     def plot(self, file_name, chunk):
@@ -503,10 +511,8 @@ class signalViewer(ss.Ui_MainWindow):
                 QtCore.QSize(500, 200)
             )
             self.widgets[signalViewer.numOfPanels].setXRange(min=0, max=1000)
-            self.widgets[signalViewer.numOfPanels].setYRange(min=-1, max=1)
-            self.widgets[signalViewer.numOfPanels].plotItem.setTitle(
-                "Channel " + str(signalViewer.numOfPanels + 1)
-            )
+            # self.widgets[signalViewer.numOfPanels].setYRange(min=-1, max=1)
+            self.widgets[signalViewer.numOfPanels].plotItem.setTitle("Channel " + str(signalViewer.numOfPanels + 1))
             self.widgets[signalViewer.numOfPanels].plotItem.addLegend(size=(2, 3))
             self.widgets[signalViewer.numOfPanels].plotItem.showGrid(
                 True, True, alpha=0.8
@@ -541,7 +547,8 @@ class signalViewer(ss.Ui_MainWindow):
         # msg.buttonClicked.connect(self.popup_button)
         x = msg.exec_()
 
-    def deletePreviousSignal(self):
+
+    def clearPreviousSignal(self):
         # clear the previous data line
         self.widgets[signalViewer.currentSelected - 1].plotItem.clear()
 
