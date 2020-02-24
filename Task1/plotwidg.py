@@ -68,10 +68,10 @@ class signalViewer(ss.Ui_MainWindow):
 
     # Queues for tracing the available and shown panels
     AvPanels = Q.PriorityQueue(5)
-    ShownPanels = Q.PriorityQueue(5)
+    # ShownPanels = Q.PriorityQueue(5)
 
     # Sorted list, used in queue operations
-    LsShownPanels = SortedList()
+    # LsShownPanels = SortedList()
 
     # Contains keys of the channels (1 - 5) and the file path for each channel
     CurUsedFile = dict()
@@ -121,7 +121,7 @@ class signalViewer(ss.Ui_MainWindow):
         for i in range(2, 6):
             self.AvPanels.put(i)
 
-        self.ShownPanels.put(1)
+        # self.ShownPanels.put(1)
 
         # pens configurations
         self.pens = [pg.mkPen(color=(255, 0, 0)), pg.mkPen(color=(0, 255, 0)),
@@ -392,10 +392,10 @@ class signalViewer(ss.Ui_MainWindow):
     def delete(self):
         print('the current is ', signalViewer.currentSelected)
         num = signalViewer.currentSelected
-        signalViewer.LsShownPanels.clear()
-        while not signalViewer.ShownPanels.empty():
-            signalViewer.LsShownPanels.add(signalViewer.ShownPanels.get())
-            print("in while loop")
+        # signalViewer.LsShownPanels.clear()
+        # while not signalViewer.ShownPanels.empty():
+            # signalViewer.LsShownPanels.add(signalViewer.ShownPanels.get())
+            # print("in while loop")
         # if not signalViewer.LsShownPanels.__contains__(num):
         #     print("No plots to delete")
         #     self.show_popup("Channel doesn't exist","Choose an existing panel")
@@ -414,23 +414,23 @@ class signalViewer(ss.Ui_MainWindow):
                 del signalViewer.channels[signalViewer.CurUsedFile[num]]
                 del signalViewer.CurUsedFile[num]
             self.stopSignal()
-            for x in range(signalViewer.LsShownPanels.__len__()):
-                signalViewer.ShownPanels.put(signalViewer.LsShownPanels.pop())
-                print("in for loop")
+            # for x in range(signalViewer.LsShownPanels.__len__()):
+            #     signalViewer.ShownPanels.put(signalViewer.LsShownPanels.pop())
+            #     print("in for loop")
 
             # Return currentSelected to normal state
             signalViewer.currentSelected = 0
 
-    def find(self, num):
-        print("in find function")
-        while not signalViewer.ShownPanels.empty():
-            print("in while loop find function")
-            signalViewer.LsShownPanels.add(signalViewer.ShownPanels.get())
-        found = signalViewer.LsShownPanels.__contains__(num)
-        for x in range(signalViewer.LsShownPanels.__len__()):
-            signalViewer.ShownPanels.put(signalViewer.LsShownPanels.pop())
-            print("in for loop find function")
-        return found
+    # def find(self, num):
+    #     print("in find function")
+    #     while not signalViewer.ShownPanels.empty():
+    #         print("in while loop find function")
+    #         signalViewer.LsShownPanels.add(signalViewer.ShownPanels.get())
+    #     found = signalViewer.LsShownPanels.__contains__(num)
+    #     for x in range(signalViewer.LsShownPanels.__len__()):
+    #         signalViewer.ShownPanels.put(signalViewer.LsShownPanels.pop())
+    #         print("in for loop find function")
+    #     return found
 
     def addNewPanel(self):
         if signalViewer.AvPanels.empty():
@@ -442,7 +442,7 @@ class signalViewer(ss.Ui_MainWindow):
             # if not signalViewer.AvPanels.empty() :
             # Adjusting Queues
             signalViewer.numOfPanels = signalViewer.AvPanels.get()
-            signalViewer.ShownPanels.put(signalViewer.numOfPanels)
+            # signalViewer.ShownPanels.put(signalViewer.numOfPanels)
             signalViewer.numOfPanels -= 1
 
             signalViewer.channel = signalViewer.numOfPanels - 1
