@@ -12,6 +12,14 @@ import queue as Q
 from sortedcontainers import SortedList
 from pyqtgraph import PlotWidget
 
+class Scroller(QtWidgets.QScrollArea):
+    def __init__(self):
+        QtWidgets.QScrollArea.__init__(self)
+    def wheelEvent(self, ev):
+        if ev.type() == QtCore.QEvent.Wheel:
+            ev.ignore()
+
+
 class myPlotWidget(PlotWidget):
     signal = pyqtSignal(int)  # Signal to send to other slots, containing int which identifies the exct type of the sent
 
@@ -69,12 +77,29 @@ class signalViewer(ss.Ui_MainWindow):
     # Current selected widget by the user
     currentSelected = 0
 
+    pauseCalled = False
+
+    mainRange = [0, 1100]
+
     def __init__(self, mainwindow, speed):
         '''
         Main loop of the UI
         :param mainwindow: QMainWindow Object
         '''
         super(signalViewer, self).setupUi(mainwindow)
+        self.scrollArea = Scroller()
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollArea.setObjectName("scrollArea")
+        self.scrollAreaWidgetContents = QtWidgets.QWidget()
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 915, 761))
+        self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.verticalLayout = QtWidgets.QVBoxLayout()
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.verticalLayout_2.addLayout(self.verticalLayout)
+        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+        self.horizontalLayout.addWidget(self.scrollArea)
         # Speed of changing the rows of the data
         self.speed = speed
 
@@ -120,35 +145,65 @@ class signalViewer(ss.Ui_MainWindow):
         self.actionDelete.triggered.connect(self.delete)
         self.actionStop.triggered.connect(self.stopSignal)
         self.actionLoad.triggered.connect(self.load_file)
-        self.actionStart.triggered.connect(self.start)
-        # self.actionPause.triggered.connect(self.pause)
+        self.actionStart.triggered.connect(self.startMoving)
+        self.actionPause.triggered.connect(self.pauseMoving)
+
         # Timer Configurations
         # self.timer()
         self.view = self.widget.plotItem.getViewBox()
 
         # Connector slot to the signal from myplotwidget
-        self.widget.signal.connect(self.hi)
+        self.widget.signal.connect(self.receiveData)
 
         # Zoom Buttons Configuration
         self.actionZoomIn.triggered.connect(self.zoomin)
         self.actionZoomOut.triggered.connect(self.zoomout)
 
-    def start(self):
+    def startMoving(self):
+        # Reset default to not be paused ---- case of start for first time
+        signalViewer.pauseCalled = False
+
+        print(self.widgets[signalViewer.currentSelected-1])
+
+        # Check if the widget is None ----- if it is not existed
         if self.widgets[signalViewer.currentSelected-1] == None:
             pass
-        else:
-            print(self.widget.plotItem.items)
-            for x in range(10000):
-                self.widgets[signalViewer.currentSelected-1].setXRange(10+x, 700+x)
-                QtWidgets.QApplication.processEvents()
-    #
-    # def pause(self):
-    #     range = self.widgets[signalViewer.currentSelected-1].plotItem.getAxis('bottom').range
-    #     print(range)
-    #     self.widgets[signalViewer.currentSelected - 1].setXRange(range[0], range[1])
-    #     QtWidgets.QApplication.processEvents()
 
-    def hi(self, data):
+        else:
+            # Start the moving loop
+            for x in range(10000):
+                # If it was pause previously ---- Not the first time
+                if signalViewer.mainRange != [0, 1100]:
+                    if self.widgets[signalViewer.currentSelected - 1] == None:
+                        break
+                    # Set the range for the previous one
+                    self.widgets[signalViewer.currentSelected - 1].setXRange(signalViewer.mainRange[0]+x, signalViewer.mainRange[1]+x)
+                    QtWidgets.QApplication.processEvents()
+
+                    # If we clicked the pause in the loop
+                    if signalViewer.pauseCalled == True:
+                        break
+
+                # First Time
+                else:
+                    if self.widgets[signalViewer.currentSelected - 1] == None:
+                        break
+                    # start the moving for first time
+                    self.widgets[signalViewer.currentSelected-1].setXRange(10+x, 700+x)
+                    QtWidgets.QApplication.processEvents()
+                    if signalViewer.pauseCalled == True:
+                        break
+
+    def pauseMoving(self):
+        signalViewer.pauseCalled = True
+        range = self.widgets[signalViewer.currentSelected-1].plotItem.getAxis('bottom').range
+        print(range)
+        signalViewer.mainRange = range
+        self.widgets[signalViewer.currentSelected - 1].setXRange(range[0], range[1])
+        print(signalViewer.mainRange)
+        QtWidgets.QApplication.processEvents()
+
+    def receiveData(self, data):
         """
         testing function to demonstrate how two classes can communicate with each other
         :param data: sent from myplotwidget
@@ -176,16 +231,11 @@ class signalViewer(ss.Ui_MainWindow):
         Load the File from User and add it to files dictionary
         :return:
         """
-
         if signalViewer.currentSelected == 0:
             self.show_popup('No Selected Pannel', 'First Select a Panel by clicking on it')
             pass
         else:
             signalViewer.i = 0
-
-            # Stop timer for waiting to upload new file
-            # self.timer.stop()
-
             # Open File
             self.filename, self.format = QtWidgets.QFileDialog.getOpenFileName(None, 'Load Signal', '/home', "*.csv;;"
                                                                                                              " *.txt;;"
@@ -193,19 +243,6 @@ class signalViewer(ss.Ui_MainWindow):
             if self.filename == '':
                 pass
             else:
-                # signalViewer.channel += 1
-                #
-                # if signalViewer.channel > 4:
-                #     signalViewer.channel = 0
-                #     if not self.find(signalViewer.channel):
-                #         signalViewer.channel += 1
-                #
-                # # Check if the channel is found in the ShownPanel Queue
-                # if (not self.find(signalViewer.channel+1)):
-                #     signalViewer.channel -= 1
-                #     self.show_popup('Error','Add a new channel first')
-                #     pass
-                # else:
                 if self.filename in signalViewer.filenames:
                     self.show_popup("File Existed", "You already uploaded this file before")
                 else:
@@ -230,9 +267,6 @@ class signalViewer(ss.Ui_MainWindow):
         self.widget.plotItem.enableAutoScale()
         self.widget.plotItem.getViewBox().setAutoPan(x=True)
         self.verticalLayout.addWidget(self.widget)
-
-
-
     # Reading Files Functions
     def load_csv_data(self, file_name):
         """
@@ -290,51 +324,7 @@ class signalViewer(ss.Ui_MainWindow):
         '''
         # File name
         name = file_name.split('/')[-1]
-        # signalViewer.graphs[file_name] = self.widgets[signalViewer.currentSelected-1].plotItem.plot(chunk, name=name,
-        #                                                                                   pen=self.pens[signalViewer.currentSelected-1])
-        signalViewer.graphs[name] = self.widgets[signalViewer.currentSelected - 1].plotItem.plot(chunk, name=name,
-                                                                                                      pen=self.pens[
-                                                                                                          signalViewer.currentSelected - 1])
-
-    # def update_plot_data(self):
-    #     '''
-    #     update function .... add chunks to self.y from loaded data self.data
-    #     :return:
-    #     '''
-    #     # Iterate over keys (chunk) in chnuks dictionary
-    #     for chunk in signalViewer.chunks:
-    #         signalViewer.i += 30
-    #         signalViewer.chunks[chunk] = pd.concat([signalViewer.chunks[chunk],
-    #                                                 signalViewer.channels[chunk].iloc[
-    #                                                 signalViewer.i:signalViewer.i + self.speed, 1]],
-    #                                                axis=0, sort=True)
-    #         # graph ->> file_name is the key
-    #         signalViewer.graphs[chunk].setData(signalViewer.chunks[chunk])
-
-    # def timer(self):
-    #     """
-    #     Timer function that executes the data updating for every n ms
-    #     :return:
-    #     """
-    #     self.timer = QtCore.QTimer()
-    #     self.timer.setInterval(50)
-    #     self.timer.timeout.connect(self.update_plot_data)
-    #     self.start_timer()
-    #     self.pause_timer()
-    #
-    # def start_timer(self):
-    #     '''
-    #     Event of clicking the start button which starts the signal plotting
-    #     :return:
-    #     '''
-    #     self.actionStart.triggered.connect(self.timer.start)
-    #
-    # def pause_timer(self):
-    #     '''
-    #     Event of clicking the stop button which stops the signal plotting
-    #     :return:
-    #     '''
-    #     self.actionPause.triggered.connect(self.timer.stop)
+        signalViewer.graphs[name] = self.widgets[signalViewer.currentSelected - 1].plotItem.plot(chunk, name=name, pen=self.pens[signalViewer.currentSelected - 1])
 
     def stopSignal(self):
         signalViewer.i = 0
@@ -431,9 +421,10 @@ class signalViewer(ss.Ui_MainWindow):
             self.widgets[signalViewer.numOfPanels].plotItem.setLabel('bottom', text='Time (ms)')
             # self.widgets[signalViewer.numOfPanels].plotItem.enableAutoScale()
             # self.widgets[signalViewer.numOfPanels].plotItem.getViewBox().setAutoPan(x=True)
-            self.widgets[signalViewer.numOfPanels].signal.connect(self.hi)
+            self.widgets[signalViewer.numOfPanels].signal.connect(self.receiveData)
             self.verticalLayout.addWidget(self.widgets[signalViewer.numOfPanels])
             self.checkBoxes[signalViewer.numOfPanels].setEnabled(True)
+            signalViewer.mainRange = [0, 1100]
 
     def hideChannel(self, checkNumber):
         if self.widgets[checkNumber] is None:
@@ -453,35 +444,6 @@ class signalViewer(ss.Ui_MainWindow):
         # msg.buttonClicked.connect(self.popup_button)
         x = msg.exec_()
 
-    def startDeletingProcess(self):
-        self.showDeleteList("Delete a channel", "Choose the channel you want to delete")
-
-    def showDeleteList(self, message, info):
-        msg = QMessageBox()
-        msg.setWindowTitle("Popup Message")
-        msg.setText(message)
-        msg.setIcon(QMessageBox.Warning)
-        msg.setStandardButtons(QMessageBox.Cancel)
-        msg.setDefaultButton(QMessageBox.Cancel)
-        msg.setInformativeText(info)
-
-        # Custome btns
-        msg.setWindowModality(QtCore.Qt.NonModal)
-        panel1 = msg.addButton("1", msg.ActionRole)
-        panel2 = msg.addButton("2", msg.ActionRole)
-        panel3 = msg.addButton("3", msg.ActionRole)
-        panel4 = msg.addButton("4", msg.ActionRole)
-        panel5 = msg.addButton("5", msg.ActionRole)
-
-        # msg.buttonClicked.connect(self.deletePanel)
-        msg.buttonClicked.connect(self.delete)
-        x = msg.exec_()
-
-    def startMovingView(self):
-        signalViewer.columnLength = self.graphs
-
-
-    # def stopMovingView(self):
 
     def deletePreviousSignal(self):
         # clear the previous data line

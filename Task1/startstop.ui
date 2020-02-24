@@ -6,37 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1061</width>
-    <height>857</height>
+    <width>700</width>
+    <height>200</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>700</width>
+    <height>200</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Wave Yeeter</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
-    <item>
-     <widget class="QScrollArea" name="scrollArea">
-      <property name="widgetResizable">
-       <bool>true</bool>
-      </property>
-      <widget class="QWidget" name="scrollAreaWidgetContents">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>915</width>
-         <height>761</height>
-        </rect>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout"/>
-        </item>
-       </layout>
-      </widget>
-     </widget>
-    </item>
     <item>
      <widget class="QGroupBox" name="groupBox">
       <property name="sizePolicy">
@@ -142,7 +126,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1061</width>
+     <width>700</width>
      <height>22</height>
     </rect>
    </property>
