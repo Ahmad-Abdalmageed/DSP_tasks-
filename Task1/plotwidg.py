@@ -3,7 +3,7 @@ from PyQt5 import QtWidgets, uic, QtCore, QtGui
 from PyQt5.QtCore import pyqtSignal, pyqtSlot, QObject
 from PyQt5.QtWidgets import QMessageBox
 import pyqtgraph as pg
-import testScroll as ss
+import testScroll1 as ss
 import pandas as pd
 from scipy.io import loadmat
 import sys
@@ -220,10 +220,13 @@ class signalViewer(ss.Ui_MainWindow):
 
         # Check if we pressed another widget -- remove the border from the first element
         if len(signalViewer.borderList) == 2:
+            if self.widgets[signalViewer.borderList[0] - 1] == None:
+                pass
             self.widgets[signalViewer.borderList[0] - 1].setStyleSheet("border: 0px solid rgb(0, 0, 255);")
 
             # Remove the border from the first
             del(signalViewer.borderList[0])
+            print(signalViewer.borderList)
 
 
         # Add selected to list --- now list length is one
