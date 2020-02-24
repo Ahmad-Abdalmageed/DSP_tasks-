@@ -487,27 +487,16 @@ class signalViewer(ss.Ui_MainWindow):
         x = msg.exec_()
 
     def clearPreviousSignal(self):
-        # # clear the previous data line
+        # clear the previous data line
         self.widgets[signalViewer.currentSelected - 1].plotItem.clear()
 
     def clearPreviousLegend(self):
-        # Remove the legend and add the new one
-        # legendData = self.widgets[signalViewer.currentSelected - 1].plotItem.legend
-        # print("Legend before deleting: ", legendData)
-
-        # # Load for the first time
+        # In case of Loading for the first time
         if self.widgets[signalViewer.currentSelected - 1].plotItem.legend == None:
             pass
         else:
-        # print(self.widgets[signalViewer.currentSelected - 1].plotItem.legend.scene())
+            # Remove the legend
             self.widgets[signalViewer.currentSelected - 1].plotItem.legend.scene().removeItem(self.widgets[signalViewer.currentSelected - 1].plotItem.legend)
-        # self.widgets[signalViewer.currentSelected - 1].plotItem.removeItem(self.widgets[signalViewer.currentSelected - 1].plotItem.legend.items)
-        # self.widgets[signalViewer.currentSelected - 1].plotItem.legend = None
-        # print("Legend after deleting: ", self.widgets[signalViewer.currentSelected - 1].plotItem.legend)
-        # self.widgets[signalViewer.currentSelected - 1].getPlotItem().legend.items = []
-        # print(self.widgets[signalViewer.currentSelected - 1].getPlotItem().legend.items)
-
-        # pass
 
 
 def main():
