@@ -82,6 +82,9 @@ class signalViewer(ss.Ui_MainWindow):
     # Flag to check start/pausing state
     pauseCalled = False
 
+    # Flag to check stop state
+    stopCalled = False
+
     # set the Main Range
     mainRange = [0, 1100]
 
@@ -157,13 +160,14 @@ class signalViewer(ss.Ui_MainWindow):
         self.widget.signal.connect(self.receiveData)
 
     def startMoving(self):
-        # Reset default to not be paused ---- case of start for first time
+        # Reset default to not be paused && not be stopped ---- case of start for first time
         signalViewer.pauseCalled = False
+        signalViewer.stopCalled = False
         selectedWidget = signalViewer.currentSelected
-        print(self.widgets[signalViewer.currentSelected-1])
+        print(self.widgets[signalViewer.currentSelected - 1])
 
         # Check if the widget is None ----- if it is not existed
-        if self.widgets[signalViewer.currentSelected-1] == None:
+        if self.widgets[signalViewer.currentSelected - 1] == None:
             pass
 
         else:
@@ -178,11 +182,15 @@ class signalViewer(ss.Ui_MainWindow):
                     if self.widgets[signalViewer.currentSelected - 1] == None:
                         break
                     # Set the range for the previous one
-                    self.widgets[signalViewer.currentSelected - 1].setXRange(signalViewer.mainRange[0]+x, signalViewer.mainRange[1]+x)
+                    self.widgets[signalViewer.currentSelected - 1].setXRange(signalViewer.mainRange[0] + x, signalViewer.mainRange[1] + x)
                     QtWidgets.QApplication.processEvents()
 
                     # If we clicked the pause in the loop
                     if signalViewer.pauseCalled == True:
+                        break
+
+                    # If we clicked the stop in the loop
+                    if signalViewer.stopCalled == True:
                         break
 
                 # First Time
@@ -190,18 +198,24 @@ class signalViewer(ss.Ui_MainWindow):
                     if self.widgets[signalViewer.currentSelected - 1] == None:
                         break
                     # start the moving for first time
-                    self.widgets[signalViewer.currentSelected-1].setXRange(10+x, 700+x)
+                    self.widgets[signalViewer.currentSelected-1].setXRange(10 + x, 700 + x)
                     QtWidgets.QApplication.processEvents()
                     if signalViewer.pauseCalled == True:
+                        break
+
+                    if signalViewer.stopCalled == True:
                         break
 
     def pauseMoving(self):
         signalViewer.pauseCalled = True
         range = self.widgets[signalViewer.currentSelected-1].plotItem.getAxis('bottom').range
-        print(range)
         signalViewer.mainRange = range
         self.widgets[signalViewer.currentSelected - 1].setXRange(range[0], range[1])
-        print(signalViewer.mainRange)
+        QtWidgets.QApplication.processEvents()
+
+    def stopSignal(self):
+        signalViewer.stopCalled = True
+        self.widgets[signalViewer.currentSelected - 1].setXRange(0, 1100)
         QtWidgets.QApplication.processEvents()
 
     def receiveData(self, data):
@@ -362,12 +376,6 @@ class signalViewer(ss.Ui_MainWindow):
         self.widgets[signalViewer.currentSelected - 1].plotItem.addLegend(size=(2, 3))
         name = file_name.split('/')[-1]
         signalViewer.graphs[name] = self.widgets[signalViewer.currentSelected - 1].plotItem.plot(chunk, name=name, pen=self.pens[signalViewer.currentSelected - 1])
-
-    def stopSignal(self):
-        signalViewer.i = 0
-        signalViewer.chunks = dict()
-        # self.widgets[signalViewer.currentSelected - 1].setXRange(min=0, max=1000)
-        # self.show_popup("Signal has stopped", "You have terminated the signal.. upload it again to view it")
 
     def checkFileExt(self, file):
         """
