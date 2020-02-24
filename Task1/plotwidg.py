@@ -35,6 +35,7 @@ class myPlotWidget(PlotWidget):
         :emit: id of the last clicked widget
         """
         self.signal.emit(self.id)
+        self.setStyleSheet("border: 2px solid rgb(0, 0, 255);")
 
     # def hover(self):
     #     print("hovering")
@@ -77,9 +78,18 @@ class signalViewer(ss.Ui_MainWindow):
     # Current selected widget by the user
     currentSelected = 0
 
+    # Flag to check start/pausing state
     pauseCalled = False
 
+    # set the Main Range
     mainRange = [0, 1100]
+
+    # The previous widget for border configuration
+    previousSelectedWidget = 0
+
+    # List to add widgets with borders
+    borderList = list()
+
 
     def __init__(self, mainwindow, speed):
         '''
@@ -87,19 +97,9 @@ class signalViewer(ss.Ui_MainWindow):
         :param mainwindow: QMainWindow Object
         '''
         super(signalViewer, self).setupUi(mainwindow)
-        self.scrollArea = Scroller()
-        self.scrollArea.setWidgetResizable(True)
-        self.scrollArea.setObjectName("scrollArea")
-        self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 915, 761))
-        self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
-        self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.verticalLayout = QtWidgets.QVBoxLayout()
-        self.verticalLayout.setObjectName("verticalLayout")
-        self.verticalLayout_2.addLayout(self.verticalLayout)
-        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
-        self.horizontalLayout.addWidget(self.scrollArea)
+
+        self.scrollAreaConfiguration()
+
         # Speed of changing the rows of the data
         self.speed = speed
 
@@ -215,6 +215,22 @@ class signalViewer(ss.Ui_MainWindow):
         """
         print('This is the data sent', data)
         signalViewer.currentSelected = data
+        # signalViewer.previousSelectedWidget = data
+        signalViewer.borderList.append(data)
+
+        # Check if we pressed another widget -- remove the border from the first element
+        if len(signalViewer.borderList) == 2:
+            self.widgets[signalViewer.borderList[0] - 1].setStyleSheet("border: 0px solid rgb(0, 0, 255);")
+
+            # Remove the border from the first
+            del(signalViewer.borderList[0])
+
+
+        # Add selected to list --- now list length is one
+        # If pressed again ... size of list will be 2
+        # take the first element of list ... set border to 0
+        # remove the first from the list
+
 
     # Zoom in Configurations
     def zoomin(self):
@@ -271,6 +287,24 @@ class signalViewer(ss.Ui_MainWindow):
         self.widget.plotItem.enableAutoScale()
         self.widget.plotItem.getViewBox().setAutoPan(x=True)
         self.verticalLayout.addWidget(self.widget)
+
+
+    def scrollAreaConfiguration(self):
+        self.scrollArea = Scroller()
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollArea.setObjectName("scrollArea")
+        self.scrollAreaWidgetContents = QtWidgets.QWidget()
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 915, 761))
+        self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.verticalLayout = QtWidgets.QVBoxLayout()
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.verticalLayout_2.addLayout(self.verticalLayout)
+        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+        self.horizontalLayout.addWidget(self.scrollArea)
+
+
     # Reading Files Functions
     def load_csv_data(self, file_name):
         """
