@@ -366,6 +366,7 @@ class signalViewer(ss.Ui_MainWindow):
     def stopSignal(self):
         signalViewer.i = 0
         signalViewer.chunks = dict()
+        # self.widgets[signalViewer.currentSelected - 1].setXRange(min=0, max=1000)
         # self.show_popup("Signal has stopped", "You have terminated the signal.. upload it again to view it")
 
     def checkFileExt(self, file):
