@@ -222,11 +222,11 @@ class signalViewer(ss.Ui_MainWindow):
         if len(signalViewer.borderList) == 2:
             if self.widgets[signalViewer.borderList[0] - 1] == None:
                 pass
-            self.widgets[signalViewer.borderList[0] - 1].setStyleSheet("border: 0px solid rgb(0, 0, 255);")
+            else:
+                self.widgets[signalViewer.borderList[0] - 1].setStyleSheet("border: 0px solid rgb(0, 0, 255);")
 
             # Remove the border from the first
             del(signalViewer.borderList[0])
-            print(signalViewer.borderList)
 
 
         # Add selected to list --- now list length is one
