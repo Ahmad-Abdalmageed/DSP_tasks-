@@ -84,7 +84,7 @@ class signalViewer(ss.Ui_MainWindow):
     stopCalled = False
 
     # set the Main Range
-    mainRange = [0, 1100]
+    mainRange = [0, 1500]
 
     # The previous widget for border configuration
     previousSelectedWidget = 0
@@ -193,7 +193,7 @@ class signalViewer(ss.Ui_MainWindow):
                     break
 
                 # If it was paused previously ---- Not the first time
-                if signalViewer.mainRange != [0, length]:
+                if signalViewer.mainRange != [0, 1500]:
                     if self.widgets[signalViewer.currentSelected - 1] == None:
                         break
                     # Set the range for the previous one
@@ -243,9 +243,9 @@ class signalViewer(ss.Ui_MainWindow):
         """ Resets viewed plot scope to the beginnig """
         signalViewer.stopCalled = True  # Set Stop Flag True
         self.widgets[signalViewer.currentSelected - 1].setXRange(
-            0, self.widgets[self.currentSelected - 1].dataLength
+            0, 1500 #self.widgets[self.currentSelected - 1].dataLength
         )
-        self.mainRange = [0, self.widgets[self.currentSelected - 1].dataLength]
+        self.mainRange = [0, 1500 ]
         QtWidgets.QApplication.processEvents()
 
     def receiveData(self, data):
@@ -459,7 +459,7 @@ class signalViewer(ss.Ui_MainWindow):
         ].plotItem.plot(
             chunk, name=name, pen=self.pens[signalViewer.currentSelected - 1]
         )
-        self.mainRange[1] = self.widgets[self.currentSelected - 1].dataLength
+        #self.mainRange[1] = self.widgets[self.currentSelected - 1].dataLength
         self.widgets[signalViewer.currentSelected - 1].setXRange(
             signalViewer.mainRange[0], signalViewer.mainRange[1]
         )
