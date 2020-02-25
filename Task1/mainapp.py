@@ -229,23 +229,22 @@ class signalViewer(ss.Ui_MainWindow):
 
     def pauseMoving(self):
         signalViewer.pauseCalled = True  # Set Pause Flag True
-        range = (
-            self.widgets[signalViewer.currentSelected - 1]
-            .plotItem.getAxis("bottom")
-            .range
-        )
+        range = self.widgets[signalViewer.currentSelected - 1].plotItem.getAxis("bottom").range
+        print(range)
         signalViewer.mainRange = [range[0] , range[1]]
         print(self.mainRange)  # for debugging
         self.widgets[signalViewer.currentSelected - 1].setXRange(range[0], range[1])
         QtWidgets.QApplication.processEvents()
 
     def stopSignal(self):
-        """ Resets viewed plot scope to the beginnig """
+        """
+        Resets viewed plot scope to the beginnig
+        :return:
+        """
         signalViewer.stopCalled = True  # Set Stop Flag True
-        self.widgets[signalViewer.currentSelected - 1].setXRange(
-            0, 1500 #self.widgets[self.currentSelected - 1].dataLength
-        )
-        self.mainRange = [0, 1500 ]
+        self.widgets[signalViewer.currentSelected - 1].setXRange(0, 1500)
+        signalViewer.mainRange = [0, 1500]
+
         QtWidgets.QApplication.processEvents()
 
     def receiveData(self, data):
