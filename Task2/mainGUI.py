@@ -28,7 +28,7 @@ class equalizerApp(ss.Ui_MainWindow):
         self.widgetsConfiguration()
 
         #Media Player Config.
-        self.PlayAudio.clicked.connect(lambda : sd.play(self.audioFile["data"] ,  44100))
+        self.PlayAudio.clicked.connect(lambda : sd.play(self.audioFile["data"] ,  self.audioFile['frequency']))
         self.StopAudio.clicked.connect(lambda: sd.stop())
         #self.PauseAudio.clicked.connect(lambda : sd.wait())
 
@@ -151,22 +151,23 @@ class equalizerApp(ss.Ui_MainWindow):
     def loadFileConfiguration(self, fileName):
         # Load Wav File
         self.audioFile = loadAudioFile(fileName)
+        print(self.audioFile)
 
         # Convert array of arrays To one array
-        self.audioArray = np.concatenate(self.audioFile['data'])
+        # self.audioArray = np.concatenate(self.audioFile['data'])
 
         # Add it back to the original Dictionary
-        self.audioFile['data'] = self.audioArray
+        # self.audioFile['data'] = self.audioArray
 
         # Convert the array to series to plot it
-        self.audioArray = pd.array(self.audioArray)
+        # self.audioArray = pd.array(self.audioArray)
 
+        # self.fourierDictionary = fourierTransform(self.audioFile)
         self.fourierDictionary = fourierTransform(self.audioFile)
         self.signalBands = createBands(self.fourierDictionary)
-
-        self.widget1.plotItem.plot(self.audioArray, pen=self.pens[0])
-        self.widget2.plotItem.plot(self.fourierDictionary['dataFrequencies'], self.fourierDictionary['transformedData'],
-                                   pen=self.pens[1])
+        #
+        self.widget1.plotItem.plot(self.audioFile['data'], pen=self.pens[0])
+        self.widget2.plotItem.plot(self.fourierDictionary['dataFrequencies'], self.fourierDictionary['transformedData'], pen=self.pens[1])
 
     def sliderChanged(self, sliderID):
         sliderValue = self.sliderBars[sliderID].value()
