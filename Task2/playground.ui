@@ -113,6 +113,16 @@
      <string>Reset Bands</string>
     </property>
    </widget>
+   <widget class="QMediaPlayer" name="widget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>680</x>
+      <y>450</y>
+      <width>341</width>
+      <height>71</height>
+     </rect>
+    </property>
+   </widget>
    <widget class="QPushButton" name="PlayAudio">
     <property name="geometry">
      <rect>
@@ -170,6 +180,12 @@
    <class>PlotWidget</class>
    <extends>QWidget</extends>
    <header>pyqtgraph.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QMediaPlayer</class>
+   <extends>QWidget</extends>
+   <header>PyQt5.QtMultimediaWidgets</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -61,6 +61,9 @@ class Ui_MainWindow(object):
         self.resetButton = QtWidgets.QPushButton(self.centralwidget)
         self.resetButton.setGeometry(QtCore.QRect(760, 590, 93, 28))
         self.resetButton.setObjectName("resetButton")
+        self.widget = QMediaPlayer(self.centralwidget)
+        self.widget.setGeometry(QtCore.QRect(680, 450, 341, 71))
+        self.widget.setObjectName("widget")
         self.PlayAudio = QtWidgets.QPushButton(self.centralwidget)
         self.PlayAudio.setGeometry(QtCore.QRect(700, 540, 89, 25))
         self.PlayAudio.setObjectName("PlayAudio")
@@ -94,4 +97,5 @@ class Ui_MainWindow(object):
         self.StopAudio.setText(_translate("MainWindow", "Stop"))
         self.PauseAudio.setText(_translate("MainWindow", "Pause"))
 
+from PyQt5.QtMultimediaWidgets import QMediaPlayer
 from pyqtgraph import PlotWidget
