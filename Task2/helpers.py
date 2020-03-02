@@ -21,7 +21,7 @@ def fourierTransform(signalDict):
      'frequency'-- Sampling frequency
      'data' -- Signal Data
     :return: Data Transformed with:
-                        'trasformedData' --- absolute of the fourier transform
+                        'transformedData' --- absolute of the fourier transform
                         'dataFrequencies'--- Frequencies of the signal
     """
     signal = signalDict['data']
@@ -39,7 +39,7 @@ def fourierTransform(signalDict):
 def inverseFourierTransform(transfomerdData):
     """
     apply inverse Fourier Transform
-    :param: transfomerdData: the fourier transformed data
+    :param: transformedData: the fourier transformed data
     :return: Real inverse transform data
     """
     dataInverse = np.real(fftpack.ifft(transfomerdData))
