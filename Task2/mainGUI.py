@@ -26,12 +26,13 @@ class equalizerApp(ss.Ui_MainWindow):
         self.sliderConfiguration()
         self.radioBoxesConfiguration()
         self.widgetsConfiguration()
-        self.loadFileConfiguration()
-        
+
         #Media Player Config.
         self.PlayAudio.clicked.connect(lambda : sd.play(self.audioFile["data"] ,  44100))
         self.StopAudio.clicked.connect(lambda: sd.stop())
         #self.PauseAudio.clicked.connect(lambda : sd.wait())
+
+        self.loadBtn.clicked.connect(self.load_file)
 
         # sliderBars Configurations #TODO Convert it to loop (DRY!!)
         self.sliderBars[0].valueChanged.connect(lambda: self.sliderChanged(0))
@@ -55,7 +56,7 @@ class equalizerApp(ss.Ui_MainWindow):
 
 
         # Apply Fourier Transform
-        self.fourierDictionary =  fourierTransform(self.audioFile)
+
         # print(self.fourierDictionary['transformedData'])
         # print(self.fourierDictionary['dataFrequencies'])
 
@@ -71,19 +72,14 @@ class equalizerApp(ss.Ui_MainWindow):
             pg.mkPen(color=(123, 34, 203)),
         ]
 
-        self.signalBands = createBands(self.fourierDictionary)
-        # print(self.signalBands)
-
         # self.fourierArrayModified = applyWindowFunction(2, 4, self.signalBands)
         # print(self.fourierArrayModified)
-        print("dataFrequencies Length: ", len(self.fourierDictionary['dataFrequencies']))
+        # print("dataFrequencies Length: ", len(self.fourierDictionary['dataFrequencies']))
 
-        self.widget1.plotItem.plot(self.audioArray, pen=self.pens[0])
-        self.widget2.plotItem.plot(self.fourierDictionary['dataFrequencies'], self.fourierDictionary['transformedData'], pen=self.pens[1])
         # self.widget3.plotItem.plot(self.fourierArrayModified, pen=self.pens[2])
 
-        print("Original: ", len(self.audioArray))
-        print("Fourier: ", len(self.fourierDictionary['transformedData']))
+        # print("Original: ", len(self.audioArray))
+        # print("Fourier: ", len(self.fourierDictionary['transformedData']))
         # print("Modified Fourier: ", len(self.fourierArrayModified))
 
         # Buttons Configuration
@@ -137,9 +133,24 @@ class equalizerApp(ss.Ui_MainWindow):
             self.sliderBars[i].setObjectName("slider" + str(i))
             self.horizontalLayout.addWidget(self.sliderBars[i])
 
-    def loadFileConfiguration(self):
+    # Load File
+    def load_file(self):
+        """
+        Load the File from User and add it to files dictionary
+        :return:
+        """
+        # Open File
+        self.filename, self.format = QtWidgets.QFileDialog.getOpenFileName(None, "Load Signal", "/home",
+                                                                           "*.wav;;")
+        # check if file not loaded (cancel loading....etc.)
+        if self.filename == "":
+            pass
+        else:
+            self.loadFileConfiguration(self.filename)
+
+    def loadFileConfiguration(self, fileName):
         # Load Wav File
-        self.audioFile = loadAudioFile('audio/Casio-MT-45-16-Beat.wav')
+        self.audioFile = loadAudioFile(fileName)
 
         # Convert array of arrays To one array
         self.audioArray = np.concatenate(self.audioFile['data'])
@@ -149,6 +160,13 @@ class equalizerApp(ss.Ui_MainWindow):
 
         # Convert the array to series to plot it
         self.audioArray = pd.array(self.audioArray)
+
+        self.fourierDictionary = fourierTransform(self.audioFile)
+        self.signalBands = createBands(self.fourierDictionary)
+
+        self.widget1.plotItem.plot(self.audioArray, pen=self.pens[0])
+        self.widget2.plotItem.plot(self.fourierDictionary['dataFrequencies'], self.fourierDictionary['transformedData'],
+                                   pen=self.pens[1])
 
     def sliderChanged(self, sliderID):
         sliderValue = self.sliderBars[sliderID].value()
