@@ -36,12 +36,14 @@ def fourierTransform(signalDict):
 
     return dataDict
 
-def inverseFourierTransform():
+def inverseFourierTransform(transfomerdData):
     """
     apply inverse Fourier Transform
-    :param
-    :return:
+    :param: transfomerdData: the fourier transformed data
+    :return: Real inverse transform data
     """
+    dataInverse = np.real(fftpack.ifft(transfomerdData))
+    return dataInverse
 
 def createBands(dataDict):
     """
@@ -63,9 +65,19 @@ def createBands(dataDict):
     return dataBands
 
 def windowModification(dataModified, bandIndx, gain):
+        """
+        a helper function to apply window
+        :param dataModified: the data to be modified
+        :param bandIndx: the indicies of the band
+        :param gain: the gain desired
+        :return: array data
+        """
         data = dataModified
+        print(data)
         data[bandIndx] = np.multiply(np.array(data[bandIndx]), gain)
+        print(data[bandIndx])
         data = np.concatenate(data)
+        print(data)
         return data
 
 def applyWindowFunction(sliderID, sliderVal, dataBands, windowType = "Rectangle"):
@@ -85,7 +97,6 @@ def applyWindowFunction(sliderID, sliderVal, dataBands, windowType = "Rectangle"
     hanningWindow = np.hanning(bandRange)
     hammingWindow = np.hamming(bandRange)
 
-
     if windowType == 'Rectangle': # TODO: convert multiple lines to function
         dataModified = windowModification(dataModified, bandIndx, gain)
     if windowType == 'Hanning':
@@ -97,13 +108,16 @@ def applyWindowFunction(sliderID, sliderVal, dataBands, windowType = "Rectangle"
 
     return dataModified
 
+
 if __name__ == '__main__':
-    data = {'transformedData': np.arange(20, 200, 1), 'dataFrequencies': np.arange(20, 200, 1)}
+    data = {'transformedData': np.arange(20, 60, 1), 'dataFrequencies': np.arange(20, 60, 1)}
 
     print("Length of transformedData: ", len(data['transformedData']))
     bands = createBands(data)
     # print(bands)
 
-    # print(applyWindowFunction(1, 6, bands, 'hamming'))
-    afterWindow = applyWindowFunction(1, 6, bands, 'hamming')
+    # print('result', applyWindowFunction(1, 6, bands, 'hamming'))
+    afterWindow = applyWindowFunction(1, 6, bands, 'Hamming')
+
     print(len(afterWindow))
+    # print(afterWindow)
