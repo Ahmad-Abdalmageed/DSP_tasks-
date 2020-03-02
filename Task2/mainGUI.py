@@ -5,12 +5,11 @@ from PyQt5.QtWidgets import QMessageBox
 import pyqtgraph as pg
 # from pyqtgraph import PlotWidget
 import pandas as pd
-
+import sounddevice as sd
 
 import playground as ss
 from mySliderClass import mySlider
 from helpers import *
-
 
 
 class equalizerApp(ss.Ui_MainWindow):
@@ -27,6 +26,10 @@ class equalizerApp(ss.Ui_MainWindow):
         self.sliderConfiguration()
         self.radioBoxesConfiguration()
         self.widgetsConfiguration()
+        #Media Player Config.
+        self.PlayAudio.clicked.connect(lambda : sd.play(self.audioArray ,  44100))
+        self.StopAudio.clicked.connect(lambda: sd.stop(self.audioArray , 44100))
+        self.PauseAudio.clicked.connect(lambda : sd.wait(self.audioArray , 44100))
 
         # sliderBars Configurations #TODO Convert it to loop (DRY!!)
         self.sliderBars[0].valueChanged.connect(lambda: self.sliderChanged(0))
