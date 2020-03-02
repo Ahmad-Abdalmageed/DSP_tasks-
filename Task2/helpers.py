@@ -32,21 +32,28 @@ def fourierTransform(signalDict):
 
     data_freqs = fftpack.fftfreq(len(signal), d= 1/samplingFrequency)
 
-    dataDict = {'trasformedData': data_ft, 'dataFrequencies': data_freqs}
+    dataDict = {'transformedData': data_ft, 'dataFrequencies': data_freqs}
 
     return dataDict
+
+def inverseFourierTransform():
+    """
+    apply inverse Fourier Transform
+    :param
+    :return:
+    """
 
 def createBands(dataDict):
     """
     create bands for the signal
     :param dataDict: a dictionary with:
-                                    'trasformedData' -- the absolute of the fourier transform
+                                    'transformedData' -- the absolute of the fourier transform
                                     'dataFrequencies' -- frequencies present in the signal
 
     :return: array of bands within the signal
     """
     freqs = dataDict['dataFrequencies']
-    data = dataDict['trasformedData']
+    data = dataDict['transformedData']
 
     freqBands = (0, 31.25, 62.5, 125, 250, 500, 10**3, 2*10**3, 4*10**3, 8*10**3, 16*10**3)
     dataBands = []
@@ -61,9 +68,9 @@ def windowModification(dataModified, bandIndx, gain):
         data = np.concatenate(data)
         return data
 
-def applyWindowFunction(sliderID, sliderVal, dataBands, windowType = "rectangle"):
+def applyWindowFunction(sliderID, sliderVal, dataBands, windowType = "Rectangle"):
     """
-        take the value from slider and apply the widnow given
+        take the value from slider and apply the window given
 
     :param sliderID: integer representing the id of slider
     :param sliderVal: the gain value
@@ -79,22 +86,24 @@ def applyWindowFunction(sliderID, sliderVal, dataBands, windowType = "rectangle"
     hammingWindow = np.hamming(bandRange)
 
 
-    if windowType == 'rectangle': # TODO: convert multiple lines to function
+    if windowType == 'Rectangle': # TODO: convert multiple lines to function
         dataModified = windowModification(dataModified, bandIndx, gain)
-    if windowType == 'hanning':
+    if windowType == 'Hanning':
         hanningMod = gain * hanningWindow
         dataModified = windowModification(dataModified, bandIndx, hanningMod)
-    if windowType == 'hamming':
+    if windowType == 'Hamming':
         hammingMod = gain * hammingWindow
         dataModified = windowModification(dataModified, bandIndx, hammingMod)
 
     return dataModified
 
 if __name__ == '__main__':
-    data = {'trasformedData': np.arange(20, 200, 1), 'dataFrequencies': np.arange(20, 200, 1)}
+    data = {'transformedData': np.arange(20, 200, 1), 'dataFrequencies': np.arange(20, 200, 1)}
 
+    print("Length of transformedData: ", len(data['transformedData']))
     bands = createBands(data)
-    print(bands)
+    # print(bands)
 
-    print(applyWindowFunction(1, 6, bands, 'hamming'))
-
+    # print(applyWindowFunction(1, 6, bands, 'hamming'))
+    afterWindow = applyWindowFunction(1, 6, bands, 'hamming')
+    print(len(afterWindow))
