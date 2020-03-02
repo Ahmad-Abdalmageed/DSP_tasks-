@@ -26,10 +26,12 @@ class equalizerApp(ss.Ui_MainWindow):
         self.sliderConfiguration()
         self.radioBoxesConfiguration()
         self.widgetsConfiguration()
+        self.loadFileConfiguration()
+        
         #Media Player Config.
-        self.PlayAudio.clicked.connect(lambda : sd.play(self.audioArray ,  44100))
-        self.StopAudio.clicked.connect(lambda: sd.stop(self.audioArray , 44100))
-        self.PauseAudio.clicked.connect(lambda : sd.wait(self.audioArray , 44100))
+        self.PlayAudio.clicked.connect(lambda : sd.play(self.audioFile["data"] ,  44100))
+        self.StopAudio.clicked.connect(lambda: sd.stop())
+        #self.PauseAudio.clicked.connect(lambda : sd.wait())
 
         # sliderBars Configurations #TODO Convert it to loop (DRY!!)
         self.sliderBars[0].valueChanged.connect(lambda: self.sliderChanged(0))
@@ -51,7 +53,6 @@ class equalizerApp(ss.Ui_MainWindow):
         for i in range(10):
             self.sliderBars[i].signal.connect(self.receiveSliderData)
 
-        self.loadFileConfiguration()
 
         # Apply Fourier Transform
         self.fourierDictionary =  fourierTransform(self.audioFile)
