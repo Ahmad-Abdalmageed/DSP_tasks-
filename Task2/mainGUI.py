@@ -172,13 +172,16 @@ class equalizerApp(ss.Ui_MainWindow):
         self.fourierDictionary = fourierTransform(self.audioFile)
         self.signalBands = createBands(self.fourierDictionary)
 
+        # Normalize
+        self.realFourierData = abs(self.fourierDictionary['transformedData']) * 2 / len(self.fourierDictionary['transformedData'])
+
         # on loading a new file
         self.widget1.plotItem.clear()
         self.widget2.plotItem.clear()
 
         # plotting
         self.widget1.plotItem.plot(self.audioFile['data'], pen=self.pens[0])
-        self.widget2.plotItem.plot(self.fourierDictionary['dataFrequencies'], self.fourierDictionary['transformedData'], pen=self.pens[1])
+        self.widget2.plotItem.plot(self.fourierDictionary['dataFrequencies'], self.realFourierData, pen=self.pens[1])
 
     def sliderChanged(self, sliderID):
         sliderValue = self.sliderBars[sliderID].value()
