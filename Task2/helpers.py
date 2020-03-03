@@ -26,7 +26,7 @@ def fourierTransform(signalDict):
     """
     signal = signalDict['data']
     samplingFrequency = signalDict['frequency']
-
+    print(signal)
     data_ft = fftpack.fft(signal)
     data_freqs = fftpack.fftfreq(len(signal), d= 1/samplingFrequency)
 
@@ -74,9 +74,9 @@ def windowModification(dataModified, bandIndx, gain):
 
         print("band before gain", data[bandIndx])
         data[bandIndx] = np.multiply(np.array(data[bandIndx]), gain)
-        print("band after gain", data[bandIndx])
-
+        # print(data[bandIndx])
         data = np.concatenate(data)
+        # print(data)
         return data
 
 def applyWindowFunction(sliderID, sliderVal, dataBands, windowType = "Rectangle"):
@@ -97,8 +97,7 @@ def applyWindowFunction(sliderID, sliderVal, dataBands, windowType = "Rectangle"
     hanningWindow = np.hanning(bandRange)
     hammingWindow = np.hamming(bandRange)
 
-
-    if windowType == 'Rectangle':
+    if windowType == 'Rectangle': # TODO: convert multiple lines to function
         dataModified = windowModification(dataModified, bandIndx, gain)
     if windowType == 'Hanning':
         hanningMod = gain * hanningWindow
@@ -111,17 +110,7 @@ def applyWindowFunction(sliderID, sliderVal, dataBands, windowType = "Rectangle"
 
 
 if __name__ == '__main__':
-    # data = {'transformedData': np.arange(20, 60, 1), 'dataFrequencies': np.arange(20, 60, 1)}
-    #
-    # print("Length of transformedData: ", len(data['transformedData']))
-    # bands = createBands(data)
-    # # print(bands)
-    #
-    # # print('result', applyWindowFunction(1, 6, bands, 'hamming'))
-    # afterWindow = applyWindowFunction(1, 6, bands, 'Hamming')
-    #
-    # print(len(afterWindow))
-    # # print(afterWindow)
+    data = {'transformedData': np.arange(20, 60, 1), 'dataFrequencies': np.arange(20, 60, 1)}
 
     audioFile = loadAudioFile('audio/Casio-MT-45-16-Beat.wav')
     # print(audioFile['data'].shape)
