@@ -28,8 +28,6 @@ def fourierTransform(signalDict):
     samplingFrequency = signalDict['frequency']
 
     data_ft = fftpack.fft(signal)
-    data_ft = (np.abs(data_ft) * 2) / len(signal)
-
     data_freqs = fftpack.fftfreq(len(signal), d= 1/samplingFrequency)
 
     dataDict = {'transformedData': data_ft, 'dataFrequencies': data_freqs}
@@ -72,7 +70,7 @@ def windowModification(dataModified, bandIndx, gain):
         :param gain: the gain desired
         :return: array data
         """
-        data = dataModified
+        data = np.copy(dataModified)
 
         print("band before gain", data[bandIndx])
         data[bandIndx] = np.multiply(np.array(data[bandIndx]), gain)
@@ -94,7 +92,7 @@ def applyWindowFunction(sliderID, sliderVal, dataBands, windowType = "Rectangle"
     bandIndx = sliderID -1
     gain = sliderVal
     print("slider val", gain)
-    dataModified = dataBands
+    dataModified = np.copy(dataBands)
     bandRange = len(dataModified[bandIndx])
     hanningWindow = np.hanning(bandRange)
     hammingWindow = np.hamming(bandRange)
@@ -126,12 +124,19 @@ if __name__ == '__main__':
     # # print(afterWindow)
 
     audioFile = loadAudioFile('audio/Casio-MT-45-16-Beat.wav')
-    print(audioFile['data'].shape)
-    print(audioFile['data'].flatten())
+    # print(audioFile['data'].shape)
+    # print(audioFile['data'].flatten())
     print(audioFile['data'])
 
+    fourierDict= fourierTransform(audioFile)
 
+    print(fourierDict['transformedData'])
 
+    dataBands = createBands(fourierDict)
+
+    dataBands[1] = applyWindowFunction(1, 2, dataBands)
+    dataBands[1] = applyWindowFunction(1, 3, dataBands)
+    dataBands[1] = applyWindowFunction(1, 4, dataBands)
 
 
 
