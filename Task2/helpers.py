@@ -57,16 +57,16 @@ def createBands(dataDict):
 
     freqBands = (0, 31.25, 62.5, 125, 250, 500, 10**3, 2*10**3, 4*10**3, 8*10**3, 16*10**3)
     dataBands = []
-    indices = []
+    realIndices = []
     for i in range(len(freqBands)-1):
         indices = [indx for indx, val in enumerate(freqs) if val > freqBands[i] and val < freqBands[i+1]]
-        indices.append(indices)
+        realIndices.append(indices)
         dataBands.append(data[indices])
     print("the data bands", dataBands)
-    dataConfiguration = {'dataBands': dataBands, 'indices': indices}
+    dataConfiguration = {'dataBands': dataBands, 'indices': realIndices}
     return dataConfiguration
 
-def windowModification(dataModified, bandIndx, gain):
+def windowModification(dataModified, bandIndx, gain, indices):
         """
         a helper function to apply window
         :param dataModified: the data to be modified
@@ -96,18 +96,19 @@ def applyWindowFunction(sliderID, sliderVal, dataConfiguration, windowType = "Re
     gain = sliderVal
     print("slider val", gain)
     dataModified = np.copy(dataConfiguration['dataBands'])
+    indices = dataConfiguration['indices']
     bandRange = len(dataModified[bandIndx])
     hanningWindow = np.hanning(bandRange)
     hammingWindow = np.hamming(bandRange)
 
     if windowType == 'Rectangle': # TODO: convert multiple lines to function
-        dataModified = windowModification(dataModified, bandIndx, gain)
+        dataModified = windowModification(dataModified, bandIndx, gain, indices)
     if windowType == 'Hanning':
         hanningMod = gain * hanningWindow
-        dataModified = windowModification(dataModified, bandIndx, hanningMod)
+        dataModified = windowModification(dataModified, bandIndx, hanningMod, indices)
     if windowType == 'Hamming':
         hammingMod = gain * hammingWindow
-        dataModified = windowModification(dataModified, bandIndx, hammingMod)
+        dataModified = windowModification(dataModified, bandIndx, hammingMod, indices)
 
     return dataModified
 
