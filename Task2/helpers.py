@@ -27,7 +27,7 @@ def fourierTransform(signalDict):
     signal = signalDict['data']
     samplingFrequency = signalDict['frequency']
     print("signal", signal)
-    data_ft = fftpack.fft(signal)
+    data_ft = np.fft.fft(signal)
     data_freqs = fftpack.fftfreq(len(signal), d= 1/samplingFrequency)
     print("Fourier", data_ft)
     dataDict = {'transformedData': data_ft, 'dataFrequencies': data_freqs}
@@ -40,7 +40,7 @@ def inverseFourierTransform(transfomerdData):
     :param: transformedData: the fourier transformed data
     :return: Real inverse transform data
     """
-    dataInverse = np.real(fftpack.ifft(transfomerdData))
+    dataInverse = np.real(fftpack.ifft(np.abs(transfomerdData)))
     return dataInverse
 
 def createBands(dataDict):
@@ -57,12 +57,13 @@ def createBands(dataDict):
 
     freqBands = (0, 31.25, 62.5, 125, 250, 500, 10**3, 2*10**3, 4*10**3, 8*10**3, 16*10**3)
     dataBands = []
-    indices = []
+    realindices = []
     for i in range(len(freqBands)-1):
         indices = [indx for indx, val in enumerate(freqs) if val > freqBands[i] and val < freqBands[i+1]]
-        # indices.append(indices)
+        realindices.append(indices)
         dataBands.append(data[indices])
     print("the data bands", dataBands)
+    print("the indices", realindices)
     # dataConfiguration = {'dataBands': dataBands, 'indices': indices}
     return dataBands
 
