@@ -82,7 +82,7 @@ def windowModification(dataModified, bandIndx, gain):
         data = np.concatenate(data)
         return data
 
-def applyWindowFunction(sliderID, sliderVal, dataConfiguration, windowType = "Rectangle"):
+def applyWindowFunction(sliderID, sliderVal, dataBands, windowType = "Rectangle"):
     """
         take the value from slider and apply the window given
 
@@ -95,7 +95,7 @@ def applyWindowFunction(sliderID, sliderVal, dataConfiguration, windowType = "Re
     bandIndx = sliderID -1
     gain = sliderVal
     print("slider val", gain)
-    dataModified = np.copy(dataConfiguration['dataBands'])
+    dataModified = np.copy(dataBands)
     bandRange = len(dataModified[bandIndx])
     hanningWindow = np.hanning(bandRange)
     hammingWindow = np.hamming(bandRange)
