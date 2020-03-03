@@ -32,6 +32,8 @@ class equalizerApp(ss.Ui_MainWindow):
         self.StopAudio.clicked.connect(lambda: sd.stop())
         #self.PauseAudio.clicked.connect(lambda : sd.wait())
 
+        # self.
+
         self.loadBtn.clicked.connect(self.load_file)
 
         # sliderBars Configurations #TODO Convert it to loop (DRY!!)
@@ -54,15 +56,6 @@ class equalizerApp(ss.Ui_MainWindow):
         for i in range(10):
             self.sliderBars[i].signal.connect(self.receiveSliderData)
 
-
-        # Apply Fourier Transform
-
-        # print(self.fourierDictionary['transformedData'])
-        # print(self.fourierDictionary['dataFrequencies'])
-
-        # Apply Inverse Fourier Transform
-        # self.inverseFourierDictionary = inverseFourierTransform()
-
         # pens configurations (Plot Colors)
         self.pens = [
             pg.mkPen(color=(255, 0, 0)),
@@ -71,16 +64,6 @@ class equalizerApp(ss.Ui_MainWindow):
             pg.mkPen(color=(200, 87, 125)),
             pg.mkPen(color=(123, 34, 203)),
         ]
-
-        # self.fourierArrayModified = applyWindowFunction(2, 4, self.signalBands)
-        # print(self.fourierArrayModified)
-        # print("dataFrequencies Length: ", len(self.fourierDictionary['dataFrequencies']))
-
-        # self.widget3.plotItem.plot(self.fourierArrayModified, pen=self.pens[2])
-
-        # print("Original: ", len(self.audioArray))
-        # print("Fourier: ", len(self.fourierDictionary['transformedData']))
-        # print("Modified Fourier: ", len(self.fourierArrayModified))
 
         # Buttons Configuration
         # Reset Button
@@ -155,6 +138,8 @@ class equalizerApp(ss.Ui_MainWindow):
         try:
             if shape[1] == 2 :
                 self.audioFile['data'] = self.audioFile['data'].flatten()
+                # print(self.audioFile['data'])
+        # print(self.audioFile['data'])
 
         # Convert array of arrays To one array
         # self.audioArray = np.concatenate(self.audioFile['data'])

@@ -73,9 +73,12 @@ class Ui_MainWindow(object):
         self.loadBtn = QtWidgets.QPushButton(self.centralwidget)
         self.loadBtn.setGeometry(QtCore.QRect(880, 660, 89, 25))
         self.loadBtn.setObjectName("loadBtn")
+        self.PlayAudio_2 = QtWidgets.QPushButton(self.centralwidget)
+        self.PlayAudio_2.setGeometry(QtCore.QRect(700, 480, 93, 28))
+        self.PlayAudio_2.setObjectName("PlayAudio_2")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1082, 22))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1082, 26))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -97,5 +100,16 @@ class Ui_MainWindow(object):
         self.StopAudio.setText(_translate("MainWindow", "Stop"))
         self.PauseAudio.setText(_translate("MainWindow", "Pause"))
         self.loadBtn.setText(_translate("MainWindow", "Load"))
+        self.PlayAudio_2.setText(_translate("MainWindow", "Play Result"))
 
 from pyqtgraph import PlotWidget
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())
+
