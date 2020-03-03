@@ -73,11 +73,12 @@ def windowModification(dataModified, bandIndx, gain):
         :return: array data
         """
         data = dataModified
-        print(data)
+
+        print("band before gain", data[bandIndx])
         data[bandIndx] = np.multiply(np.array(data[bandIndx]), gain)
-        print(data[bandIndx])
+        print("band after gain", data[bandIndx])
+
         data = np.concatenate(data)
-        print(data)
         return data
 
 def applyWindowFunction(sliderID, sliderVal, dataBands, windowType = "Rectangle"):
@@ -92,12 +93,14 @@ def applyWindowFunction(sliderID, sliderVal, dataBands, windowType = "Rectangle"
     """
     bandIndx = sliderID -1
     gain = sliderVal
+    print("slider val", gain)
     dataModified = dataBands
     bandRange = len(dataModified[bandIndx])
     hanningWindow = np.hanning(bandRange)
     hammingWindow = np.hamming(bandRange)
 
-    if windowType == 'Rectangle': # TODO: convert multiple lines to function
+
+    if windowType == 'Rectangle':
         dataModified = windowModification(dataModified, bandIndx, gain)
     if windowType == 'Hanning':
         hanningMod = gain * hanningWindow
@@ -110,14 +113,26 @@ def applyWindowFunction(sliderID, sliderVal, dataBands, windowType = "Rectangle"
 
 
 if __name__ == '__main__':
-    data = {'transformedData': np.arange(20, 60, 1), 'dataFrequencies': np.arange(20, 60, 1)}
+    # data = {'transformedData': np.arange(20, 60, 1), 'dataFrequencies': np.arange(20, 60, 1)}
+    #
+    # print("Length of transformedData: ", len(data['transformedData']))
+    # bands = createBands(data)
+    # # print(bands)
+    #
+    # # print('result', applyWindowFunction(1, 6, bands, 'hamming'))
+    # afterWindow = applyWindowFunction(1, 6, bands, 'Hamming')
+    #
+    # print(len(afterWindow))
+    # # print(afterWindow)
 
-    print("Length of transformedData: ", len(data['transformedData']))
-    bands = createBands(data)
-    # print(bands)
+    audioFile = loadAudioFile('audio/Casio-MT-45-16-Beat.wav')
+    print(audioFile['data'].shape)
+    print(audioFile['data'].flatten())
+    print(audioFile['data'])
 
-    # print('result', applyWindowFunction(1, 6, bands, 'hamming'))
-    afterWindow = applyWindowFunction(1, 6, bands, 'Hamming')
 
-    print(len(afterWindow))
-    # print(afterWindow)
+
+
+
+
+

@@ -151,21 +151,32 @@ class equalizerApp(ss.Ui_MainWindow):
     def loadFileConfiguration(self, fileName):
         # Load Wav File
         self.audioFile = loadAudioFile(fileName)
-        print(self.audioFile)
+        shape = self.audioFile['data'].shape
+        try:
+            if shape[1] == 2 :
+                self.audioFile['data'] = self.audioFile['data'].flatten()
 
         # Convert array of arrays To one array
         # self.audioArray = np.concatenate(self.audioFile['data'])
-
+        #
         # Add it back to the original Dictionary
         # self.audioFile['data'] = self.audioArray
-
+        #
         # Convert the array to series to plot it
         # self.audioArray = pd.array(self.audioArray)
-
+        #
         # self.fourierDictionary = fourierTransform(self.audioFile)
+        except:
+            pass
+
         self.fourierDictionary = fourierTransform(self.audioFile)
         self.signalBands = createBands(self.fourierDictionary)
-        #
+
+        # on loading a new file
+        self.widget1.plotItem.clear()
+        self.widget2.plotItem.clear()
+
+        # plotting
         self.widget1.plotItem.plot(self.audioFile['data'], pen=self.pens[0])
         self.widget2.plotItem.plot(self.fourierDictionary['dataFrequencies'], self.fourierDictionary['transformedData'], pen=self.pens[1])
 
@@ -173,14 +184,11 @@ class equalizerApp(ss.Ui_MainWindow):
         sliderValue = self.sliderBars[sliderID].value()
         self.getWindowMode()
         print(equalizerApp.windowMode)
-        # tempArray = np.copy(self.fourierArrayModified)
-        # print(type(tempArray))
 
         self.widget3.plotItem.clear()
         if sliderValue != 0:
             self.fourierArrayModified = applyWindowFunction(sliderID, sliderValue, self.signalBands, windowType=equalizerApp.windowMode)
         self.widget3.plotItem.plot(self.fourierArrayModified, pen=self.pens[2])
-        # self.fourierArrayModified = tempArray
 
         #TODO Return the array to normal state before multiplying
 
