@@ -207,13 +207,13 @@ class equalizerApp(ss.Ui_MainWindow):
         # self.newData = np.multiply(self.audioFile['data'], [3])
         # print(self.newData)
 
-        self.newData = np.multiply(self.fourierDictionary['transformedData'], [3])
+        self.newData = np.multiply(self.fourierDictionary['transformedData'], [500])
         self.newInverse = inverseFourierTransform(self.newData)
 
         print(self.newInverse)
 
-        # wavfile.write('PikaNew.wav', self.audioFile['frequency'], self.newInverse)
-        # sd.play(self.newInverse, self.audioFile['frequency'])
+        wavfile.write('PikaNew.wav', self.audioFile['frequency'], self.newInverse.astype(np.dtype('i2')))
+        sd.play(self.newInverse, self.audioFile['frequency'])
 
 
 def main():
