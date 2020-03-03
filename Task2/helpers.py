@@ -94,6 +94,8 @@ def applyWindowFunction(sliderID, sliderVal, dataBands, windowType = "Rectangle"
     """
     bandIndx = sliderID -1
     gain = sliderVal
+    if gain < 0 :
+        gain = abs(1/gain)
     print("slider val", gain)
     dataModified = np.copy(dataBands)
     bandRange = len(dataModified[bandIndx])

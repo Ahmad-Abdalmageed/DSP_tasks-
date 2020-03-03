@@ -22,6 +22,7 @@ class equalizerApp(ss.Ui_MainWindow):
         :param mainwindow: QMainWindow Object
         """
         super(equalizerApp, self).setupUi(starterWindow)
+        self.fourierArrayModified = ...
 
         self.sliderConfiguration()
         self.radioBoxesConfiguration()
@@ -176,7 +177,7 @@ class equalizerApp(ss.Ui_MainWindow):
         self.widget3.plotItem.clear()
         if sliderValue != 0:
             self.fourierArrayModified = applyWindowFunction(sliderID, sliderValue, self.signalBands, windowType=equalizerApp.windowMode)
-        self.widget3.plotItem.plot(self.fourierArrayModified, pen=self.pens[2])
+        # self.widget3.plotItem.plot(self.fourierArrayModified, pen=self.pens[2])
 
         #TODO Return the array to normal state before multiplying
 
@@ -207,9 +208,9 @@ class equalizerApp(ss.Ui_MainWindow):
         # self.newData = np.multiply(self.audioFile['data'], [3])
         # print(self.newData)
 
-        self.newData = np.multiply(self.fourierDictionary['transformedData'], [500])
-        self.newInverse = inverseFourierTransform(self.newData)
-
+        # self.newData = np.multiply(self.fourierDictionary['transformedData'], [500])
+        self.newInverse = inverseFourierTransform(self.fourierArrayModified)
+        print(self.audioFile['data'])
         print(self.newInverse)
 
         wavfile.write('PikaNew.wav', self.audioFile['frequency'], self.newInverse.astype(np.dtype('i2')))
