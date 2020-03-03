@@ -32,7 +32,7 @@ class equalizerApp(ss.Ui_MainWindow):
         self.StopAudio.clicked.connect(lambda: sd.stop())
         #self.PauseAudio.clicked.connect(lambda : sd.wait())
 
-        # self.
+        self.PlayAudio_2.clicked.connect(self.playResultFile)
 
         self.loadBtn.clicked.connect(self.load_file)
 
@@ -201,6 +201,20 @@ class equalizerApp(ss.Ui_MainWindow):
         self.widget3.plotItem.clear()
         # self.widget3.plotItem.plot(self.fourierArrayModified, pen=self.pens[2])
         #TODO Need more handling
+
+    def playResultFile(self):
+        # print(type(self.audioFile['data']))
+        # self.newData = np.multiply(self.audioFile['data'], [3])
+        # print(self.newData)
+
+        self.newData = np.multiply(self.fourierDictionary['transformedData'], [3])
+        self.newInverse = inverseFourierTransform(self.newData)
+
+        print(self.newInverse)
+
+        # wavfile.write('PikaNew.wav', self.audioFile['frequency'], self.newInverse)
+        # sd.play(self.newInverse, self.audioFile['frequency'])
+
 
 def main():
     """
