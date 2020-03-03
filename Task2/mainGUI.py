@@ -155,6 +155,9 @@ class equalizerApp(ss.Ui_MainWindow):
             pass
 
         self.fourierDictionary = fourierTransform(self.audioFile)
+
+        # Signal Frequencies
+        print(self.fourierDictionary['dataFrequencies'])
         self.signalBands = createBands(self.fourierDictionary)
 
         # Normalize
