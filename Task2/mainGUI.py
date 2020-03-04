@@ -11,6 +11,7 @@ import playground as ss
 from mySliderClass import mySlider
 from helpers import *
 
+sd.default.channels = 2
 
 class equalizerApp(ss.Ui_MainWindow):
     selectedSlider = 0
@@ -22,7 +23,6 @@ class equalizerApp(ss.Ui_MainWindow):
         :param mainwindow: QMainWindow Object
         """
         super(equalizerApp, self).setupUi(starterWindow)
-        self.fourierArrayModified = ...
 
         self.sliderConfiguration()
         self.radioBoxesConfiguration()
@@ -30,6 +30,7 @@ class equalizerApp(ss.Ui_MainWindow):
 
         #Media Player Config.
         self.PlayAudio.clicked.connect(lambda : sd.play(self.audioFile["data"] ,  self.audioFile['frequency']))
+        # self.PlayAudio.clicked.connect(lambda : sd.play(self.testFile,  self.audioFile['frequency']))
         self.StopAudio.clicked.connect(lambda: sd.stop())
         #self.PauseAudio.clicked.connect(lambda : sd.wait())
 
@@ -48,6 +49,7 @@ class equalizerApp(ss.Ui_MainWindow):
         self.sliderBars[7].valueChanged.connect(lambda: self.sliderChanged(7))
         self.sliderBars[8].valueChanged.connect(lambda: self.sliderChanged(8))
         self.sliderBars[9].valueChanged.connect(lambda: self.sliderChanged(9))
+
 
         # State of radioButtons
         for i in range(len(self.windowButtons)):
@@ -135,10 +137,17 @@ class equalizerApp(ss.Ui_MainWindow):
     def loadFileConfiguration(self, fileName):
         # Load Wav File
         self.audioFile = loadAudioFile(fileName)
-        shape = self.audioFile['data'].shape
-        try:
-            if shape[1] == 2 :
-                self.audioFile['data'] = self.audioFile['data'].flatten()
+        # self.testFile = np.copy(self.audioFile['data'])
+        # print(type(self.testFile))
+        # print(self.testFile)
+        # print(self.audioFile['data'])
+        # self.arrayNEW = self.testFile["data"]
+        # print(self.arrayNEW)
+        self.dataType = type(self.audioFile['data'][0, 0])
+        # shape = self.audioFile['data'].shape
+        # try:
+        #     if shape[1] == 2 :
+        #         self.audioFile['data'] = self.audioFile['data'].flatten()
                 # print(self.audioFile['data'])
         # print(self.audioFile['data'])
 
@@ -152,13 +161,10 @@ class equalizerApp(ss.Ui_MainWindow):
         # self.audioArray = pd.array(self.audioArray)
         #
         # self.fourierDictionary = fourierTransform(self.audioFile)
-        except:
-            pass
+        # except:
+        #     pass
 
         self.fourierDictionary = fourierTransform(self.audioFile)
-
-        # Signal Frequencies
-        print(self.fourierDictionary['dataFrequencies'])
         self.signalBands = createBands(self.fourierDictionary)
 
         # Normalize
@@ -169,8 +175,9 @@ class equalizerApp(ss.Ui_MainWindow):
         self.widget2.plotItem.clear()
 
         # plotting
-        self.widget1.plotItem.plot(self.audioFile['data'], pen=self.pens[0])
-        self.widget2.plotItem.plot(self.fourierDictionary['dataFrequencies'], self.realFourierData, pen=self.pens[1])
+        # self.widget1.plotItem.plot(self.audioFile['data'], pen=self.pens[0])
+        # self.widget2.plotItem.plot(self.fourierDictionary['dataFrequencies'], self.realFourierData, pen=self.pens[1])
+        self.fourierArrayModified = np.copy(self.fourierDictionary['transformedData'])
 
     def sliderChanged(self, sliderID):
         sliderValue = self.sliderBars[sliderID].value()
@@ -211,13 +218,20 @@ class equalizerApp(ss.Ui_MainWindow):
         # self.newData = np.multiply(self.audioFile['data'], [3])
         # print(self.newData)
 
-        self.newData = np.multiply(self.fourierDictionary['transformedData'], [3])
-        self.newInverse = inverseFourierTransform(self.newData)
-
+        # self.newData = np.multiply(self.fourierDictionary['transformedData'], [50])
+        # self.notNormalized = np.copy(inverseFourierTransform(self.fourierArrayModified))
+        self.newInverse = inverseFourierTransform(self.fourierArrayModified)
+        # self.newInverse = self.newInverse.astype(se)
+        # self.newInverse = np.multiply(self.newInverse, [1 * len(self.fourierArrayModified)])
+        print(self.audioFile['data'])
+        # print(self.notNormalized)
         print(self.newInverse)
+        print(self.dataType)
+        # print(self.newInverse2)
 
-        # wavfile.write('PikaNew.wav', self.audioFile['frequency'], self.newInverse)
-        # sd.play(self.newInverse, self.audioFile['frequency'])
+        wavfile.write('PikaNew.wav', self.audioFile['frequency'], self.newInverse.astype(self.dataType))
+        # wavfile.write('PikaNew.wav', self.audioFile['frequency'], self.newInverse2.astype(np.dtype('i2')))
+        sd.play(self.newInverse.astype(self.dataType), self.audioFile['frequency'])
 
 
 def main():
