@@ -26,10 +26,10 @@ def fourierTransform(signalDict):
     """
     signal = signalDict['data']
     samplingFrequency = signalDict['frequency']
-    print("signal", signal)
+    # print("signal", signal)
     data_ft = fftpack.fft2(signal)
     data_freqs = fftpack.fftfreq(len(signal), d= 1/samplingFrequency)
-    print("Fourier", data_ft)
+    # print("Fourier", data_ft)
     dataDict = {'transformedData': data_ft, 'dataFrequencies': data_freqs}
 
     return dataDict
@@ -62,7 +62,7 @@ def createBands(dataDict):
         indices = [indx for indx, val in enumerate(freqs) if val > freqBands[i] and val < freqBands[i+1]]
         realIndices.append(indices)
         dataBands.append(data[indices])
-    print("the data bands", dataBands)
+    # print("the data bands", dataBands)
     dataConfiguration = {'dataBands': dataBands, 'indices': realIndices}
     return dataConfiguration
 
@@ -113,22 +113,22 @@ def applyWindowFunction(sliderID, sliderVal, dataConfiguration, windowType = "Re
     return dataModified
 
 
-if __name__ == '__main__':
-    data = {'transformedData': np.arange(20, 60, 1), 'dataFrequencies': np.arange(20, 60, 1)}
+# if __name__ == '__main__':
+    # data = {'transformedData': np.arange(20, 60, 1), 'dataFrequencies': np.arange(20, 60, 1)}
 
-    audioFile = loadAudioFile('audio/pika.wav')
+    # audioFile = loadAudioFile('audio/pika.wav')
     # print(audioFile['data'].shape)
     # print(audioFile['data'].flatten())
     # print(audioFile['data'])
-    fourierDict= fourierTransform(audioFile)
+    # fourierDict= fourierTransform(audioFile)
 
     # print(fourierDict['transformedData'])
 
-    dataBands = createBands(fourierDict)
+    # dataBands = createBands(fourierDict)
 
-    dataBands[1] = applyWindowFunction(1, 2, dataBands)
-    dataBands[1] = applyWindowFunction(1, 3, dataBands)
-    dataBands[1] = applyWindowFunction(1, 4, dataBands)
+    # dataBands[1] = applyWindowFunction(1, 2, dataBands)
+    # dataBands[1] = applyWindowFunction(1, 3, dataBands)
+    # dataBands[1] = applyWindowFunction(1, 4, dataBands)
 
 
 
