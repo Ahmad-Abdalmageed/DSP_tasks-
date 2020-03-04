@@ -27,7 +27,7 @@ def fourierTransform(signalDict):
     signal = signalDict['data']
     samplingFrequency = signalDict['frequency']
     print("signal", signal)
-    data_ft = fftpack.fft(signal)
+    data_ft = np.fft.fft(signal)
     data_freqs = fftpack.fftfreq(len(signal), d= 1/samplingFrequency)
     print("Fourier", data_ft)
     dataDict = {'transformedData': data_ft, 'dataFrequencies': data_freqs}
@@ -40,7 +40,7 @@ def inverseFourierTransform(transfomerdData):
     :param: transformedData: the fourier transformed data
     :return: Real inverse transform data
     """
-    dataInverse = np.real(fftpack.ifft(transfomerdData))
+    dataInverse = np.real(fftpack.ifft(np.abs(transfomerdData)))
     return dataInverse
 
 def createBands(dataDict):
@@ -57,16 +57,17 @@ def createBands(dataDict):
 
     freqBands = (0, 31.25, 62.5, 125, 250, 500, 10**3, 2*10**3, 4*10**3, 8*10**3, 16*10**3)
     dataBands = []
-    realIndices = []
+    realindices = []
     for i in range(len(freqBands)-1):
         indices = [indx for indx, val in enumerate(freqs) if val > freqBands[i] and val < freqBands[i+1]]
-        realIndices.append(indices)
+        realindices.append(indices)
         dataBands.append(data[indices])
     print("the data bands", dataBands)
-    dataConfiguration = {'dataBands': dataBands, 'indices': realIndices}
-    return dataConfiguration
+    print("the indices", realindices)
+    # dataConfiguration = {'dataBands': dataBands, 'indices': indices}
+    return dataBands
 
-def windowModification(dataModified, bandIndx, gain, indices):
+def windowModification(dataModified, bandIndx, gain):
         """
         a helper function to apply window
         :param dataModified: the data to be modified
@@ -82,7 +83,7 @@ def windowModification(dataModified, bandIndx, gain, indices):
         data = np.concatenate(data)
         return data
 
-def applyWindowFunction(sliderID, sliderVal, dataConfiguration, windowType = "Rectangle"):
+def applyWindowFunction(sliderID, sliderVal, dataBands, windowType = "Rectangle"):
     """
         take the value from slider and apply the window given
 
@@ -94,21 +95,22 @@ def applyWindowFunction(sliderID, sliderVal, dataConfiguration, windowType = "Re
     """
     bandIndx = sliderID -1
     gain = sliderVal
+    if gain < 0 :
+        gain = abs(1/gain)
     print("slider val", gain)
-    dataModified = np.copy(dataConfiguration['dataBands'])
-    indices = dataConfiguration['indices']
+    dataModified = np.copy(dataBands)
     bandRange = len(dataModified[bandIndx])
     hanningWindow = np.hanning(bandRange)
     hammingWindow = np.hamming(bandRange)
 
     if windowType == 'Rectangle': # TODO: convert multiple lines to function
-        dataModified = windowModification(dataModified, bandIndx, gain, indices)
+        dataModified = windowModification(dataModified, bandIndx, gain)
     if windowType == 'Hanning':
         hanningMod = gain * hanningWindow
-        dataModified = windowModification(dataModified, bandIndx, hanningMod, indices)
+        dataModified = windowModification(dataModified, bandIndx, hanningMod)
     if windowType == 'Hamming':
         hammingMod = gain * hammingWindow
-        dataModified = windowModification(dataModified, bandIndx, hammingMod, indices)
+        dataModified = windowModification(dataModified, bandIndx, hammingMod)
 
     return dataModified
 
