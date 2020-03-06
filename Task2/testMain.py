@@ -30,13 +30,14 @@ class equalizerApp(ss.Ui_MainWindow):
 
         self.sliders = [self.verticalSlider, self.verticalSlider_2, self.verticalSlider_3, self.verticalSlider_4,
                         self.verticalSlider_5, self.verticalSlider_6, self.verticalSlider_7, self.verticalSlider_8,
-                        self.verticalSlider_9,]
+                        self.verticalSlider_9, self.verticalSlider_10]
 
         self.playerButtons = [self.playButton, self.pauseButton, self.stopButton]
         self.frontWidgets = [self.inputSignalGraph, self.inputSignalFourier, self.sliderChangedGraph]
 
         self.windgetTitels = ["Original Signal", "Fourier Transform", "Changes Applied"]
         self.widgetsBottomLabels = ["No. of Samples", "Frequencies", "Frequencies"]
+
         # pens configurations (Plot Colors)
         self.pens = [pg.mkPen(color=(255, 0, 0)), pg.mkPen(color=(0, 255, 0)),
                      pg.mkPen(color=(0, 0, 255)), pg.mkPen(color=(200, 87, 125)),
@@ -53,7 +54,8 @@ class equalizerApp(ss.Ui_MainWindow):
 
         for i in self.sliders:
             i.id = self.sliders.index(i)
-            i.valueChanged.connect(lambda : self.sliderChanged(i.id))
+            i.valueChanged.connect(self.sliderChanged)
+            # i.sliderPressed.connect(self.sliderChanged)
             
     # Load File
     def loadFile(self):
@@ -84,7 +86,8 @@ class equalizerApp(ss.Ui_MainWindow):
         if len(self.signalFile['dim']) == 2 : # TODO NOTE: not DRY
             self.inputSignalGraph.plotItem.plot(self.signalFile['data'][:, 0], pem=self.pens[0]) # if 2d print one channel
             self.inputSignalFourier.plotItem.plot(self.signalFourier['dataFrequencies'],
-            np.abs(self.signalFourier['transformedData'][:, 0])*2/len(self.signalFourier['transformedData'][:, 0]), pen =self.pens[1])
+                                                  np.abs(self.signalFourier['transformedData'][:, 0])*2/len(self.signalFourier['transformedData'][:, 0]),
+                                                  pen =self.pens[1])
         else:
             # plotting
             self.inputSignalGraph.plotItem.plot(self.signalFile['data'  ], pem=self.pens[0])
@@ -92,7 +95,7 @@ class equalizerApp(ss.Ui_MainWindow):
             np.abs(self.signalFourier['transformedData'])*2/len(self.signalFourier['transformedData']), pen =self.pens[1])
 
     def sliderChanged(self, i):
-        print(i)
+        return print(i)
 
 
 
