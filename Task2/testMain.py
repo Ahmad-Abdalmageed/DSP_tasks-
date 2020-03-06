@@ -96,7 +96,7 @@ class equalizerApp(ss.Ui_MainWindow):
                                                   pen =self.pens[1])
         else:
             # plotting
-            self.inputSignalGraph.plotItem.plot(self.signalFile['data'  ], pem=self.pens[0])
+            self.inputSignalGraph.plotItem.plot(self.signalFile['data'], pem=self.pens[0])
             self.inputSignalFourier.plotItem.plot(np.abs(self.signalFourier['transformedData'])*2/len(self.signalFourier['transformedData']), pen =self.pens[1])
 
     def sliderChanged(self, indx, val):
@@ -106,9 +106,11 @@ class equalizerApp(ss.Ui_MainWindow):
         if val != 0:
             self.signalModification = applyWindowFunction(indx+1, val, self.signalBands, equalizerApp.windowMode)
         try:
-            self.sliderChangedGraph.plotItem.plot(np.real(np.concatenate(self.signalBands['dataBands'])), pen= self.pens[2])
+            self.sliderChangedGraph.plotItem.plot(np.abs(self.signalModification)*2/len(self.signalBands), pen= self.pens[2])
         except:
+            print("failed")
             pass
+
     def getWindow(self):
         for i in self.windows:
             if i.isChecked():
