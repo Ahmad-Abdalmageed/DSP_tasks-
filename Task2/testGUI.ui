@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>806</width>
-    <height>866</height>
+    <width>980</width>
+    <height>1031</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>805</width>
-    <height>805</height>
+    <width>820</width>
+    <height>810</height>
    </size>
   </property>
   <property name="sizeIncrement">
@@ -31,8 +31,8 @@
   <widget class="QWidget" name="centralwidget">
    <property name="minimumSize">
     <size>
-     <width>805</width>
-     <height>805</height>
+     <width>820</width>
+     <height>810</height>
     </size>
    </property>
    <layout class="QGridLayout" name="gridLayout">
@@ -68,7 +68,7 @@
             <property name="minimumSize">
              <size>
               <width>200</width>
-              <height>140</height>
+              <height>180</height>
              </size>
             </property>
            </widget>
@@ -78,7 +78,7 @@
             <property name="minimumSize">
              <size>
               <width>200</width>
-              <height>140</height>
+              <height>180</height>
              </size>
             </property>
            </widget>
@@ -107,7 +107,7 @@
             <property name="minimumSize">
              <size>
               <width>130</width>
-              <height>160</height>
+              <height>180</height>
              </size>
             </property>
            </widget>
@@ -580,7 +580,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>806</width>
+     <width>980</width>
      <height>22</height>
     </rect>
    </property>

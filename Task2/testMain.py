@@ -77,10 +77,12 @@ class equalizerApp(ss.Ui_MainWindow):
             i.plotItem.clear()
 
         if len(self.signalFile['dim']) == 2 :
+            self.inputSignalGraph.plotItem.plot(self.signalFile['data'].flatten(), pem=self.pens[0])
+
             print("2Dimensional shit")
             pass
         # plotting
-        self.inputSignalGraph.plotItem.plot(self.signalFile['data'], pem=self.pens[0])
+        # self.inputSignalGraph.plotItem.plot(self.signalFile['data'], pem=self.pens[0])
         # self.inputSignalFourier.plotItem.plot(self.signalFourier['dataFrequencies'],
         # np.abs(self.signalFourier['transformedData'])*2/len(self.signalFourier['transformedData']), pen =self.pens[1])
 
