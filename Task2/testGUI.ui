@@ -955,7 +955,7 @@
                  <enum>Qt::Vertical</enum>
                 </property>
                 <property name="tickPosition">
-                 <enum>QSlider::TicksBothSides</enum>
+                 <enum>QSlider::TicksBelow</enum>
                 </property>
                 <property name="tickInterval">
                  <number>1</number>
@@ -977,7 +977,7 @@
                  <enum>Qt::Vertical</enum>
                 </property>
                 <property name="tickPosition">
-                 <enum>QSlider::TicksBothSides</enum>
+                 <enum>QSlider::TicksBelow</enum>
                 </property>
                 <property name="tickInterval">
                  <number>1</number>
@@ -999,7 +999,7 @@
                  <enum>Qt::Vertical</enum>
                 </property>
                 <property name="tickPosition">
-                 <enum>QSlider::TicksBothSides</enum>
+                 <enum>QSlider::TicksBelow</enum>
                 </property>
                 <property name="tickInterval">
                  <number>1</number>
@@ -1021,7 +1021,7 @@
                  <enum>Qt::Vertical</enum>
                 </property>
                 <property name="tickPosition">
-                 <enum>QSlider::TicksBothSides</enum>
+                 <enum>QSlider::TicksBelow</enum>
                 </property>
                 <property name="tickInterval">
                  <number>1</number>
@@ -1043,7 +1043,7 @@
                  <enum>Qt::Vertical</enum>
                 </property>
                 <property name="tickPosition">
-                 <enum>QSlider::TicksBothSides</enum>
+                 <enum>QSlider::TicksBelow</enum>
                 </property>
                 <property name="tickInterval">
                  <number>1</number>
@@ -1065,7 +1065,7 @@
                  <enum>Qt::Vertical</enum>
                 </property>
                 <property name="tickPosition">
-                 <enum>QSlider::TicksBothSides</enum>
+                 <enum>QSlider::TicksBelow</enum>
                 </property>
                 <property name="tickInterval">
                  <number>1</number>
@@ -1087,7 +1087,7 @@
                  <enum>Qt::Vertical</enum>
                 </property>
                 <property name="tickPosition">
-                 <enum>QSlider::TicksBothSides</enum>
+                 <enum>QSlider::TicksBelow</enum>
                 </property>
                 <property name="tickInterval">
                  <number>1</number>
@@ -1109,7 +1109,7 @@
                  <enum>Qt::Vertical</enum>
                 </property>
                 <property name="tickPosition">
-                 <enum>QSlider::TicksBothSides</enum>
+                 <enum>QSlider::TicksBelow</enum>
                 </property>
                 <property name="tickInterval">
                  <number>1</number>
@@ -1131,7 +1131,7 @@
                  <enum>Qt::Vertical</enum>
                 </property>
                 <property name="tickPosition">
-                 <enum>QSlider::TicksBothSides</enum>
+                 <enum>QSlider::TicksBelow</enum>
                 </property>
                 <property name="tickInterval">
                  <number>1</number>

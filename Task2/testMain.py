@@ -63,7 +63,10 @@ class equalizerApp(ss.Ui_MainWindow):
 
     def loadFileConfiguration(self, fileName):
         self.signalFile = loadAudioFile(fileName)
-        print("Loaded")
+        self.plotSignalLoaded()
+
+    def plotSignalLoaded(self):
+        self.signalFourier = fourierTransform(self.signalFile)
 
 
 def main():
