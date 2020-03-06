@@ -11,7 +11,8 @@ def loadAudioFile(filePath):
     :return: a dictionary with sampling freq. and data inside the file
     """
     samplingFrequency, data = wavfile.read(filePath)
-    signalDict = {'frequency':samplingFrequency, 'data':data}
+    dimensions = data.shape
+    signalDict = {'frequency':samplingFrequency, 'data':data, 'dim': dimensions}
     return signalDict
 
 def fourierTransform(signalDict):
@@ -26,9 +27,14 @@ def fourierTransform(signalDict):
     """
     signal = signalDict['data']
     samplingFrequency = signalDict['frequency']
+    dim = signalDict['dim']
     # print("signal", signal)
-    data_ft = fftpack.fft2(signal)
-    data_freqs = fftpack.fftfreq(len(signal), d= 1/samplingFrequency)
+    if len(dim) == 2 :
+        data_ft = fftpack.fft2(signal)
+        data_freqs = fftpack.fftfreq(len(signal), d= 1/samplingFrequency)
+    else:
+        data_ft = fftpack.fft(signal)
+        data_freqs = fftpack.fftfreq(len(signal), d=1 / samplingFrequency)
     # print("Fourier", data_ft)
     dataDict = {'transformedData': data_ft, 'dataFrequencies': data_freqs}
 
@@ -113,19 +119,24 @@ def applyWindowFunction(sliderID, sliderVal, dataConfiguration, windowType = "Re
     return dataModified
 
 
-# if __name__ == '__main__':
-    # data = {'transformedData': np.arange(20, 60, 1), 'dataFrequencies': np.arange(20, 60, 1)}
+if __name__ == '__main__':
+    data = {'transformedData': np.arange(20, 60, 1), 'dataFrequencies': np.arange(20, 60, 1)}
 
-    # audioFile = loadAudioFile('audio/pika.wav')
+    audioFile = loadAudioFile('audio/Casio-MT-45-16-Beat.wav')
+    print(audioFile['data'])
     # print(audioFile['data'].shape)
     # print(audioFile['data'].flatten())
     # print(audioFile['data'])
-    # fourierDict= fourierTransform(audioFile)
+    fourierDict= fourierTransform(audioFile)
+    test = fftpack.fft(audioFile['data'])
+    print("2d", fourierDict['transformedData'])
+    print("1d", test)
 
+    #
     # print(fourierDict['transformedData'])
-
+    #
     # dataBands = createBands(fourierDict)
-
+    #
     # dataBands[1] = applyWindowFunction(1, 2, dataBands)
     # dataBands[1] = applyWindowFunction(1, 3, dataBands)
     # dataBands[1] = applyWindowFunction(1, 4, dataBands)

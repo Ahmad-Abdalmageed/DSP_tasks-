@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>872</width>
-    <height>850</height>
+    <width>869</width>
+    <height>900</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -921,7 +921,7 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="PlotWidget" name="inputSignalFourier_2" native="true">
+           <widget class="PlotWidget" name="sliderChangedGraph" native="true">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -938,200 +938,253 @@
           </item>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout">
+            <property name="sizeConstraint">
+             <enum>QLayout::SetMinimumSize</enum>
+            </property>
             <item>
-             <widget class="QSlider" name="verticalSlider_4">
-              <property name="minimum">
-               <number>-3</number>
-              </property>
-              <property name="maximum">
-               <number>3</number>
-              </property>
-              <property name="tracking">
-               <bool>true</bool>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="tickPosition">
-               <enum>QSlider::TicksBothSides</enum>
-              </property>
-              <property name="tickInterval">
-               <number>1</number>
-              </property>
-             </widget>
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <item>
+               <widget class="QSlider" name="verticalSlider">
+                <property name="minimum">
+                 <number>-3</number>
+                </property>
+                <property name="maximum">
+                 <number>3</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="tickPosition">
+                 <enum>QSlider::TicksBothSides</enum>
+                </property>
+                <property name="tickInterval">
+                 <number>1</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="verticalSlider_2">
+                <property name="minimum">
+                 <number>-3</number>
+                </property>
+                <property name="maximum">
+                 <number>3</number>
+                </property>
+                <property name="tracking">
+                 <bool>true</bool>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="tickPosition">
+                 <enum>QSlider::TicksBothSides</enum>
+                </property>
+                <property name="tickInterval">
+                 <number>1</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="verticalSlider_3">
+                <property name="minimum">
+                 <number>-3</number>
+                </property>
+                <property name="maximum">
+                 <number>3</number>
+                </property>
+                <property name="tracking">
+                 <bool>true</bool>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="tickPosition">
+                 <enum>QSlider::TicksBothSides</enum>
+                </property>
+                <property name="tickInterval">
+                 <number>1</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="verticalSlider_4">
+                <property name="minimum">
+                 <number>-3</number>
+                </property>
+                <property name="maximum">
+                 <number>3</number>
+                </property>
+                <property name="tracking">
+                 <bool>true</bool>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="tickPosition">
+                 <enum>QSlider::TicksBothSides</enum>
+                </property>
+                <property name="tickInterval">
+                 <number>1</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="verticalSlider_5">
+                <property name="minimum">
+                 <number>-3</number>
+                </property>
+                <property name="maximum">
+                 <number>3</number>
+                </property>
+                <property name="tracking">
+                 <bool>true</bool>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="tickPosition">
+                 <enum>QSlider::TicksBothSides</enum>
+                </property>
+                <property name="tickInterval">
+                 <number>1</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="verticalSlider_6">
+                <property name="minimum">
+                 <number>-3</number>
+                </property>
+                <property name="maximum">
+                 <number>3</number>
+                </property>
+                <property name="tracking">
+                 <bool>true</bool>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="tickPosition">
+                 <enum>QSlider::TicksBothSides</enum>
+                </property>
+                <property name="tickInterval">
+                 <number>1</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="verticalSlider_7">
+                <property name="minimum">
+                 <number>-3</number>
+                </property>
+                <property name="maximum">
+                 <number>3</number>
+                </property>
+                <property name="tracking">
+                 <bool>true</bool>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="tickPosition">
+                 <enum>QSlider::TicksBothSides</enum>
+                </property>
+                <property name="tickInterval">
+                 <number>1</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="verticalSlider_8">
+                <property name="minimum">
+                 <number>-3</number>
+                </property>
+                <property name="maximum">
+                 <number>3</number>
+                </property>
+                <property name="tracking">
+                 <bool>true</bool>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="tickPosition">
+                 <enum>QSlider::TicksBothSides</enum>
+                </property>
+                <property name="tickInterval">
+                 <number>1</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="verticalSlider_9">
+                <property name="minimum">
+                 <number>-3</number>
+                </property>
+                <property name="maximum">
+                 <number>3</number>
+                </property>
+                <property name="tracking">
+                 <bool>true</bool>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="tickPosition">
+                 <enum>QSlider::TicksBothSides</enum>
+                </property>
+                <property name="tickInterval">
+                 <number>1</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
             <item>
-             <widget class="QSlider" name="verticalSlider_5">
-              <property name="minimum">
-               <number>-3</number>
+             <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,0,0">
+              <property name="sizeConstraint">
+               <enum>QLayout::SetMinimumSize</enum>
               </property>
-              <property name="maximum">
-               <number>3</number>
-              </property>
-              <property name="tracking">
-               <bool>true</bool>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="tickPosition">
-               <enum>QSlider::TicksBothSides</enum>
-              </property>
-              <property name="tickInterval">
-               <number>1</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSlider" name="verticalSlider_6">
-              <property name="minimum">
-               <number>-3</number>
-              </property>
-              <property name="maximum">
-               <number>3</number>
-              </property>
-              <property name="tracking">
-               <bool>true</bool>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="tickPosition">
-               <enum>QSlider::TicksBothSides</enum>
-              </property>
-              <property name="tickInterval">
-               <number>1</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSlider" name="verticalSlider_8">
-              <property name="minimum">
-               <number>-3</number>
-              </property>
-              <property name="maximum">
-               <number>3</number>
-              </property>
-              <property name="tracking">
-               <bool>true</bool>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="tickPosition">
-               <enum>QSlider::TicksBothSides</enum>
-              </property>
-              <property name="tickInterval">
-               <number>1</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSlider" name="verticalSlider">
-              <property name="minimum">
-               <number>-3</number>
-              </property>
-              <property name="maximum">
-               <number>3</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="tickPosition">
-               <enum>QSlider::TicksBothSides</enum>
-              </property>
-              <property name="tickInterval">
-               <number>1</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSlider" name="verticalSlider_7">
-              <property name="minimum">
-               <number>-3</number>
-              </property>
-              <property name="maximum">
-               <number>3</number>
-              </property>
-              <property name="tracking">
-               <bool>true</bool>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="tickPosition">
-               <enum>QSlider::TicksBothSides</enum>
-              </property>
-              <property name="tickInterval">
-               <number>1</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSlider" name="verticalSlider_3">
-              <property name="minimum">
-               <number>-3</number>
-              </property>
-              <property name="maximum">
-               <number>3</number>
-              </property>
-              <property name="tracking">
-               <bool>true</bool>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="tickPosition">
-               <enum>QSlider::TicksBothSides</enum>
-              </property>
-              <property name="tickInterval">
-               <number>1</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSlider" name="verticalSlider_2">
-              <property name="minimum">
-               <number>-3</number>
-              </property>
-              <property name="maximum">
-               <number>3</number>
-              </property>
-              <property name="tracking">
-               <bool>true</bool>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="tickPosition">
-               <enum>QSlider::TicksBothSides</enum>
-              </property>
-              <property name="tickInterval">
-               <number>1</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSlider" name="verticalSlider_9">
-              <property name="minimum">
-               <number>-3</number>
-              </property>
-              <property name="maximum">
-               <number>3</number>
-              </property>
-              <property name="tracking">
-               <bool>true</bool>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="tickPosition">
-               <enum>QSlider::TicksBothSides</enum>
-              </property>
-              <property name="tickInterval">
-               <number>1</number>
-              </property>
-             </widget>
+              <item>
+               <widget class="QRadioButton" name="rectangle">
+                <property name="maximumSize">
+                 <size>
+                  <width>100</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Rectangle</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="hanning">
+                <property name="maximumSize">
+                 <size>
+                  <width>100</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Hanning</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="hamming">
+                <property name="maximumSize">
+                 <size>
+                  <width>100</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Hamming</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
            </layout>
           </item>
@@ -1181,7 +1234,7 @@
             </widget>
            </item>
            <item row="2" column="1" colspan="2">
-            <widget class="QPushButton" name="pushButton">
+            <widget class="QPushButton" name="generateOutput">
              <property name="minimumSize">
               <size>
                <width>30</width>
@@ -1321,7 +1374,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>872</width>
+     <width>869</width>
      <height>22</height>
     </rect>
    </property>

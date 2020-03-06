@@ -7,7 +7,7 @@ import pyqtgraph as pg
 import pandas as pd
 import sounddevice as sd
 
-import testGUI as ss
+import playground as ss
 from mySliderClass import mySlider
 from helpers import *
 
