@@ -951,6 +951,9 @@
                 <property name="maximum">
                  <number>3</number>
                 </property>
+                <property name="pageStep">
+                 <number>1</number>
+                </property>
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
                 </property>
@@ -969,6 +972,9 @@
                 </property>
                 <property name="maximum">
                  <number>3</number>
+                </property>
+                <property name="pageStep">
+                 <number>1</number>
                 </property>
                 <property name="tracking">
                  <bool>true</bool>
@@ -992,6 +998,9 @@
                 <property name="maximum">
                  <number>3</number>
                 </property>
+                <property name="pageStep">
+                 <number>1</number>
+                </property>
                 <property name="tracking">
                  <bool>true</bool>
                 </property>
@@ -1013,6 +1022,9 @@
                 </property>
                 <property name="maximum">
                  <number>3</number>
+                </property>
+                <property name="pageStep">
+                 <number>1</number>
                 </property>
                 <property name="tracking">
                  <bool>true</bool>
@@ -1036,6 +1048,9 @@
                 <property name="maximum">
                  <number>3</number>
                 </property>
+                <property name="pageStep">
+                 <number>1</number>
+                </property>
                 <property name="tracking">
                  <bool>true</bool>
                 </property>
@@ -1057,6 +1072,9 @@
                 </property>
                 <property name="maximum">
                  <number>3</number>
+                </property>
+                <property name="pageStep">
+                 <number>1</number>
                 </property>
                 <property name="tracking">
                  <bool>true</bool>
@@ -1080,6 +1098,9 @@
                 <property name="maximum">
                  <number>3</number>
                 </property>
+                <property name="pageStep">
+                 <number>1</number>
+                </property>
                 <property name="tracking">
                  <bool>true</bool>
                 </property>
@@ -1102,6 +1123,9 @@
                 <property name="maximum">
                  <number>3</number>
                 </property>
+                <property name="pageStep">
+                 <number>1</number>
+                </property>
                 <property name="tracking">
                  <bool>true</bool>
                 </property>
@@ -1123,6 +1147,9 @@
                 </property>
                 <property name="maximum">
                  <number>3</number>
+                </property>
+                <property name="pageStep">
+                 <number>1</number>
                 </property>
                 <property name="tracking">
                  <bool>true</bool>
