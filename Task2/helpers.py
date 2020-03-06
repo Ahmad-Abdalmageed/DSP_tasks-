@@ -128,9 +128,11 @@ if __name__ == '__main__':
     # print(audioFile['data'].flatten())
     # print(audioFile['data'])
     fourierDict= fourierTransform(audioFile)
-    test = fftpack.fft(audioFile['data'])
+    # test = fftpack.fft(audioFile['data'])
     print("2d", fourierDict['transformedData'])
-    print("1d", test)
+    print("2d", fourierDict['dataFrequencies'])
+    # print("1d", test)
+
 
     #
     # print(fourierDict['transformedData'])

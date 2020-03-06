@@ -40,16 +40,19 @@ class equalizerApp(ss.Ui_MainWindow):
         # pens configurations (Plot Colors)
         self.pens = [pg.mkPen(color=(255, 0, 0)), pg.mkPen(color=(0, 255, 0)),
                      pg.mkPen(color=(0, 0, 255)), pg.mkPen(color=(200, 87, 125)),
-                     pg.mkPen(color=(123, 34, 203)),]
+                     pg.mkPen(color=(123, 34, 203))]
 
         for i in self.frontWidgets:
             i.plotItem.setTitle(self.windgetTitels[self.frontWidgets.index(i)])
             i.plotItem.showGrid(True, True, alpha=0.8)
             i.plotItem.setLabel("bottom", text=self.widgetsBottomLabels[self.frontWidgets.index(i)])
             i.setXRange(min = 0, max = 1000)
+            i.plotItem.hideButtons()
 
         self.actionload.triggered.connect(self.loadFile)
 
+        for i in self.sliders:
+            i.valueChanged.connect(self.sliderChanged)
     # Load File
     def loadFile(self):
         """
@@ -76,16 +79,18 @@ class equalizerApp(ss.Ui_MainWindow):
         for i in self.frontWidgets:
             i.plotItem.clear()
 
-        if len(self.signalFile['dim']) == 2 :
-            self.inputSignalGraph.plotItem.plot(self.signalFile['data'].flatten(), pem=self.pens[0])
+        if len(self.signalFile['dim']) == 2 : # TODO NOTE: not DRY
+            self.inputSignalGraph.plotItem.plot(self.signalFile['data'][:, 0], pem=self.pens[0]) # if 2d print one channel
+            self.inputSignalFourier.plotItem.plot(self.signalFourier['dataFrequencies'],
+            np.abs(self.signalFourier['transformedData'][:, 0])*2/len(self.signalFourier['transformedData'][:, 0]), pen =self.pens[1])
+        else:
+            # plotting
+            self.inputSignalGraph.plotItem.plot(self.signalFile['data'], pem=self.pens[0])
+            self.inputSignalFourier.plotItem.plot(self.signalFourier['dataFrequencies'],
+            np.abs(self.signalFourier['transformedData'])*2/len(self.signalFourier['transformedData']), pen =self.pens[1])
 
-            print("2Dimensional shit")
-            pass
-        # plotting
-        # self.inputSignalGraph.plotItem.plot(self.signalFile['data'], pem=self.pens[0])
-        # self.inputSignalFourier.plotItem.plot(self.signalFourier['dataFrequencies'],
-        # np.abs(self.signalFourier['transformedData'])*2/len(self.signalFourier['transformedData']), pen =self.pens[1])
-
+    def sliderChanged(self):
+        print("yes")
 
 
 
