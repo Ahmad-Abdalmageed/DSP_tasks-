@@ -37,6 +37,10 @@ class equalizerApp(ss.Ui_MainWindow):
 
         self.windgetTitels = ["Original Signal", "Fourier Transform", "Changes Applied"]
         self.widgetsBottomLabels = ["No. of Samples", "Frequencies", "Frequencies"]
+        # pens configurations (Plot Colors)
+        self.pens = [pg.mkPen(color=(255, 0, 0)), pg.mkPen(color=(0, 255, 0)),
+                     pg.mkPen(color=(0, 0, 255)), pg.mkPen(color=(200, 87, 125)),
+                     pg.mkPen(color=(123, 34, 203)),]
 
         for i in self.frontWidgets:
             i.plotItem.setTitle(self.windgetTitels[self.frontWidgets.index(i)])
@@ -67,6 +71,20 @@ class equalizerApp(ss.Ui_MainWindow):
 
     def plotSignalLoaded(self):
         self.signalFourier = fourierTransform(self.signalFile)
+
+        # on loading a new file
+        for i in self.frontWidgets:
+            i.plotItem.clear()
+
+        if len(self.signalFile['dim']) == 2 :
+            print("2Dimensional shit")
+            pass
+        # plotting
+        self.inputSignalGraph.plotItem.plot(self.signalFile['data'], pem=self.pens[0])
+        # self.inputSignalFourier.plotItem.plot(self.signalFourier['dataFrequencies'],
+        # np.abs(self.signalFourier['transformedData'])*2/len(self.signalFourier['transformedData']), pen =self.pens[1])
+
+
 
 
 def main():
