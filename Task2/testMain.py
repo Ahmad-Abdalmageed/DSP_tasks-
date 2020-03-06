@@ -57,10 +57,8 @@ class equalizerApp(ss.Ui_MainWindow):
 
         for i in self.sliders:
             i.id = self.sliders.index(i)
-            # i.valueChanged.connect(self.sliderChanged)
             i.signal.connect(self.sliderChanged)
-            # i.sliderPressed.connect(self.sliderChanged)
-            
+
     # Load File
     def loadFile(self):
         """
@@ -82,6 +80,8 @@ class equalizerApp(ss.Ui_MainWindow):
 
     def plotSignalLoaded(self):
         self.signalFourier = fourierTransform(self.signalFile)
+        self.signalBands = createBands(self.signalFourier)
+        print(self.signalBands)
 
         # on loading a new file
         for i in self.frontWidgets:
@@ -102,9 +102,8 @@ class equalizerApp(ss.Ui_MainWindow):
         print("slider %s value = %s"%(indx, val))
         self.sliderChangedGraph.plotItem.clear()
         self.getWindow()
-        self.signalBands = createBands(self.signalFourier)
         if val != 0:
-            self.signalModification = applyWindowFunction(indx+1, val, self.signalBands,equalizerApp.windowMode)
+            self.signalModification = applyWindowFunction(indx+1, val, self.signalBands, equalizerApp.windowMode)
         self.sliderChangedGraph.plotItem.plot(np.real(self.signalModification), pen= self.pens[2])
 
     def getWindow(self):
