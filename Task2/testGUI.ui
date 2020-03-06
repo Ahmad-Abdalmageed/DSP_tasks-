@@ -1329,6 +1329,10 @@
     <property name="title">
      <string>Load File</string>
     </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>Icons/icons8-file-128.png</normaloff>Icons/icons8-file-128.png</iconset>
+    </property>
    </widget>
    <addaction name="menuLoad_File"/>
   </widget>
