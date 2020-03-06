@@ -59,6 +59,9 @@ class equalizerApp(ss.Ui_MainWindow):
             i.id = self.sliders.index(i)
             i.signal.connect(self.sliderChanged)
 
+        self.playButton.clicked.connect(lambda : sd.play(self.signalFile["data"] ,  self.signalFile['frequency']))
+        self.stopButton.clicked.connect(lambda : sd.stop())
+        self.pauseButton.clicked.connect(lambda : sd.wait())
     # Load File
     def loadFile(self):
         """
@@ -89,14 +92,12 @@ class equalizerApp(ss.Ui_MainWindow):
 
         if len(self.signalFile['dim']) == 2 : # TODO NOTE: not DRY
             self.inputSignalGraph.plotItem.plot(self.signalFile['data'][:, 0], pem=self.pens[0]) # if 2d print one channel
-            self.inputSignalFourier.plotItem.plot(self.signalFourier['dataFrequencies'],
-                                                  np.abs(self.signalFourier['transformedData'][:, 0])*2/len(self.signalFourier['transformedData'][:, 0]),
+            self.inputSignalFourier.plotItem.plot(np.abs(self.signalFourier['transformedData'][:, 0])*2/len(self.signalFourier['transformedData'][:, 0]),
                                                   pen =self.pens[1])
         else:
             # plotting
             self.inputSignalGraph.plotItem.plot(self.signalFile['data'  ], pem=self.pens[0])
-            self.inputSignalFourier.plotItem.plot(self.signalFourier['dataFrequencies'],
-            np.abs(self.signalFourier['transformedData'])*2/len(self.signalFourier['transformedData']), pen =self.pens[1])
+            self.inputSignalFourier.plotItem.plot(np.abs(self.signalFourier['transformedData'])*2/len(self.signalFourier['transformedData']), pen =self.pens[1])
 
     def sliderChanged(self, indx, val):
         print("slider %s value = %s"%(indx, val))
@@ -104,8 +105,10 @@ class equalizerApp(ss.Ui_MainWindow):
         self.getWindow()
         if val != 0:
             self.signalModification = applyWindowFunction(indx+1, val, self.signalBands, equalizerApp.windowMode)
-        self.sliderChangedGraph.plotItem.plot(np.real(self.signalModification), pen= self.pens[2])
-
+        try:
+            self.sliderChangedGraph.plotItem.plot(np.real(np.concatenate(self.signalBands['dataBands'])), pen= self.pens[2])
+        except:
+            pass
     def getWindow(self):
         for i in self.windows:
             if i.isChecked():

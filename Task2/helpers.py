@@ -65,10 +65,8 @@ def createBands(dataDict):
     dataBands = []
     realIndices = []
     for i in range(len(freqBands)-1):
-        indices = [indx for indx, val in enumerate(freqs) if val > freqBands[i] and val < freqBands[i+1]]
-        realIndices.append(indices)
-        dataBands.append(data[indices])
-    # print("the data bands", dataBands)
+        bands = [val for indx, val in enumerate(data) if indx > freqBands[i] and indx < freqBands[i+1]]
+        dataBands.append(bands)
     dataConfiguration = {'dataBands': dataBands, 'indices': realIndices}
     return dataConfiguration
 
