@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>980</width>
-    <height>1031</height>
+    <width>843</width>
+    <height>995</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -59,26 +59,39 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_6">
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout">
-          <property name="spacing">
-           <number>8</number>
-          </property>
-          <item>
-           <widget class="PlotWidget" name="inputSignalFourier" native="true">
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="4" column="0">
+           <widget class="PlotWidget" name="sliderChangedGraph" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="minimumSize">
              <size>
               <width>200</width>
-              <height>180</height>
+              <height>250</height>
              </size>
             </property>
            </widget>
           </item>
-          <item>
+          <item row="2" column="0">
            <widget class="PlotWidget" name="inputSignalGraph" native="true">
             <property name="minimumSize">
              <size>
               <width>200</width>
-              <height>180</height>
+              <height>130</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="PlotWidget" name="inputSignalFourier" native="true">
+            <property name="minimumSize">
+             <size>
+              <width>200</width>
+              <height>130</height>
              </size>
             </property>
            </widget>
@@ -97,22 +110,6 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="PlotWidget" name="sliderChangedGraph" native="true">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>130</width>
-              <height>180</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item>
            <layout class="QHBoxLayout" name="horizontalLayout">
             <property name="sizeConstraint">
              <enum>QLayout::SetMinimumSize</enum>
@@ -121,6 +118,12 @@
              <layout class="QHBoxLayout" name="horizontalLayout_3">
               <item>
                <widget class="QSlider" name="verticalSlider">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>80</height>
+                 </size>
+                </property>
                 <property name="minimum">
                  <number>-3</number>
                 </property>
@@ -143,6 +146,12 @@
               </item>
               <item>
                <widget class="QSlider" name="verticalSlider_2">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>80</height>
+                 </size>
+                </property>
                 <property name="minimum">
                  <number>-3</number>
                 </property>
@@ -168,6 +177,12 @@
               </item>
               <item>
                <widget class="QSlider" name="verticalSlider_3">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>80</height>
+                 </size>
+                </property>
                 <property name="minimum">
                  <number>-3</number>
                 </property>
@@ -193,6 +208,12 @@
               </item>
               <item>
                <widget class="QSlider" name="verticalSlider_4">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>80</height>
+                 </size>
+                </property>
                 <property name="minimum">
                  <number>-3</number>
                 </property>
@@ -218,6 +239,12 @@
               </item>
               <item>
                <widget class="QSlider" name="verticalSlider_5">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>80</height>
+                 </size>
+                </property>
                 <property name="minimum">
                  <number>-3</number>
                 </property>
@@ -243,6 +270,12 @@
               </item>
               <item>
                <widget class="QSlider" name="verticalSlider_6">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>80</height>
+                 </size>
+                </property>
                 <property name="minimum">
                  <number>-3</number>
                 </property>
@@ -268,6 +301,12 @@
               </item>
               <item>
                <widget class="QSlider" name="verticalSlider_7">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>80</height>
+                 </size>
+                </property>
                 <property name="minimum">
                  <number>-3</number>
                 </property>
@@ -293,6 +332,12 @@
               </item>
               <item>
                <widget class="QSlider" name="verticalSlider_8">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>80</height>
+                 </size>
+                </property>
                 <property name="minimum">
                  <number>-3</number>
                 </property>
@@ -318,6 +363,43 @@
               </item>
               <item>
                <widget class="QSlider" name="verticalSlider_9">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>80</height>
+                 </size>
+                </property>
+                <property name="minimum">
+                 <number>-3</number>
+                </property>
+                <property name="maximum">
+                 <number>3</number>
+                </property>
+                <property name="pageStep">
+                 <number>1</number>
+                </property>
+                <property name="tracking">
+                 <bool>true</bool>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="tickPosition">
+                 <enum>QSlider::TicksBelow</enum>
+                </property>
+                <property name="tickInterval">
+                 <number>1</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="verticalSlider_10">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>80</height>
+                 </size>
+                </property>
                 <property name="minimum">
                  <number>-3</number>
                 </property>
@@ -394,145 +476,145 @@
             </item>
            </layout>
           </item>
+          <item>
+           <widget class="QGroupBox" name="groupBox">
+            <property name="minimumSize">
+             <size>
+              <width>150</width>
+              <height>150</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>1500</width>
+              <height>150</height>
+             </size>
+            </property>
+            <property name="title">
+             <string/>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_2">
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_2">
+               <property name="text">
+                <string>Output</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1" colspan="2">
+              <widget class="QSlider" name="horizontalSlider">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QPushButton" name="pauseButton">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normaloff>Icons/icons8-pause-100.png</normaloff>Icons/icons8-pause-100.png</iconset>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1" colspan="2">
+              <widget class="QPushButton" name="generateOutput">
+               <property name="minimumSize">
+                <size>
+                 <width>30</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>350</width>
+                 <height>140</height>
+                </size>
+               </property>
+               <property name="palette">
+                <palette>
+                 <active>
+                  <colorrole role="Button">
+                   <brush brushstyle="SolidPattern">
+                    <color alpha="255">
+                     <red>115</red>
+                     <green>210</green>
+                     <blue>22</blue>
+                    </color>
+                   </brush>
+                  </colorrole>
+                 </active>
+                 <inactive>
+                  <colorrole role="Button">
+                   <brush brushstyle="SolidPattern">
+                    <color alpha="255">
+                     <red>115</red>
+                     <green>210</green>
+                     <blue>22</blue>
+                    </color>
+                   </brush>
+                  </colorrole>
+                 </inactive>
+                 <disabled>
+                  <colorrole role="Button">
+                   <brush brushstyle="SolidPattern">
+                    <color alpha="255">
+                     <red>115</red>
+                     <green>210</green>
+                     <blue>22</blue>
+                    </color>
+                   </brush>
+                  </colorrole>
+                 </disabled>
+                </palette>
+               </property>
+               <property name="text">
+                <string>Generate</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QPushButton" name="stopButton">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normaloff>Icons/icons8-stop-100.png</normaloff>Icons/icons8-stop-100.png</iconset>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string>Player</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QPushButton" name="playButton">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset>
+                 <normaloff>Icons/icons8-play-100.png</normaloff>Icons/icons8-play-100.png</iconset>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string>Volume</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
          </layout>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="groupBox">
-          <property name="minimumSize">
-           <size>
-            <width>150</width>
-            <height>150</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>1500</width>
-            <height>150</height>
-           </size>
-          </property>
-          <property name="title">
-           <string/>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_2">
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_2">
-             <property name="text">
-              <string>Output</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1" colspan="2">
-            <widget class="QSlider" name="horizontalSlider">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QPushButton" name="pauseButton">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="icon">
-              <iconset>
-               <normaloff>Icons/icons8-pause-100.png</normaloff>Icons/icons8-pause-100.png</iconset>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1" colspan="2">
-            <widget class="QPushButton" name="generateOutput">
-             <property name="minimumSize">
-              <size>
-               <width>30</width>
-               <height>20</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>350</width>
-               <height>140</height>
-              </size>
-             </property>
-             <property name="palette">
-              <palette>
-               <active>
-                <colorrole role="Button">
-                 <brush brushstyle="SolidPattern">
-                  <color alpha="255">
-                   <red>115</red>
-                   <green>210</green>
-                   <blue>22</blue>
-                  </color>
-                 </brush>
-                </colorrole>
-               </active>
-               <inactive>
-                <colorrole role="Button">
-                 <brush brushstyle="SolidPattern">
-                  <color alpha="255">
-                   <red>115</red>
-                   <green>210</green>
-                   <blue>22</blue>
-                  </color>
-                 </brush>
-                </colorrole>
-               </inactive>
-               <disabled>
-                <colorrole role="Button">
-                 <brush brushstyle="SolidPattern">
-                  <color alpha="255">
-                   <red>115</red>
-                   <green>210</green>
-                   <blue>22</blue>
-                  </color>
-                 </brush>
-                </colorrole>
-               </disabled>
-              </palette>
-             </property>
-             <property name="text">
-              <string>Generate</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="2">
-            <widget class="QPushButton" name="stopButton">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="icon">
-              <iconset>
-               <normaloff>Icons/icons8-stop-100.png</normaloff>Icons/icons8-stop-100.png</iconset>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_3">
-             <property name="text">
-              <string>Player</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QPushButton" name="playButton">
-             <property name="text">
-              <string/>
-             </property>
-             <property name="icon">
-              <iconset>
-               <normaloff>Icons/icons8-play-100.png</normaloff>Icons/icons8-play-100.png</iconset>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="label">
-             <property name="text">
-              <string>Volume</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
         </item>
        </layout>
       </widget>
@@ -580,7 +662,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>980</width>
+     <width>843</width>
      <height>22</height>
     </rect>
    </property>

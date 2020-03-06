@@ -46,13 +46,14 @@ class equalizerApp(ss.Ui_MainWindow):
             i.plotItem.setTitle(self.windgetTitels[self.frontWidgets.index(i)])
             i.plotItem.showGrid(True, True, alpha=0.8)
             i.plotItem.setLabel("bottom", text=self.widgetsBottomLabels[self.frontWidgets.index(i)])
-            i.setXRange(min = 0, max = 1000)
-            i.plotItem.hideButtons()
+            # i.setXRange(min = 0, max = 1000)
+            # i.plotItem.hideButtons()
 
         self.actionload.triggered.connect(self.loadFile)
 
         for i in self.sliders:
             i.valueChanged.connect(self.sliderChanged)
+            
     # Load File
     def loadFile(self):
         """
