@@ -1028,8 +1028,20 @@
             </item>
             <item>
              <widget class="QSlider" name="verticalSlider">
+              <property name="minimum">
+               <number>-3</number>
+              </property>
+              <property name="maximum">
+               <number>3</number>
+              </property>
               <property name="orientation">
                <enum>Qt::Vertical</enum>
+              </property>
+              <property name="tickPosition">
+               <enum>QSlider::TicksBothSides</enum>
+              </property>
+              <property name="tickInterval">
+               <number>1</number>
               </property>
              </widget>
             </item>
@@ -1271,7 +1283,7 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_5">
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_4" stretch="">
+         <layout class="QVBoxLayout" name="outputLayout" stretch="">
           <property name="bottomMargin">
            <number>0</number>
           </property>
