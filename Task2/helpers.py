@@ -26,10 +26,10 @@ def fourierTransform(signalDict):
     """
     signal = signalDict['data']
     samplingFrequency = signalDict['frequency']
-    print("signal", signal)
-    data_ft = np.fft.fft(signal)
+    # print("signal", signal)
+    data_ft = fftpack.fft2(signal)
     data_freqs = fftpack.fftfreq(len(signal), d= 1/samplingFrequency)
-    print("Fourier", data_ft)
+    # print("Fourier", data_ft)
     dataDict = {'transformedData': data_ft, 'dataFrequencies': data_freqs}
 
     return dataDict
@@ -40,7 +40,7 @@ def inverseFourierTransform(transfomerdData):
     :param: transformedData: the fourier transformed data
     :return: Real inverse transform data
     """
-    dataInverse = np.real(fftpack.ifft(np.abs(transfomerdData)))
+    dataInverse = np.real(fftpack.ifft2(transfomerdData))
     return dataInverse
 
 def createBands(dataDict):
@@ -57,17 +57,16 @@ def createBands(dataDict):
 
     freqBands = (0, 31.25, 62.5, 125, 250, 500, 10**3, 2*10**3, 4*10**3, 8*10**3, 16*10**3)
     dataBands = []
-    realindices = []
+    realIndices = []
     for i in range(len(freqBands)-1):
         indices = [indx for indx, val in enumerate(freqs) if val > freqBands[i] and val < freqBands[i+1]]
-        realindices.append(indices)
+        realIndices.append(indices)
         dataBands.append(data[indices])
-    print("the data bands", dataBands)
-    print("the indices", realindices)
-    # dataConfiguration = {'dataBands': dataBands, 'indices': indices}
-    return dataBands
+    # print("the data bands", dataBands)
+    dataConfiguration = {'dataBands': dataBands, 'indices': realIndices}
+    return dataConfiguration
 
-def windowModification(dataModified, bandIndx, gain):
+def windowModification(dataModified, bandIndx, gain, indices):
         """
         a helper function to apply window
         :param dataModified: the data to be modified
@@ -83,7 +82,7 @@ def windowModification(dataModified, bandIndx, gain):
         data = np.concatenate(data)
         return data
 
-def applyWindowFunction(sliderID, sliderVal, dataBands, windowType = "Rectangle"):
+def applyWindowFunction(sliderID, sliderVal, dataConfiguration, windowType = "Rectangle"):
     """
         take the value from slider and apply the window given
 
@@ -95,42 +94,41 @@ def applyWindowFunction(sliderID, sliderVal, dataBands, windowType = "Rectangle"
     """
     bandIndx = sliderID -1
     gain = sliderVal
-    if gain < 0 :
-        gain = abs(1/gain)
     print("slider val", gain)
-    dataModified = np.copy(dataBands)
+    dataModified = np.copy(dataConfiguration['dataBands'])
+    indices = dataConfiguration['indices']
     bandRange = len(dataModified[bandIndx])
     hanningWindow = np.hanning(bandRange)
     hammingWindow = np.hamming(bandRange)
 
     if windowType == 'Rectangle': # TODO: convert multiple lines to function
-        dataModified = windowModification(dataModified, bandIndx, gain)
+        dataModified = windowModification(dataModified, bandIndx, gain, indices)
     if windowType == 'Hanning':
         hanningMod = gain * hanningWindow
-        dataModified = windowModification(dataModified, bandIndx, hanningMod)
+        dataModified = windowModification(dataModified, bandIndx, hanningMod, indices)
     if windowType == 'Hamming':
         hammingMod = gain * hammingWindow
-        dataModified = windowModification(dataModified, bandIndx, hammingMod)
+        dataModified = windowModification(dataModified, bandIndx, hammingMod, indices)
 
     return dataModified
 
 
-if __name__ == '__main__':
-    data = {'transformedData': np.arange(20, 60, 1), 'dataFrequencies': np.arange(20, 60, 1)}
+# if __name__ == '__main__':
+    # data = {'transformedData': np.arange(20, 60, 1), 'dataFrequencies': np.arange(20, 60, 1)}
 
-    audioFile = loadAudioFile('audio/pika.wav')
+    # audioFile = loadAudioFile('audio/pika.wav')
     # print(audioFile['data'].shape)
     # print(audioFile['data'].flatten())
     # print(audioFile['data'])
-    fourierDict= fourierTransform(audioFile)
+    # fourierDict= fourierTransform(audioFile)
 
     # print(fourierDict['transformedData'])
 
-    dataBands = createBands(fourierDict)
+    # dataBands = createBands(fourierDict)
 
-    dataBands[1] = applyWindowFunction(1, 2, dataBands)
-    dataBands[1] = applyWindowFunction(1, 3, dataBands)
-    dataBands[1] = applyWindowFunction(1, 4, dataBands)
+    # dataBands[1] = applyWindowFunction(1, 2, dataBands)
+    # dataBands[1] = applyWindowFunction(1, 3, dataBands)
+    # dataBands[1] = applyWindowFunction(1, 4, dataBands)
 
 
 
