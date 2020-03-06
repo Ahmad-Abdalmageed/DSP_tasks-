@@ -531,7 +531,7 @@ class Ui_MainWindow(object):
         self.actionload = QtWidgets.QAction(MainWindow)
         self.actionload.setCheckable(False)
         self.actionload.setChecked(False)
-        self.actionload.setEnabled(False)
+        self.actionload.setEnabled(True)
         icon3 = QtGui.QIcon()
         icon3.addPixmap(QtGui.QPixmap("Icons/icons8-file-128.png"), QtGui.QIcon.Normal, QtGui.QIcon.On)
         self.actionload.setIcon(icon3)
