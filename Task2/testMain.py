@@ -25,6 +25,7 @@ class equalizerApp(ss.Ui_MainWindow):
         self.signalFile = ... # the file loaded ---> data, Sampling Rate
         self.signalFourier = ... # fourier transform of the signal file data
         self.signalBands = ... # Contains the signal bands
+        self.signalModification = ... # Contains the signal with the modified data
         self.filename = ... # contains the file path
         self.format = ... # contains the file format
 
@@ -33,9 +34,11 @@ class equalizerApp(ss.Ui_MainWindow):
                         self.verticalSlider_9, self.verticalSlider_10]
 
         self.playerButtons = [self.playButton, self.pauseButton, self.stopButton]
+        self.windows = [self.rectangle, self.hanning, self.hamming]
         self.frontWidgets = [self.inputSignalGraph, self.inputSignalFourier, self.sliderChangedGraph]
 
-        self.windgetTitels = ["Original Signal", "Fourier Transform", "Changes Applied"]
+
+        self.widgetTitels = ["Original Signal", "Fourier Transform", "Changes Applied"]
         self.widgetsBottomLabels = ["No. of Samples", "Frequencies", "Frequencies"]
 
         # pens configurations (Plot Colors)
@@ -44,7 +47,7 @@ class equalizerApp(ss.Ui_MainWindow):
                      pg.mkPen(color=(123, 34, 203))]
 
         for i in self.frontWidgets:
-            i.plotItem.setTitle(self.windgetTitels[self.frontWidgets.index(i)])
+            i.plotItem.setTitle(self.widgetTitels[self.frontWidgets.index(i)])
             i.plotItem.showGrid(True, True, alpha=0.8)
             i.plotItem.setLabel("bottom", text=self.widgetsBottomLabels[self.frontWidgets.index(i)])
             # i.setXRange(min = 0, max = 1000)
@@ -97,7 +100,17 @@ class equalizerApp(ss.Ui_MainWindow):
 
     def sliderChanged(self, indx, val):
         print("slider %s value = %s"%(indx, val))
+        self.sliderChangedGraph.plotItem.clear()
+        self.getWindow()
+        self.signalBands = createBands(self.signalFourier)
+        if val != 0:
+            self.signalModification = applyWindowFunction(indx+1, val, self.signalBands,equalizerApp.windowMode)
+        self.sliderChangedGraph.plotItem.plot(np.real(self.signalModification), pen= self.pens[2])
 
+    def getWindow(self):
+        for i in self.windows:
+            if i.isChecked():
+                equalizerApp.windowMode = i.text()
 
 
 def main():
