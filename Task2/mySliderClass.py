@@ -5,9 +5,9 @@ class mySlider(QtWidgets.QSlider):
     # Signal to send to other slots, containing int which identifies the exct type of the sent
     signal = pyqtSignal(int)
 
-    def __init__(self, id, *args):
+    def __init__(self, *args):
         super().__init__(*args)
-        self.id = id
+        self.id = ... # to be added 
 
     def mousePressEvent(self, QMouseEvent):
         super().mousePressEvent(QMouseEvent)
