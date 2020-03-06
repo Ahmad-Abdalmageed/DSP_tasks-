@@ -44,7 +44,7 @@ class equalizerApp(ss.Ui_MainWindow):
             i.plotItem.setLabel("bottom", text=self.widgetsBottomLabels[self.frontWidgets.index(i)])
             i.setXRange(min = 0, max = 1000)
 
-        self.menuLoad_File.clicked.connect(self.loadFile)
+        self.actionload.triggered.connect(self.loadFile)
 
     # Load File
     def loadFile(self):
@@ -63,8 +63,7 @@ class equalizerApp(ss.Ui_MainWindow):
 
     def loadFileConfiguration(self, fileName):
         self.signalFile = loadAudioFile(fileName)
-
-
+        print("Loaded")
 
 
 def main():
