@@ -52,7 +52,8 @@ class equalizerApp(ss.Ui_MainWindow):
         self.actionload.triggered.connect(self.loadFile)
 
         for i in self.sliders:
-            i.valueChanged.connect(self.sliderChanged)
+            i.id = self.sliders.index(i)
+            i.valueChanged.connect(lambda : self.sliderChanged(i.id))
             
     # Load File
     def loadFile(self):
@@ -86,12 +87,12 @@ class equalizerApp(ss.Ui_MainWindow):
             np.abs(self.signalFourier['transformedData'][:, 0])*2/len(self.signalFourier['transformedData'][:, 0]), pen =self.pens[1])
         else:
             # plotting
-            self.inputSignalGraph.plotItem.plot(self.signalFile['data'], pem=self.pens[0])
+            self.inputSignalGraph.plotItem.plot(self.signalFile['data'  ], pem=self.pens[0])
             self.inputSignalFourier.plotItem.plot(self.signalFourier['dataFrequencies'],
             np.abs(self.signalFourier['transformedData'])*2/len(self.signalFourier['transformedData']), pen =self.pens[1])
 
-    def sliderChanged(self):
-        print("yes")
+    def sliderChanged(self, i):
+        print(i)
 
 
 

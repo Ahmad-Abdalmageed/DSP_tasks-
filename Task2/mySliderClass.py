@@ -7,7 +7,7 @@ class mySlider(QtWidgets.QSlider):
 
     def __init__(self, *args):
         super().__init__(*args)
-        self.id = ... # to be added 
+        self.id = ... # to be added
 
     def mousePressEvent(self, QMouseEvent):
         super().mousePressEvent(QMouseEvent)

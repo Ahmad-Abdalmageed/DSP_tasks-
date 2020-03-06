@@ -117,7 +117,7 @@
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_3">
               <item>
-               <widget class="QSlider" name="verticalSlider">
+               <widget class="mySlider" name="verticalSlider">
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
@@ -145,38 +145,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QSlider" name="verticalSlider_2">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>80</height>
-                 </size>
-                </property>
-                <property name="minimum">
-                 <number>-3</number>
-                </property>
-                <property name="maximum">
-                 <number>3</number>
-                </property>
-                <property name="pageStep">
-                 <number>1</number>
-                </property>
-                <property name="tracking">
-                 <bool>true</bool>
-                </property>
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="tickPosition">
-                 <enum>QSlider::TicksBelow</enum>
-                </property>
-                <property name="tickInterval">
-                 <number>1</number>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QSlider" name="verticalSlider_3">
+               <widget class="mySlider" name="verticalSlider_2">
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
@@ -207,7 +176,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QSlider" name="verticalSlider_4">
+               <widget class="mySlider" name="verticalSlider_3">
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
@@ -238,7 +207,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QSlider" name="verticalSlider_5">
+               <widget class="mySlider" name="verticalSlider_4">
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
@@ -269,7 +238,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QSlider" name="verticalSlider_6">
+               <widget class="mySlider" name="verticalSlider_5">
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
@@ -300,7 +269,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QSlider" name="verticalSlider_7">
+               <widget class="mySlider" name="verticalSlider_6">
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
@@ -331,7 +300,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QSlider" name="verticalSlider_8">
+               <widget class="mySlider" name="verticalSlider_7">
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
@@ -362,7 +331,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QSlider" name="verticalSlider_9">
+               <widget class="mySlider" name="verticalSlider_8">
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
@@ -393,7 +362,38 @@
                </widget>
               </item>
               <item>
-               <widget class="QSlider" name="verticalSlider_10">
+               <widget class="mySlider" name="verticalSlider_9">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>80</height>
+                 </size>
+                </property>
+                <property name="minimum">
+                 <number>-3</number>
+                </property>
+                <property name="maximum">
+                 <number>3</number>
+                </property>
+                <property name="pageStep">
+                 <number>1</number>
+                </property>
+                <property name="tracking">
+                 <bool>true</bool>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="tickPosition">
+                 <enum>QSlider::TicksBelow</enum>
+                </property>
+                <property name="tickInterval">
+                 <number>1</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="mySlider" name="verticalSlider_10">
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
@@ -715,6 +715,11 @@
    <extends>QWidget</extends>
    <header>pyqtgraph</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>mySlider</class>
+   <extends>QSlider</extends>
+   <header>mySliderClass</header>
   </customwidget>
  </customwidgets>
  <resources/>
