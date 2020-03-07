@@ -13,6 +13,10 @@ def loadAudioFile(filePath):
     """
     samplingFrequency, data = wavfile.read(filePath)
     dimensions = data.shape
+    if len(dimensions) == 2:
+        data = data[:,  0]
+        print("de channeled ")
+        dimensions = (dimensions[0],)
     signalDict = {'frequency':samplingFrequency, 'data':data, 'dim': dimensions}
     return signalDict
 
