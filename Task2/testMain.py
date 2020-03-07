@@ -136,7 +136,7 @@ class equalizerApp(ss.Ui_MainWindow):
         except:
             print("failed")
             pass
-        self.signalModificationInv = inverseFourierTransform(self.signalModification, self.signalFile['dim'])   
+        self.signalModificationInv = inverseFourierTransform(self.signalModification, self.signalFile['dim'])
     def getWindow(self):
         """
         identifies the seleted window
