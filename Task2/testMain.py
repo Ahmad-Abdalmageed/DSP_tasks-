@@ -37,11 +37,11 @@ class equalizerApp(ss.Ui_MainWindow):
 
         self.playerButtons = [self.playButton, self.pauseButton, self.stopButton]
         self.windows = [self.rectangle, self.hanning, self.hamming]
-        self.frontWidgets = [self.inputSignalGraph, self.inputSignalFourier, self.sliderChangedGraph]
+        self.frontWidgets = [self.inputSignalGraph, self.sliderChangedGraph]
 
 
-        self.widgetTitels = ["Original Signal", "Fourier Transform", "Changes Applied"]
-        self.widgetsBottomLabels = ["No. of Samples", "Frequencies", "Frequencies"]
+        self.widgetTitels = ["Original Signal", "Changes Applied"]
+        self.widgetsBottomLabels = ["No. of Samples", "Frequencies"]
 
         # pens configurations (Plot Colors)
         self.pens = [pg.mkPen(color=(255, 0, 0)), pg.mkPen(color=(0, 255, 0)),
@@ -105,12 +105,12 @@ class equalizerApp(ss.Ui_MainWindow):
         # check the dimensions of the signal and plot using best method
         if len(self.signalFile['dim']) == 2 : # TODO NOTE: not DRY
             self.inputSignalGraph.plotItem.plot(self.signalFile['data'][:, 0], pem=self.pens[0]) # if 2d print one channel
-            self.inputSignalFourier.plotItem.plot(np.abs(self.signalFourier['transformedData'][:, 0])*2/len(self.signalFourier['transformedData'][:, 0]),
+            self.sliderChangedGraph.plotItem.plot(np.abs(self.signalFourier['transformedData'][:, 0])*2/len(self.signalFourier['transformedData'][:, 0]),
                                                   pen =self.pens[1])
         else:
             # plotting
             self.inputSignalGraph.plotItem.plot(self.signalFile['data'], pem=self.pens[0])
-            self.inputSignalFourier.plotItem.plot(np.abs(self.signalFourier['transformedData'])*2/len(self.signalFourier['transformedData']), pen =self.pens[1])
+            self.sliderChangedGraph.plotItem.plot(np.abs(self.signalFourier['transformedData'])*2/len(self.signalFourier['transformedData']), pen =self.pens[1])
 
     def sliderChanged(self, indx, val):
         """
@@ -127,7 +127,8 @@ class equalizerApp(ss.Ui_MainWindow):
             self.signalModification = applyWindowFunction(indx+1, val, self.signalBands, equalizerApp.windowMode)
             self.signalModificationInv = inverseFourierTransform(self.signalModification)
         try:
-            self.sliderChangedGraph.plotItem.plot(abs(self.signalModification), pen= self.pens[2])
+            print("this ", self.signalModification)
+            self.sliderChangedGraph.plotItem.plot(np.real(self.signalModification), pen= self.pens[2])
         except:
             print("failed")
             pass
