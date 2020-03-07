@@ -41,13 +41,17 @@ def fourierTransform(signalDict):
 
     return dataDict
 
-def inverseFourierTransform(transfomerdData):
+def inverseFourierTransform(transfomerdData, dim):
     """
     apply inverse Fourier Transform
     :param: transformedData: the fourier transformed data
     :return: Real inverse transform data
     """
-    dataInverse = np.real(fftpack.ifft2(transfomerdData))
+    if len(dim) == 2:
+        print("2 dimensional inverse")
+        dataInverse = np.real(fftpack.ifft2(transfomerdData))
+    else:
+        dataInverse = np.real(fftpack.ifft(transfomerdData))
     return dataInverse
 
 def createBands(dataDict):

@@ -126,7 +126,7 @@ class equalizerApp(ss.Ui_MainWindow):
         self.getWindow()
         if val != 0:
             self.signalModification = applyWindowFunction(indx+1, val, self.signalBands, equalizerApp.windowMode)
-            self.signalModificationInv = inverseFourierTransform(self.signalModification)
+            self.signalModificationInv = inverseFourierTransform(self.signalModification, self.signalFile['dim'])
         try:
             print("this ", self.signalModification)
             self.sliderChangedGraph.plotItem.plot(np.real(self.signalModification), pen= self.pens[2])
@@ -144,10 +144,13 @@ class equalizerApp(ss.Ui_MainWindow):
                 equalizerApp.windowMode = i.text()
 
     def playResultFile(self):
-        self.dataType = type(self.signalFile['data'][0, 0])
+        if len(self.signalFile['dim']) == 2:
+            self.dataType = type(self.signalFile['data'][0, 0])
+        else:
+            self.dataType = type(self.signalFile['data'][0])
         self.fourierArrayModified = np.copy(self.signalFourier['transformedData'])
 
-        self.newInverse = inverseFourierTransform(self.fourierArrayModified)
+        self.newInverse = inverseFourierTransform(self.fourierArrayModified, self.signalFile['dim'])
         sd.play(self.newInverse.astype(self.dataType), self.signalFile['frequency'])
         print(self.signalFile['frequency'])
 
