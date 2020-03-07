@@ -22,9 +22,6 @@ class loaderThread(QThread):
         self.signal.emit(self.file)
 
 
-
-
-
 class equalizerApp(ss.Ui_MainWindow):
     selectedSlider = 0
     windowMode = "Rectangle"
@@ -150,8 +147,8 @@ class equalizerApp(ss.Ui_MainWindow):
         if val in self.sliderValuesClicked[indx]:
             pass
         else:
-            self.sliderValuesClicked[indx].append(val)
             self.sliderChangedGraph.plotItem.clear()
+            self.sliderValuesClicked[indx].append(val)
             self.getWindow()
 
             self.signalModification = applyWindowFunction(indx+1, val, self.signalBandsCopy, equalizerApp.windowMode)
@@ -210,6 +207,6 @@ def main():
     sys.exit(app.exec_())
 
 
-
 if __name__ == "__main__":
     main()
+
