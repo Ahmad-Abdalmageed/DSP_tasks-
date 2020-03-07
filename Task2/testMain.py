@@ -106,12 +106,11 @@ class equalizerApp(ss.Ui_MainWindow):
         # check the dimensions of the signal and plot using best method
         if len(self.signalFile['dim']) == 2 : # TODO NOTE: not DRY
             self.inputSignalGraph.plotItem.plot(self.signalFile['data'][:, 0], pem=self.pens[0]) # if 2d print one channel
-            self.sliderChangedGraph.plotItem.plot(np.abs(self.signalFourier['transformedData'][:, 0])*2/len(self.signalFourier['transformedData'][:, 0]),
-                                                  pen =self.pens[1])
+            self.plotFourier(self.signalFourier['transformedData'][:, 0], pen=self.pens[1])
         else:
             # plotting
             self.inputSignalGraph.plotItem.plot(self.signalFile['data'], pem=self.pens[0])
-            self.sliderChangedGraph.plotItem.plot(2.0 / np.abs(self.signalFourier['transformedData'][: len(self.signalFourier['transformedData'])//2]), pen =self.pens[1])
+            self.plotFourier(self.signalFourier['transformedData'], pen=self.pens[1])
 
     def sliderChanged(self, indx, val):
         """
@@ -124,12 +123,15 @@ class equalizerApp(ss.Ui_MainWindow):
         print("slider %s value = %s"%(indx, val))
         self.sliderChangedGraph.plotItem.clear()
         self.getWindow()
-        if val != 0:
-            self.signalModification = applyWindowFunction(indx+1, val, self.signalBands, equalizerApp.windowMode)
-            self.signalModificationInv = inverseFourierTransform(self.signalModification, self.signalFile['dim'])
+
+        self.signalModification = applyWindowFunction(indx+1, val, self.signalBands, equalizerApp.windowMode)
+        self.signalModificationInv = inverseFourierTransform(self.signalModification, self.signalFile['dim'])
         try:
             print("this ", self.signalModification)
-            self.sliderChangedGraph.plotItem.plot(np.real(self.signalModification), pen= self.pens[2])
+            print(len(self.signalModification))
+            print(len(np.concatenate(self.signalBands)))
+            # self.sliderChangedGraph.plotItem.plot(2.0 /len(self.signalModification) * np.abs(self.signalModification)[: len(self.signalModification)//2], pen= self.pens[2])
+            self.plotFourier(self.signalModification, self.pens[2])
         except:
             print("failed")
             pass
@@ -144,15 +146,30 @@ class equalizerApp(ss.Ui_MainWindow):
                 equalizerApp.windowMode = i.text()
 
     def playResultFile(self):
+        """
+        play the results from the sliders while checking the dimensions of the file
+        :return:
+        """
         if len(self.signalFile['dim']) == 2:
             self.dataType = type(self.signalFile['data'][0, 0])
         else:
             self.dataType = type(self.signalFile['data'][0])
         self.fourierArrayModified = np.copy(self.signalFourier['transformedData'])
-
         self.newInverse = inverseFourierTransform(self.fourierArrayModified, self.signalFile['dim'])
         sd.play(self.newInverse.astype(self.dataType), self.signalFile['frequency'])
         print(self.signalFile['frequency'])
+
+    def plotFourier(self, data, pen):
+        """
+        plot the fourier transform of the data
+        :data: the data to be plotted
+        :return:
+        """
+        # T = 1 /
+        N = len(data)
+        # x = np.linspace(0.0, 1.0/2.0 * T, )
+        yplot = 2.0 / N * np.abs(data[: N//2])
+        self.sliderChangedGraph.plotItem.plot(yplot, pen= pen)
 
 
 def main():

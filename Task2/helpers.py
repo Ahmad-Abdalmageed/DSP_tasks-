@@ -28,15 +28,12 @@ def fourierTransform(signalDict):
     signal = signalDict['data']
     samplingFrequency = signalDict['frequency']
     dim = signalDict['dim']
-    # print("signal", signal)
-    print(len(dim))
     if len(dim) == 2 :
         data_ft = fftpack.fft2(signal)
         data_freqs = fftpack.fftfreq(len(signal), d= 1/samplingFrequency)
     else:
         data_ft = fftpack.fft(signal)
         data_freqs = fftpack.fftfreq(len(signal), d=1 / samplingFrequency)
-    # print("Fourier", data_ft)
     dataDict = {'transformedData': data_ft, 'dataFrequencies': data_freqs}
 
     return dataDict
@@ -66,11 +63,13 @@ def createBands(dataDict):
     freqs = dataDict['dataFrequencies']
     data = dataDict['transformedData']
 
-    freqBands = (0, 31.25, 62.5, 125, 250, 500, 10**3, 2*10**3, 4*10**3, 8*10**3, 16*10**3)
+    print(len(data))
+    freqBands = (0, 31.25, 62.5, 125, 250, 500, 10**3, 2*10**3, 4*10**3, 8*10**3, 16*10**3, len(data))
     dataBands = []
     for i in range(len(freqBands)-1):
         bands = [val for indx, val in enumerate(data) if indx >= freqBands[i] and indx < freqBands[i+1]] ## equal sign هه
         dataBands.append(bands)
+    print(len(np.concatenate(dataBands)))
     return dataBands
 
 def windowModification(dataModified, bandIndx, gain):
@@ -128,7 +127,7 @@ if __name__ == '__main__':
     print(dataBands)
     mod = applyWindowFunction(1, 5, dataBands)
     print(mod)
-    inv = inverseFourierTransform(mod)
+    inv = inverseFourierTransform(mod, audioFile['dim'])
     print(type(inv))
     # for i in dataBands:
     #     print(i)
