@@ -3,6 +3,7 @@ import scipy as sp
 from scipy import fftpack
 from scipy.io import wavfile
 
+
 ## These are helper functions
 def loadAudioFile(filePath):
     """
@@ -14,6 +15,7 @@ def loadAudioFile(filePath):
     dimensions = data.shape
     signalDict = {'frequency':samplingFrequency, 'data':data, 'dim': dimensions}
     return signalDict
+
 
 def fourierTransform(signalDict):
     """
@@ -38,6 +40,7 @@ def fourierTransform(signalDict):
 
     return dataDict
 
+
 def inverseFourierTransform(transfomerdData, dim):
     """
     apply inverse Fourier Transform
@@ -50,6 +53,7 @@ def inverseFourierTransform(transfomerdData, dim):
     else:
         dataInverse = np.real(fftpack.ifft(transfomerdData))
     return dataInverse
+
 
 def createBands(dataDict):
     """
@@ -72,6 +76,7 @@ def createBands(dataDict):
     print(len(np.concatenate(dataBands)))
     return dataBands
 
+
 def windowModification(dataModified, bandIndx, gain):
         """
         a helper function to apply window
@@ -88,6 +93,7 @@ def windowModification(dataModified, bandIndx, gain):
         data = np.concatenate(data)
         return data
 
+
 def applyWindowFunction(sliderID, sliderVal, dataBands, windowType = "Rectangle"):
     """
         take the value from slider and apply the window given
@@ -101,7 +107,7 @@ def applyWindowFunction(sliderID, sliderVal, dataBands, windowType = "Rectangle"
     bandIndx = sliderID -1
     gain = sliderVal
     print("slider val", gain)
-    dataModified = np.copy(dataBands)
+    dataModified = dataBands
     bandRange = len(dataModified[bandIndx])
     hanningWindow = np.hanning(bandRange)
     hammingWindow = np.hamming(bandRange)
