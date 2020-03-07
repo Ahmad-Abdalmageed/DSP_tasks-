@@ -1,12 +1,27 @@
 # Importing Packages
 import sys
 from PyQt5 import QtWidgets
+from PyQt5.QtCore import QThread, pyqtSignal
 from PyQt5.QtWidgets import QMessageBox
 import pyqtgraph as pg
 import sounddevice as sd
 import testGUI as ss
 from helpers import *
 import threading
+
+class loaderThread(QThread):
+    signal = pyqtSignal('PyQt_PyObject')
+
+    def __init__(self, filepath):
+        super(loaderThread, self).__init__()
+        self.filepath = filepath
+        self.file = ...
+
+    def run(self):
+        self.file = loadAudioFile(self.filepath)
+        self.signal.emit(self.file)
+
+
 
 
 
@@ -20,10 +35,12 @@ class equalizerApp(ss.Ui_MainWindow):
         :param mainwindow: QMainWindow Object
         """
         super(equalizerApp, self).setupUi(starterWindow)
+        # Initializations
         self.signalFile = ... # the file loaded ---> data, Sampling Rate
         self.signalDataType = ... # contains the data type of the signal
         self.signalFourier = ... # fourier transform of the signal file data
         self.signalBands = ... # Contains the signal bands
+        self.signalBandsCopy = ... # contains a copy of the signal bands for modification purposes
         self.signalModification = ... # Contains the signal with the modified data
         self.signalModificationInv = ... # Contains the data to be played and writen to wave
         self.filename = ... # contains the file path
@@ -31,8 +48,9 @@ class equalizerApp(ss.Ui_MainWindow):
         self.plotInputThread = ... # contains the plotter Thread for input signal
         self.plotFourierThread = ... # contains the plotter Thread for input signal fourier
         self.loadThread = ... # contains the loader thread
+        self.sliderValuesClicked = {0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[], 9:[]} # list contains the last pressed values
 
-
+        # encapsulations
         self.sliders = [self.verticalSlider, self.verticalSlider_2, self.verticalSlider_3, self.verticalSlider_4,
                         self.verticalSlider_5, self.verticalSlider_6, self.verticalSlider_7, self.verticalSlider_8,
                         self.verticalSlider_9, self.verticalSlider_10]
@@ -62,9 +80,10 @@ class equalizerApp(ss.Ui_MainWindow):
         for i in self.sliders:
             i.id = self.sliders.index(i)
             i.signal.connect(self.sliderChanged)
+
         self.playButton.clicked.connect(lambda : sd.play(self.signalFile["data"] ,  self.signalFile['frequency']))
         self.stopButton.clicked.connect(lambda : sd.stop())
-        self.pauseButton.clicked.connect(lambda : sd.wait())
+        # self.pauseButton.clicked.connect(lambda : sd.wait())
         self.playResult.clicked.connect(lambda : sd.play(self.signalModificationInv.astype(self.signalDataType), self.signalFile['frequency']))
         # self.playResult.clicked.connect(self.playResultFile)
 
@@ -80,7 +99,9 @@ class equalizerApp(ss.Ui_MainWindow):
         if self.filename == "":
             pass
         else:
-            self.loadFileConfiguration(self.filename)
+            threading.Thread(target=self.loadFileConfiguration, args=(self.filename,)).start()
+            # self.loadThread = loaderThread(self.filename)
+            # self.loadThread.signal.connect(self.loadFileConfiguration)
 
     def loadFileConfiguration(self, fileName):
         """
@@ -99,7 +120,7 @@ class equalizerApp(ss.Ui_MainWindow):
         """
         self.signalFourier = fourierTransform(self.signalFile)
         self.signalBands = createBands(self.signalFourier)
-
+        self.signalBandsCopy = np.copy(self.signalBands)
 
         # on loading a new file
         for i in self.frontWidgets:
@@ -108,12 +129,11 @@ class equalizerApp(ss.Ui_MainWindow):
         # check the dimensions of the signal and plot using best method
         if len(self.signalFile['dim']) == 2 : # TODO NOTE: not DRY
             self.inputSignalGraph.plotItem.plot(self.signalFile['data'][:, 0], pem=self.pens[0]) # if 2d print one channel
-            # self.plotFourier(self.signalFourier['transformedData'][:, 0], pen=self.pens[1])
+            self.plotFourier(self.signalFourier['transformedData'][:, 0], pen=self.pens[1])
         else:
             # plotting
             self.inputSignalGraph.plotItem.plot(self.signalFile['data'], pem=self.pens[0])
-            # self.plotFourier(self.signalFourier['transformedData'], pen=self.pens[1])
-            threading.Thread(target=self.plotFourier,args=(self.signalFourier['transformedData'], self.pens[1])).start()
+            self.plotFourier(self.signalFourier['transformedData'], pen=self.pens[1])
 
 
 
@@ -126,17 +146,21 @@ class equalizerApp(ss.Ui_MainWindow):
         :return: none
         """
         print("slider %s value = %s"%(indx, val))
-        self.sliderChangedGraph.plotItem.clear()
-        self.getWindow()
-
-        self.signalModification = applyWindowFunction(indx+1, val, self.signalBands, equalizerApp.windowMode)
-        try:
-             # self.plotFourier(self.signalModification, self.pens[2])
-            threading.Thread(target=self.plotFourier, args=(self.signalModification, self.pens[2])).start()
-        except:
-            print("failed")
+        if val in self.sliderValuesClicked[indx]:
             pass
-        self.signalModificationInv = inverseFourierTransform(self.signalModification, self.signalFile['dim'])
+        else:
+            self.sliderValuesClicked[indx].append(val)
+            self.sliderChangedGraph.plotItem.clear()
+            self.getWindow()
+
+            self.signalModification = applyWindowFunction(indx+1, val, self.signalBandsCopy, equalizerApp.windowMode)
+            try:
+                 self.plotFourier(self.signalModification, self.pens[2])
+            except:
+                print("failed")
+                pass
+            self.signalModificationInv = inverseFourierTransform(self.signalModification, self.signalFile['dim'])
+
     def getWindow(self):
         """
         identifies the seleted window

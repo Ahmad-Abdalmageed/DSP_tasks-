@@ -2,7 +2,7 @@ import numpy as np
 import scipy as sp
 from scipy import fftpack
 from scipy.io import wavfile
-
+import threading
 
 ## These are helper functions
 def loadAudioFile(filePath):
@@ -71,13 +71,11 @@ def createBands(dataDict):
     freqs = dataDict['dataFrequencies']
     data = dataDict['transformedData']
 
-    print(len(data))
     freqBands = (0, 31.25, 62.5, 125, 250, 500, 10**3, 2*10**3, 4*10**3, 8*10**3, 16*10**3, len(data))
     dataBands = []
     for i in range(len(freqBands)-1):
         bands = [val for indx, val in enumerate(data) if indx >= freqBands[i] and indx < freqBands[i+1]] ## equal sign هه
         dataBands.append(bands)
-    print(len(np.concatenate(dataBands)))
     return dataBands
 
 
@@ -89,11 +87,8 @@ def windowModification(dataModified, bandIndx, gain):
         :param gain: the gain desired
         :return: array data
         """
-        data = np.copy(dataModified)
-
-        print("band before gain", data[bandIndx])
+        data = dataModified
         data[bandIndx] = np.multiply(np.array(data[bandIndx]), gain)
-        print("band after gain", data[bandIndx])
         data = np.concatenate(data)
         return data
 
@@ -110,7 +105,6 @@ def applyWindowFunction(sliderID, sliderVal, dataBands, windowType = "Rectangle"
     """
     bandIndx = sliderID -1
     gain = sliderVal
-    print("slider val", gain)
     dataModified = dataBands
     bandRange = len(dataModified[bandIndx])
     hanningWindow = np.hanning(bandRange)
