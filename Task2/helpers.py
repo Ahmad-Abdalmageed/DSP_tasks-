@@ -29,6 +29,7 @@ def fourierTransform(signalDict):
     samplingFrequency = signalDict['frequency']
     dim = signalDict['dim']
     # print("signal", signal)
+    print(len(dim))
     if len(dim) == 2 :
         data_ft = fftpack.fft2(signal)
         data_freqs = fftpack.fftfreq(len(signal), d= 1/samplingFrequency)
@@ -46,7 +47,7 @@ def inverseFourierTransform(transfomerdData):
     :param: transformedData: the fourier transformed data
     :return: Real inverse transform data
     """
-    dataInverse = np.abs(fftpack.ifft(transfomerdData))
+    dataInverse = np.real(fftpack.ifft2(transfomerdData))
     return dataInverse
 
 def createBands(dataDict):
@@ -134,7 +135,3 @@ if __name__ == '__main__':
     # dataBands[1] = applyWindowFunction(1, 2, dataBands)
     # dataBands[1] = applyWindowFunction(1, 3, dataBands)
     # dataBands[1] = applyWindowFunction(1, 4, dataBands)
-
-
-
-

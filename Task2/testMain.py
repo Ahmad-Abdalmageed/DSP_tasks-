@@ -64,7 +64,8 @@ class equalizerApp(ss.Ui_MainWindow):
         self.playButton.clicked.connect(lambda : sd.play(self.signalFile["data"] ,  self.signalFile['frequency']))
         self.stopButton.clicked.connect(lambda : sd.stop())
         self.pauseButton.clicked.connect(lambda : sd.wait())
-        self.playResult.clicked.connect(lambda : sd.play(self.signalModificationInv.astype(self.signalDataType), self.signalFile['frequency']))
+        # self.playResult.clicked.connect(lambda : sd.play(self.signalModificationInv.astype(self.signalDataType), self.signalFile['frequency']))
+        self.playResult.clicked.connect(self.playResultFile)
 
     def loadFile(self):
         """
@@ -141,6 +142,14 @@ class equalizerApp(ss.Ui_MainWindow):
         for i in self.windows:
             if i.isChecked():
                 equalizerApp.windowMode = i.text()
+
+    def playResultFile(self):
+        self.dataType = type(self.signalFile['data'][0, 0])
+        self.fourierArrayModified = np.copy(self.signalFourier['transformedData'])
+
+        self.newInverse = inverseFourierTransform(self.fourierArrayModified)
+        sd.play(self.newInverse.astype(self.dataType), self.signalFile['frequency'])
+        print(self.signalFile['frequency'])
 
 
 def main():
