@@ -69,12 +69,15 @@
              </size>
             </property>
             <property name="minimum">
-             <number>1</number>
+             <number>0</number>
             </property>
             <property name="maximum">
              <number>12</number>
             </property>
             <property name="pageStep">
+             <number>1</number>
+            </property>
+            <property name="sliderPosition">
              <number>1</number>
             </property>
             <property name="orientation">
@@ -97,12 +100,15 @@
              </size>
             </property>
             <property name="minimum">
-             <number>1</number>
+             <number>0</number>
             </property>
             <property name="maximum">
              <number>12</number>
             </property>
             <property name="pageStep">
+             <number>1</number>
+            </property>
+            <property name="sliderPosition">
              <number>1</number>
             </property>
             <property name="tracking">
@@ -128,12 +134,15 @@
              </size>
             </property>
             <property name="minimum">
-             <number>1</number>
+             <number>0</number>
             </property>
             <property name="maximum">
              <number>12</number>
             </property>
             <property name="pageStep">
+             <number>1</number>
+            </property>
+            <property name="sliderPosition">
              <number>1</number>
             </property>
             <property name="tracking">
@@ -159,12 +168,15 @@
              </size>
             </property>
             <property name="minimum">
-             <number>1</number>
+             <number>0</number>
             </property>
             <property name="maximum">
              <number>12</number>
             </property>
             <property name="pageStep">
+             <number>1</number>
+            </property>
+            <property name="sliderPosition">
              <number>1</number>
             </property>
             <property name="tracking">
@@ -190,12 +202,15 @@
              </size>
             </property>
             <property name="minimum">
-             <number>1</number>
+             <number>0</number>
             </property>
             <property name="maximum">
              <number>12</number>
             </property>
             <property name="pageStep">
+             <number>1</number>
+            </property>
+            <property name="sliderPosition">
              <number>1</number>
             </property>
             <property name="tracking">
@@ -221,12 +236,15 @@
              </size>
             </property>
             <property name="minimum">
-             <number>1</number>
+             <number>0</number>
             </property>
             <property name="maximum">
              <number>12</number>
             </property>
             <property name="pageStep">
+             <number>1</number>
+            </property>
+            <property name="sliderPosition">
              <number>1</number>
             </property>
             <property name="tracking">
@@ -252,12 +270,15 @@
              </size>
             </property>
             <property name="minimum">
-             <number>1</number>
+             <number>0</number>
             </property>
             <property name="maximum">
              <number>12</number>
             </property>
             <property name="pageStep">
+             <number>1</number>
+            </property>
+            <property name="sliderPosition">
              <number>1</number>
             </property>
             <property name="tracking">
@@ -283,12 +304,15 @@
              </size>
             </property>
             <property name="minimum">
-             <number>1</number>
+             <number>0</number>
             </property>
             <property name="maximum">
              <number>12</number>
             </property>
             <property name="pageStep">
+             <number>1</number>
+            </property>
+            <property name="sliderPosition">
              <number>1</number>
             </property>
             <property name="tracking">
@@ -314,12 +338,15 @@
              </size>
             </property>
             <property name="minimum">
-             <number>1</number>
+             <number>0</number>
             </property>
             <property name="maximum">
              <number>12</number>
             </property>
             <property name="pageStep">
+             <number>1</number>
+            </property>
+            <property name="sliderPosition">
              <number>1</number>
             </property>
             <property name="tracking">
@@ -345,12 +372,15 @@
              </size>
             </property>
             <property name="minimum">
-             <number>1</number>
+             <number>0</number>
             </property>
             <property name="maximum">
              <number>12</number>
             </property>
             <property name="pageStep">
+             <number>1</number>
+            </property>
+            <property name="sliderPosition">
              <number>1</number>
             </property>
             <property name="tracking">

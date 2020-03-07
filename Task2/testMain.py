@@ -123,9 +123,9 @@ class equalizerApp(ss.Ui_MainWindow):
         print("slider %s value = %s"%(indx, val))
         self.sliderChangedGraph.plotItem.clear()
         self.getWindow()
-        if val != 0:
-            self.signalModification = applyWindowFunction(indx+1, val, self.signalBands, equalizerApp.windowMode)
-            self.signalModificationInv = inverseFourierTransform(self.signalModification, self.signalFile['dim'])
+
+        self.signalModification = applyWindowFunction(indx+1, val, self.signalBands, equalizerApp.windowMode)
+        self.signalModificationInv = inverseFourierTransform(self.signalModification, self.signalFile['dim'])
         try:
             print("this ", self.signalModification)
             print(len(self.signalModification))
