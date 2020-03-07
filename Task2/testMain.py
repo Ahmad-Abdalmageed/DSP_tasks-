@@ -64,8 +64,8 @@ class equalizerApp(ss.Ui_MainWindow):
         self.playButton.clicked.connect(lambda : sd.play(self.signalFile["data"] ,  self.signalFile['frequency']))
         self.stopButton.clicked.connect(lambda : sd.stop())
         self.pauseButton.clicked.connect(lambda : sd.wait())
-        # self.playResult.clicked.connect(lambda : sd.play(self.signalModificationInv.astype(self.signalDataType), self.signalFile['frequency']))
-        self.playResult.clicked.connect(self.playResultFile)
+        self.playResult.clicked.connect(lambda : sd.play(self.signalModificationInv.astype(self.signalDataType), self.signalFile['frequency']))
+        # self.playResult.clicked.connect(self.playResultFile)
 
     def loadFile(self):
         """
