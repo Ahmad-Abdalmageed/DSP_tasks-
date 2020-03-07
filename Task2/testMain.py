@@ -129,6 +129,7 @@ class equalizerApp(ss.Ui_MainWindow):
         try:
             print("this ", self.signalModification)
             print(len(self.signalModification))
+            print(len(np.concatenate(self.signalBands)))
             # self.sliderChangedGraph.plotItem.plot(2.0 /len(self.signalModification) * np.abs(self.signalModification)[: len(self.signalModification)//2], pen= self.pens[2])
             self.plotFourier(self.signalModification, self.pens[2])
         except:
