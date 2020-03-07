@@ -12,9 +12,9 @@ import threading
 class loaderThread(QThread):
     signal = pyqtSignal('PyQt_PyObject')
 
-    def __init__(self, filepath):
+    def __init__(self):
         super(loaderThread, self).__init__()
-        self.filepath = filepath
+        self.filepath = ...
         self.file = ...
 
     def run(self):
@@ -47,7 +47,7 @@ class equalizerApp(ss.Ui_MainWindow):
         self.format = ... # contains the file format
         self.plotInputThread = ... # contains the plotter Thread for input signal
         self.plotFourierThread = ... # contains the plotter Thread for input signal fourier
-        self.loadThread = ... # contains the loader thread
+        self.loadThread = loaderThread()# contains the loader thread
         self.sliderValuesClicked = {0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[], 9:[]} # list contains the last pressed values
 
         # encapsulations
@@ -99,17 +99,18 @@ class equalizerApp(ss.Ui_MainWindow):
         if self.filename == "":
             pass
         else:
-            threading.Thread(target=self.loadFileConfiguration, args=(self.filename,)).start()
-            # self.loadThread = loaderThread(self.filename)
-            # self.loadThread.signal.connect(self.loadFileConfiguration)
+            # threading.Thread(target=self.loadFileConfiguration, args=(self.filename,)).start()
+            self.loadThread.filepath = self.filename
+            self.loadThread.start()
+            self.loadThread.signal.connect(self.loadFileConfiguration)
 
     def loadFileConfiguration(self, fileName):
         """
-        takes the file path from loadFile and plot the fourier transform of the signal and the original signal
+        takes the file from loadFile and plot the fourier transform of the signal and the original signal
         :param fileName: file path ... string
         :return: none
         """
-        self.signalFile = loadAudioFile(fileName)
+        self.signalFile = fileName
         self.signalDataType = self.signalFile['data'].dtype
         self.plotSignalLoaded()
 
