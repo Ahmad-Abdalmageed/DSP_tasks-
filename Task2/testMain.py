@@ -1,15 +1,13 @@
 # Importing Packages
 import sys
-from PyQt5 import QtWidgets, uic, QtCore, QtGui
+from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMessageBox
 import pyqtgraph as pg
-# from pyqtgraph import PlotWidget
-import pandas as pd
 import sounddevice as sd
-
 import testGUI as ss
-from mySliderClass import mySlider
 from helpers import *
+import threading
+
 
 
 class equalizerApp(ss.Ui_MainWindow):
@@ -30,6 +28,10 @@ class equalizerApp(ss.Ui_MainWindow):
         self.signalModificationInv = ... # Contains the data to be played and writen to wave
         self.filename = ... # contains the file path
         self.format = ... # contains the file format
+        self.plotInputThread = ... # contains the plotter Thread for input signal
+        self.plotFourierThread = ... # contains the plotter Thread for input signal fourier
+        self.loadThread = ... # contains the loader thread
+
 
         self.sliders = [self.verticalSlider, self.verticalSlider_2, self.verticalSlider_3, self.verticalSlider_4,
                         self.verticalSlider_5, self.verticalSlider_6, self.verticalSlider_7, self.verticalSlider_8,
@@ -48,13 +50,12 @@ class equalizerApp(ss.Ui_MainWindow):
                      pg.mkPen(color=(0, 0, 255)), pg.mkPen(color=(200, 87, 125)),
                      pg.mkPen(color=(123, 34, 203))]
 
-        # Setuo windger configurations
+        # Setup widget configurations
         for i in self.frontWidgets:
             i.plotItem.setTitle(self.widgetTitels[self.frontWidgets.index(i)])
             i.plotItem.showGrid(True, True, alpha=0.8)
             i.plotItem.setLabel("bottom", text=self.widgetsBottomLabels[self.frontWidgets.index(i)])
-            # i.setXRange(min = 0, max = 1000)
-            # i.plotItem.hideButtons()
+
 
         # CONNECTIONS
         self.actionload.triggered.connect(self.loadFile)
@@ -99,6 +100,7 @@ class equalizerApp(ss.Ui_MainWindow):
         self.signalFourier = fourierTransform(self.signalFile)
         self.signalBands = createBands(self.signalFourier)
 
+
         # on loading a new file
         for i in self.frontWidgets:
             i.plotItem.clear()
@@ -106,11 +108,14 @@ class equalizerApp(ss.Ui_MainWindow):
         # check the dimensions of the signal and plot using best method
         if len(self.signalFile['dim']) == 2 : # TODO NOTE: not DRY
             self.inputSignalGraph.plotItem.plot(self.signalFile['data'][:, 0], pem=self.pens[0]) # if 2d print one channel
-            self.plotFourier(self.signalFourier['transformedData'][:, 0], pen=self.pens[1])
+            # self.plotFourier(self.signalFourier['transformedData'][:, 0], pen=self.pens[1])
         else:
             # plotting
             self.inputSignalGraph.plotItem.plot(self.signalFile['data'], pem=self.pens[0])
-            self.plotFourier(self.signalFourier['transformedData'], pen=self.pens[1])
+            # self.plotFourier(self.signalFourier['transformedData'], pen=self.pens[1])
+            threading.Thread(target=self.plotFourier,args=(self.signalFourier['transformedData'], self.pens[1])).start()
+
+
 
     def sliderChanged(self, indx, val):
         """
@@ -125,17 +130,13 @@ class equalizerApp(ss.Ui_MainWindow):
         self.getWindow()
 
         self.signalModification = applyWindowFunction(indx+1, val, self.signalBands, equalizerApp.windowMode)
-        self.signalModificationInv = inverseFourierTransform(self.signalModification, self.signalFile['dim'])
         try:
-            print("this ", self.signalModification)
-            print(len(self.signalModification))
-            print(len(np.concatenate(self.signalBands)))
-            # self.sliderChangedGraph.plotItem.plot(2.0 /len(self.signalModification) * np.abs(self.signalModification)[: len(self.signalModification)//2], pen= self.pens[2])
-            self.plotFourier(self.signalModification, self.pens[2])
+             # self.plotFourier(self.signalModification, self.pens[2])
+            threading.Thread(target=self.plotFourier, args=(self.signalModification, self.pens[2])).start()
         except:
             print("failed")
             pass
-
+        self.signalModificationInv = inverseFourierTransform(self.signalModification, self.signalFile['dim'])   
     def getWindow(self):
         """
         identifies the seleted window
@@ -182,6 +183,7 @@ def main():
     ui = equalizerApp(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
+
 
 
 if __name__ == "__main__":
