@@ -46,7 +46,7 @@ def inverseFourierTransform(transfomerdData):
     :param: transformedData: the fourier transformed data
     :return: Real inverse transform data
     """
-    dataInverse = np.real(fftpack.ifft2(transfomerdData))
+    dataInverse = np.abs(fftpack.ifft(transfomerdData))
     return dataInverse
 
 def createBands(dataDict):
@@ -115,15 +115,21 @@ def applyWindowFunction(sliderID, sliderVal, dataBands, windowType = "Rectangle"
 
 
 if __name__ == '__main__':
-    audioFile = loadAudioFile('audio/pika.wav')
+    audioFile = loadAudioFile('audio/Casio-MT-45-16-Beat.wav')
     print(audioFile['data'])
     fourierDict= fourierTransform(audioFile)
     print(fourierDict['transformedData'])
     dataBands = createBands(fourierDict)
-    for i in dataBands:
-        print(i)
-    print(np.real(np.concatenate(dataBands)))
-    print(np.real(fourierDict['transformedData']))
+    print(dataBands)
+    mod = applyWindowFunction(1, 5, dataBands)
+    print(mod)
+    inv = inverseFourierTransform(mod)
+    print(type(inv))
+    # for i in dataBands:
+    #     print(i)
+    # print(np.real(np.concatenate(dataBands)))
+    # print(np.real(fourierDict['transformedData']))
+    #
     # print(dataBands['dataBands'])
     # dataBands[1] = applyWindowFunction(1, 2, dataBands)
     # dataBands[1] = applyWindowFunction(1, 3, dataBands)

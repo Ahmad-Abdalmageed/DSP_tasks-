@@ -9,7 +9,11 @@ class mySlider(QtWidgets.QSlider):
         super().__init__(*args)
         self.id = ... # to be added
         self.sliderValue = ...
-
+    #
+    # def valueChanged(self, value):
+    #     super().valueChanged(value)
+    #     self.signal.emit(self.id, self.value())
+    #
     def mousePressEvent(self, QMouseEvent):
         super().mousePressEvent(QMouseEvent)
         self.signal.emit(self.id, self.value())

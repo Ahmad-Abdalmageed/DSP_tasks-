@@ -608,7 +608,7 @@
                   </widget>
                  </item>
                  <item row="2" column="3">
-                  <widget class="QPushButton" name="pushButton">
+                  <widget class="QPushButton" name="playResult">
                    <property name="text">
                     <string>Play Result</string>
                    </property>
