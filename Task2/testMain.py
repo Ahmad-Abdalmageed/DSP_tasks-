@@ -88,8 +88,6 @@ class equalizerApp(ss.Ui_MainWindow):
         """
         self.signalFile = loadAudioFile(fileName)
         self.signalDataType = self.signalFile['data'].dtype
-        print(self.signalDataType)
-        print(type(self.signalFile['data']))
         self.plotSignalLoaded()
 
     def plotSignalLoaded(self):
@@ -127,10 +125,9 @@ class equalizerApp(ss.Ui_MainWindow):
         self.getWindow()
         if val != 0:
             self.signalModification = applyWindowFunction(indx+1, val, self.signalBands, equalizerApp.windowMode)
-            print(self.signalModification)
             self.signalModificationInv = inverseFourierTransform(self.signalModification)
         try:
-            self.sliderChangedGraph.plotItem.plot(np.abs(self.signalModification)*2/len(self.signalBands), pen= self.pens[2])
+            self.sliderChangedGraph.plotItem.plot(abs(self.signalModification), pen= self.pens[2])
         except:
             print("failed")
             pass
