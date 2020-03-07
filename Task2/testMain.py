@@ -111,7 +111,7 @@ class equalizerApp(ss.Ui_MainWindow):
         else:
             # plotting
             self.inputSignalGraph.plotItem.plot(self.signalFile['data'], pem=self.pens[0])
-            self.sliderChangedGraph.plotItem.plot(np.abs(self.signalFourier['transformedData'])*2/len(self.signalFourier['transformedData']), pen =self.pens[1])
+            self.sliderChangedGraph.plotItem.plot(2.0 / np.abs(self.signalFourier['transformedData'][: len(self.signalFourier['transformedData'])//2]), pen =self.pens[1])
 
     def sliderChanged(self, indx, val):
         """

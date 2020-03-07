@@ -143,19 +143,13 @@ class equalizerApp(ss.Ui_MainWindow):
         # print(self.audioFile['data'])
         # self.arrayNEW = self.testFile["data"]
         # print(self.arrayNEW)
-        # self.dataType = type(self.audioFile['data'][0, 0])
-        shape = self.audioFile['data'].shape
-        print(shape)
-        try:
-            if shape[1] == 2:
-                self.dataType = type(self.audioFile['data'][0, 0])
-                # self.audioFile['data'] = self.audioFile['data'].flatten()
-                print(type(self.audioFile['data'][0, 0]))
-                print(self.audioFile['data'])
-            # else:
-            #     self.dataType = type(self.audioFile['data'][0])
-            # print(self.audioFile['data'])
-            # print(self.dataType)
+        self.dataType = type(self.audioFile['data'][0, 0])
+        # shape = self.audioFile['data'].shape
+        # try:
+        #     if shape[1] == 2 :
+        #         self.audioFile['data'] = self.audioFile['data'].flatten()
+                # print(self.audioFile['data'])
+        # print(self.audioFile['data'])
 
         # Convert array of arrays To one array
         # self.audioArray = np.concatenate(self.audioFile['data'])
@@ -167,9 +161,8 @@ class equalizerApp(ss.Ui_MainWindow):
         # self.audioArray = pd.array(self.audioArray)
         #
         # self.fourierDictionary = fourierTransform(self.audioFile)
-        except:
-            print(type(self.audioFile['data'][0]))
-            self.dataType = type(self.audioFile['data'][0])
+        # except:
+        #     pass
 
         self.fourierDictionary = fourierTransform(self.audioFile)
         self.signalBands = createBands(self.fourierDictionary)
