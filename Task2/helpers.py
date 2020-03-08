@@ -117,16 +117,20 @@ def applyWindowFunction(sliderID, sliderVal, dataBands, windowType = "Rectangle"
 
     if windowType == 'Rectangle':
         dataModified = windowModification(dataModified, bandIndx, gain)
+
     if windowType == 'Hanning':
         for slider, value in gain.items():
             print(value)
             if type(value) != type(...) :
-                gain[slider] = value * np.hanning(len(dataModified[slider]))
+                if value is int :
+                    gain[slider] = value * np.hanning(len(dataModified[slider]))
         dataModified = windowModification(dataModified, bandIndx, gain)
+
     if windowType == 'Hamming':
         for slider, value in gain.items():
-            if value != ... :
-                gain[slider] = value * np.hanning(len(dataModified[slider]))
+            if type(value) != type(...) :
+                if value is int :
+                    gain[slider] = value * np.hanning(len(dataModified[slider]))
         dataModified = windowModification(dataModified, bandIndx, gain)
 
     return dataModified
