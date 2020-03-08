@@ -47,7 +47,7 @@ class equalizerApp(ss.Ui_MainWindow):
         self.plotInputThread = ... # contains the plotter Thread for input signal
         self.plotFourierThread = ... # contains the plotter Thread for input signal fourier
         self.loadThread = loaderThread()# contains the loader thread
-        self.sliderValuesClicked = {0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[], 9:[]} # list contains the last pressed values
+        self.sliderValuesClicked = {0:..., 1:..., 2:..., 3:..., 4:..., 5:..., 6:..., 7:..., 8:..., 9:...} # list contains the last pressed values
 
         # encapsulations
         self.sliders = [self.verticalSlider, self.verticalSlider_2, self.verticalSlider_3, self.verticalSlider_4,
@@ -153,21 +153,21 @@ class equalizerApp(ss.Ui_MainWindow):
         :param val: int
         :return: none
         """
-        print("slider %s value = %s"%(indx, val))
-        if val in self.sliderValuesClicked[indx]:
-            pass
-        else:
-            self.sliderChangedGraph.plotItem.clear()
-            self.sliderValuesClicked[indx].append(val)
-            self.getWindow()
+        # print("slider %s value = %s"%(indx, val))
+        # if val in self.sliderValuesClicked[indx]:
+        #     pass
+        # else:
+        self.sliderChangedGraph.plotItem.clear()
+        self.sliderValuesClicked[indx] = val
+        self.getWindow()
 
-            self.signalModification = applyWindowFunction(indx+1, val, self.signalBandsCopy, equalizerApp.windowMode)
-            try:
-                 self.plotFourier(self.signalModification, self.pens[2])
-            except:
-                print("failed")
-                pass
-            self.signalModificationInv = inverseFourierTransform(self.signalModification, self.signalFile['dim'])
+        self.signalModification = applyWindowFunction(indx+1, self.sliderValuesClicked, self.signalBandsCopy, equalizerApp.windowMode)
+        try:
+             self.plotFourier(self.signalModification, self.pens[2])
+        except:
+            print("failed")
+            pass
+        self.signalModificationInv = inverseFourierTransform(self.signalModification, self.signalFile['dim'])
 
     def getWindow(self):
         """
@@ -213,8 +213,9 @@ class equalizerApp(ss.Ui_MainWindow):
             slider.setValue(1)
         self.sliderChangedGraph.plotItem.clear()
         self.plotUsingDimension()
-        for valueList in self.sliderValuesClicked.values():
-            valueList[:] = []
+        for value in self.sliderValuesClicked.values():
+            value = ...
+        self.signalModification = ...
         self.signalModificationInv = self.signalFile['data']
 
 def main():

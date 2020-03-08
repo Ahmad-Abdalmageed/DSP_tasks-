@@ -71,15 +71,18 @@ def createBands(dataDict):
     freqs = dataDict['dataFrequencies']
     data = dataDict['transformedData']
 
+    print("the data", len(data))
     freqBands = (0, 31.25, 62.5, 125, 250, 500, 10**3, 2*10**3, 4*10**3, 8*10**3, 16*10**3, len(data))
     dataBands = []
     for i in range(len(freqBands)-1):
         bands = [val for indx, val in enumerate(data) if indx >= freqBands[i] and indx < freqBands[i+1]] ## equal sign هه
         dataBands.append(bands)
+    print("returned", len(dataBands))
+    print("are they equal", len(data) == len(np.concatenate(dataBands)))
     return dataBands
 
 
-def windowModification(dataModified, bandIndx, gain):
+def windowModification(dataModified, bandIndx, gains):
         """
         a helper function to apply window
         :param dataModified: the data to be modified
@@ -87,9 +90,14 @@ def windowModification(dataModified, bandIndx, gain):
         :param gain: the gain desired
         :return: array data
         """
-        data = dataModified
-        data[bandIndx] = np.multiply(np.array(data[bandIndx]), gain)
+        data = np.copy(dataModified)
+        for slider, value in gains.items():
+            # print("slider %s value %s"%(slider, value))
+            if value != ... :
+                data[slider] = np.multiply(np.array(data[slider]), value)
+            else: pass
         data = np.concatenate(data)
+        print("after modification", len(data))
         return data
 
 
@@ -105,10 +113,11 @@ def applyWindowFunction(sliderID, sliderVal, dataBands, windowType = "Rectangle"
     """
     bandIndx = sliderID -1
     gain = sliderVal
-    dataModified = dataBands
+    dataModified = np.copy(dataBands)
     bandRange = len(dataModified[bandIndx])
     hanningWindow = np.hanning(bandRange)
     hammingWindow = np.hamming(bandRange)
+    print("before modification", len(np.concatenate(dataBands)))
 
     if windowType == 'Rectangle': # TODO: convert multiple lines to function
         dataModified = windowModification(dataModified, bandIndx, gain)
