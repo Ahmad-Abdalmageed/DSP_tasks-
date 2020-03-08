@@ -208,8 +208,10 @@ class equalizerApp(ss.Ui_MainWindow):
             slider.setValue(1)
         self.sliderChangedGraph.plotItem.clear()
         self.plotUsingDimension()
-        for value in self.sliderValuesClicked.values():
-            value = ...
+        print("before reseting", self.sliderValuesClicked)
+        for slider, value in self.sliderValuesClicked.items():
+            self.sliderValuesClicked[slider] = ...
+        print('after resetting ', self.sliderValuesClicked)
         self.signalModification = ...
         self.signalModificationInv = self.signalFile['data']
 
