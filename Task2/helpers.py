@@ -38,7 +38,7 @@ def fourierTransform(signalDict):
         data_ft = fftpack.fft2(signal)
         data_freqs = fftpack.fftfreq(len(signal), d= 1/samplingFrequency)
     else:
-        data_ft = fftpack.fft(signal)
+        data_ft = fftpack.rfft(signal)
         data_freqs = fftpack.fftfreq(len(signal), d=1 / samplingFrequency)
     dataDict = {'transformedData': data_ft, 'dataFrequencies': data_freqs}
 
@@ -55,7 +55,7 @@ def inverseFourierTransform(transfomerdData, dim):
         print("2 dimensional inverse")
         dataInverse = np.real(fftpack.ifft2(transfomerdData))
     else:
-        dataInverse = np.real(fftpack.ifft(transfomerdData))
+        dataInverse = np.real(fftpack.irfft(transfomerdData))
     return dataInverse
 
 

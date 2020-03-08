@@ -8,6 +8,8 @@ import sounddevice as sd
 import testGUI as ss
 from helpers import *
 import threading
+from scipy import signal as si
+
 
 class loaderThread(QThread):
     signal = pyqtSignal('PyQt_PyObject')
@@ -66,23 +68,25 @@ class equalizerApp(ss.Ui_MainWindow):
                      pg.mkPen(color=(123, 34, 203))]
 
         # Setup widget configurations
-        for i in self.frontWidgets:
-            i.plotItem.setTitle(self.widgetTitels[self.frontWidgets.index(i)])
-            i.plotItem.showGrid(True, True, alpha=0.8)
-            i.plotItem.setLabel("bottom", text=self.widgetsBottomLabels[self.frontWidgets.index(i)])
+        for widget in self.frontWidgets:
+            widget.plotItem.setTitle(self.widgetTitels[self.frontWidgets.index(widget)])
+            widget.plotItem.showGrid(True, True, alpha=0.8)
+            widget.plotItem.setLabel("bottom", text=self.widgetsBottomLabels[self.frontWidgets.index(widget)])
+
 
 
         # CONNECTIONS
         self.actionload.triggered.connect(self.loadFile)
-        for i in self.sliders:
-            i.id = self.sliders.index(i)
-            i.signal.connect(self.sliderChanged)
+        for slider in self.sliders:
+            slider.id = self.sliders.index(slider)
+            slider.signal.connect(self.sliderChanged)
 
         self.playButton.clicked.connect(lambda : sd.play(self.signalFile["data"] ,  self.signalFile['frequency']))
         self.stopButton.clicked.connect(lambda : sd.stop())
         # self.pauseButton.clicked.connect(lambda : sd.wait())
         self.playResult.clicked.connect(lambda : sd.play(self.signalModificationInv.astype(self.signalDataType), self.signalFile['frequency']))
         # self.playResult.clicked.connect(self.playResultFile)
+        self.resetBands.clicked.connect(self.resetAllBands)
 
     def loadFile(self):
         """
@@ -121,10 +125,16 @@ class equalizerApp(ss.Ui_MainWindow):
         self.signalBandsCopy = np.copy(self.signalBands)
 
         # on loading a new file
-        for i in self.frontWidgets:
-            i.plotItem.clear()
+        for widget in self.frontWidgets:
+            widget.plotItem.clear()
+        self.plotUsingDimension()
 
-        # check the dimensions of the signal and plot using best method
+    def plotUsingDimension(self):
+        """
+        used to plot the data from the specified fourier attribute to the specified graph
+        :return: none
+        """
+       # check the dimensions of the signal and plot using best method
         if len(self.signalFile['dim']) == 2 : # TODO NOTE: not DRY
             self.inputSignalGraph.plotItem.plot(self.signalFile['data'][:, 0], pem=self.pens[0]) # if 2d print one channel
             self.plotFourier(self.signalFourier['transformedData'][:, 0], pen=self.pens[1])
@@ -164,9 +174,9 @@ class equalizerApp(ss.Ui_MainWindow):
         identifies the seleted window
         :return: none
         """
-        for i in self.windows:
-            if i.isChecked():
-                equalizerApp.windowMode = i.text()
+        for window in self.windows:
+            if window.isChecked():
+                equalizerApp.windowMode = window.text()
 
     def playResultFile(self):
         """
@@ -194,6 +204,18 @@ class equalizerApp(ss.Ui_MainWindow):
         yplot = 2.0 / N * np.abs(data[: N//2])
         self.sliderChangedGraph.plotItem.plot(yplot, pen= pen)
 
+    def resetAllBands(self):
+        """
+        resets al equalizer processes
+        :return:
+        """
+        for slider in self.sliders:
+            slider.setValue(1)
+        self.sliderChangedGraph.plotItem.clear()
+        self.plotUsingDimension()
+        for valueList in self.sliderValuesClicked.values():
+            valueList[:] = []
+        self.signalModificationInv = self.signalFile['data']
 
 def main():
     """
