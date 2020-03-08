@@ -1,5 +1,4 @@
 import numpy as np
-import scipy as sp
 from scipy import fftpack
 from scipy.io import wavfile
 import threading
@@ -92,8 +91,7 @@ def windowModification(dataModified, bandIndx, gains):
         """
         data = np.copy(dataModified)
         for slider, value in gains.items():
-            # print("slider %s value %s"%(slider, value))
-            if value != ... :
+            if type(value) != type(...) :
                 data[slider] = np.multiply(np.array(data[slider]), value)
             else: pass
         data = np.concatenate(data)
@@ -111,22 +109,25 @@ def applyWindowFunction(sliderID, sliderVal, dataBands, windowType = "Rectangle"
     :param windowType: window mode
     :return: data modified with the mode and gain
     """
-    bandIndx = sliderID -1
+    bandIndx = sliderID
     gain = sliderVal
     dataModified = np.copy(dataBands)
-    bandRange = len(dataModified[bandIndx])
-    hanningWindow = np.hanning(bandRange)
-    hammingWindow = np.hamming(bandRange)
+    print("gain is ", gain)
     print("before modification", len(np.concatenate(dataBands)))
 
-    if windowType == 'Rectangle': # TODO: convert multiple lines to function
+    if windowType == 'Rectangle':
         dataModified = windowModification(dataModified, bandIndx, gain)
     if windowType == 'Hanning':
-        hanningMod = gain * hanningWindow
-        dataModified = windowModification(dataModified, bandIndx, hanningMod)
+        for slider, value in gain.items():
+            print(value)
+            if type(value) != type(...) :
+                gain[slider] = value * np.hanning(len(dataModified[slider]))
+        dataModified = windowModification(dataModified, bandIndx, gain)
     if windowType == 'Hamming':
-        hammingMod = gain * hammingWindow
-        dataModified = windowModification(dataModified, bandIndx, hammingMod)
+        for slider, value in gain.items():
+            if value != ... :
+                gain[slider] = value * np.hanning(len(dataModified[slider]))
+        dataModified = windowModification(dataModified, bandIndx, gain)
 
     return dataModified
 

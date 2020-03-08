@@ -153,15 +153,10 @@ class equalizerApp(ss.Ui_MainWindow):
         :param val: int
         :return: none
         """
-        # print("slider %s value = %s"%(indx, val))
-        # if val in self.sliderValuesClicked[indx]:
-        #     pass
-        # else:
         self.sliderChangedGraph.plotItem.clear()
         self.sliderValuesClicked[indx] = val
         self.getWindow()
-
-        self.signalModification = applyWindowFunction(indx+1, self.sliderValuesClicked, self.signalBandsCopy, equalizerApp.windowMode)
+        self.signalModification = applyWindowFunction(indx, self.sliderValuesClicked, self.signalBandsCopy, equalizerApp.windowMode)
         try:
              self.plotFourier(self.signalModification, self.pens[2])
         except:
