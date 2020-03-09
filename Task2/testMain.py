@@ -51,9 +51,9 @@ class equalizerApp(ss.Ui_MainWindow):
         self.playerButtons = [self.playButton, self.stopButton]
         self.windows = [self.rectangle, self.hanning, self.hamming]
         self.frontWidgets = [self.inputSignalGraph, self.sliderChangedGraph]
-        self.outputBttns = [self.resetBands, self.saveResult, self.playResult]
+        self.outputButtons = [self.resetBands, self.saveResult, self.playResult]
 
-        self.widgetTitels = ["Original Signal", "Changes Applied"]
+        self.widgetTitles = ["Original Signal", "Changes Applied"]
         self.widgetsBottomLabels = ["No. of Samples", "Frequencies"]
 
         # pens configurations (Plot Colors)
@@ -63,7 +63,7 @@ class equalizerApp(ss.Ui_MainWindow):
 
         # Setup widget configurations
         for widget in self.frontWidgets:
-            widget.plotItem.setTitle(self.widgetTitels[self.frontWidgets.index(widget)])
+            widget.plotItem.setTitle(self.widgetTitles[self.frontWidgets.index(widget)])
             widget.plotItem.showGrid(True, True, alpha=0.8)
             widget.plotItem.setLabel("bottom", text=self.widgetsBottomLabels[self.frontWidgets.index(widget)])
 
@@ -95,9 +95,11 @@ class equalizerApp(ss.Ui_MainWindow):
             self.loadThread.filepath = self.filename
             self.loadThread.start()
             self.loadThread.signal.connect(self.loadFileConfiguration)
-            for btn in zip(self.playerButtons, self.outputBttns):
+            for btn in zip(self.playerButtons, self.outputButtons):
                 btn[0].setEnabled(True)
                 btn[1].setEnabled(True)
+
+            self.outputButtons[2].setEnabled(True)
 
     def loadFileConfiguration(self, fileName):
         """
