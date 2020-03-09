@@ -78,22 +78,6 @@
        <layout class="QGridLayout" name="gridLayout_4">
         <item row="0" column="0" colspan="2">
          <layout class="QGridLayout" name="gridLayout_3">
-          <item row="3" column="1">
-           <spacer name="verticalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Preferred</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>5</width>
-              <height>60</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
           <item row="3" column="0">
            <widget class="PlotWidget" name="sliderChangedGraph" native="true">
             <property name="sizePolicy">
@@ -109,6 +93,22 @@
              </size>
             </property>
            </widget>
+          </item>
+          <item row="3" column="1">
+           <spacer name="verticalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Preferred</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>5</width>
+              <height>60</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </item>
@@ -203,7 +203,7 @@
               </widget>
              </item>
              <item row="2" column="1">
-              <widget class="QPushButton" name="generateOutput">
+              <widget class="QPushButton" name="saveResult">
                <property name="enabled">
                 <bool>false</bool>
                </property>
@@ -257,7 +257,7 @@
                 </palette>
                </property>
                <property name="text">
-                <string>Generate</string>
+                <string>Save Result</string>
                </property>
               </widget>
              </item>
@@ -1099,7 +1099,7 @@
   <customwidget>
    <class>PlotWidget</class>
    <extends>QWidget</extends>
-   <header>pyqtgraph</header>
+   <header location="global">pyqtgraph</header>
    <container>1</container>
   </customwidget>
   <customwidget>

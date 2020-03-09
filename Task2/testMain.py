@@ -51,7 +51,7 @@ class equalizerApp(ss.Ui_MainWindow):
         self.playerButtons = [self.playButton, self.stopButton]
         self.windows = [self.rectangle, self.hanning, self.hamming]
         self.frontWidgets = [self.inputSignalGraph, self.sliderChangedGraph]
-        self.outputBttns = [self.resetBands, self.generateOutput, self.playResult]
+        self.outputBttns = [self.resetBands, self.saveResult, self.playResult]
 
         self.widgetTitels = ["Original Signal", "Changes Applied"]
         self.widgetsBottomLabels = ["No. of Samples", "Frequencies"]
@@ -216,6 +216,11 @@ class equalizerApp(ss.Ui_MainWindow):
             self.signalModificationInv = self.signalFile['data']
         except :
             pass
+
+
+    def saveResult(self):
+        pass
+
 
 def main():
     """
