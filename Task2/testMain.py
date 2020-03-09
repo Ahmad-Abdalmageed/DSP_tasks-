@@ -215,10 +215,12 @@ class equalizerApp(ss.Ui_MainWindow):
         :data: the data to be plotted
         :return:
         """
-        N = len(data)
-        yplot = 2.0 / N * np.abs(data[: N//2])
-        widgetName.plotItem.plot(yplot, pen= pen)
-
+        try:
+            N = len(data)
+            yplot = 2.0 / N * np.abs(data[: N//2])
+            widgetName.plotItem.plot(yplot, pen= pen)
+        except:
+            pass
     def resetAllBands(self):
         """
         resets al equalizer processes
