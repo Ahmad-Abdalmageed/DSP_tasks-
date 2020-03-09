@@ -36,6 +36,11 @@ class equalizerApp(ss.Ui_MainWindow):
         # Set Main View
         self.tabWidget.setCurrentIndex(0)
 
+        # Setup popup Window
+        self.popup_window = QtWidgets.QMainWindow()
+        self.pop_ui = Ui_OtherWindow()
+        self.pop_ui.setupUi(self.popup_window)
+
         # Initializations
         self.signalFile = ...  # the file loaded ---> data, Sampling Rate
         self.signalDataType = ...  # contains the data type of the signal
@@ -61,14 +66,21 @@ class equalizerApp(ss.Ui_MainWindow):
         self.outputWidgets = [self.inputTimeOriginal, self.outputTimeModified, self.inputFourierOriginal, self.outputFourierModified]
         # self.differenceWidgets = [self.TimeDifference, self.FourierDifference]
         self.compareWidgets = [self.result1Plot, self.result2Plot]
-        self.outputButtons = [self.resetBands, self.showResult, self.playResult]
+        self.differenceWidgets = [self.pop_ui.timeDifference, self.pop_ui.fourierDifference]
 
-        # Titles
+        self.outputButtons = [self.resetBands, self.showResult, self.playResult]
+        self.saveButtons = [self.saveFile_btn, self.showDifference_btn, self.saveResult_btn, self.compareResult_btn]
+
+        # Top Titles
         self.widgetTitles = ["Original Signal", "Changes Applied"]
         self.widgetsBottomLabels = ["No. of Samples", "Frequencies"]
         self.outputWidgetsTitles = ["Original Signal in Time", "Output Signal in Time", "Original Signal Fourier", "Output Signal Fourier"]
-        self.outputWidgetsBottomLabels = ["No. of Samples", "Frequencies"]
         self.compareTitles = ["First Result", "Second Result"]
+        self.differenceTitles = ["Time Difference", "Fourier Difference"]
+
+        # Bottom Titles
+        self.outputWidgetsBottomLabels = ["No. of Samples", "Frequencies"]
+
 
         # pens configurations (Plot Colors)
         self.pens = [pg.mkPen(color=(255, 0, 0)), pg.mkPen(color=(0, 255, 0)),
@@ -89,6 +101,10 @@ class equalizerApp(ss.Ui_MainWindow):
             widget.plotItem.setTitle(self.compareTitles[self.compareWidgets.index(widget)])
             widget.plotItem.showGrid(True, True, alpha=0.8)
 
+        for widget in self.differenceWidgets:
+            widget.plotItem.setTitle(self.differenceTitles[self.differenceWidgets.index(widget)])
+            widget.plotItem.showGrid(True, True, alpha=0.8)
+
         # CONNECTIONS
         self.actionload.triggered.connect(self.loadFile)
         for slider in self.sliders:
@@ -101,11 +117,14 @@ class equalizerApp(ss.Ui_MainWindow):
         self.resetBands.clicked.connect(self.resetAllBands)
 
         # Save Output Buttons
-        self.showResult.clicked.connect(self.saveResultOutput)
-        self.saveFile.clicked.connect(lambda: self.saveWaveFile('results/outputFile.wav', self.signalFile['frequency'], self.signalModificationInv))
+        self.showResult.clicked.connect(self.showResultOutput)
+        self.saveFile_btn.clicked.connect(lambda: self.saveWaveFile('results/outputFile.wav', self.signalFile['frequency'], self.signalModificationInv))
+
+        # Difference Button
+        self.showDifference_btn.clicked.connect(self.showPopupWindow)
 
         #Compare Results
-        self.compareBtn.clicked.connect(self.compareResults)
+        self.compareResult_btn.clicked.connect(self.compareResults)
 
 
     def loadFile(self):
@@ -250,8 +269,11 @@ class equalizerApp(ss.Ui_MainWindow):
             pass
 
 
-    def saveResultOutput(self):
+    def showResultOutput(self):
         self.tabWidget.setCurrentIndex(1)
+
+        for btn in self.saveButtons:
+            btn.setEnabled(True)
 
         # Plot Original signal in inputTimeOriginal Widget
         self.inputTimeOriginal.plotItem.plot(self.signalFile['data'])
@@ -270,19 +292,22 @@ class equalizerApp(ss.Ui_MainWindow):
     def compareResults(self):
         pass
 
-
-
-
     def saveWaveFile(self, name, rate, data):
         wavfile.write(name, rate, data.astype(self.signalDataType))
 
 
     def showPopupWindow(self):
-        self.window = QtWidgets.QMainWindow()
-        self.ui = Ui_OtherWindow()
-        self.ui.setupUi(self.window)
-        MainWindow.hide()
-        self.window.show()
+        self.popup_window.show()
+
+        # Difference of signals in Time
+        self.signalDiffInTime = self.signalModificationInv - self.signalFile['data']
+        self.pop_ui.timeDifference.plotItem.plot(self.signalDiffInTime)
+
+        # Difference of signals in Fourier
+        self.signalDiffInFourier = self.signalModification - self.signalFourier['transformedData']
+        self.pop_ui.fourierDifference.plotItem.plot(self.signalDiffInFourier)
+
+
 
 
 def main():
@@ -294,6 +319,9 @@ def main():
     MainWindow = QtWidgets.QMainWindow()
     ui = equalizerApp(MainWindow)
     MainWindow.show()
+
+
+
     sys.exit(app.exec_())
 
 
