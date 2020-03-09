@@ -92,7 +92,6 @@ class equalizerApp(ss.Ui_MainWindow):
         if self.filename == "":
             pass
         else:
-            # threading.Thread(target=self.loadFileConfiguration, args=(self.filename,)).start()
             self.loadThread.filepath = self.filename
             self.loadThread.start()
             self.loadThread.signal.connect(self.loadFileConfiguration)
@@ -197,9 +196,7 @@ class equalizerApp(ss.Ui_MainWindow):
         :data: the data to be plotted
         :return:
         """
-        # T = 1 /
         N = len(data)
-        # x = np.linspace(0.0, 1.0/2.0 * T, )
         yplot = 2.0 / N * np.abs(data[: N//2])
         self.sliderChangedGraph.plotItem.plot(yplot, pen= pen)
 
