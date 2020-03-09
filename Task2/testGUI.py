@@ -2,11 +2,13 @@
 
 # Form implementation generated from reading ui file 'testGUI.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.2
+# Created by: PyQt5 UI code generator 5.14.1
 #
 # WARNING! All changes made in this file will be lost!
 
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -23,8 +25,8 @@ class Ui_MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setMinimumSize(QtCore.QSize(600, 800))
         self.centralwidget.setObjectName("centralwidget")
-        self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
-        self.gridLayout.setObjectName("gridLayout")
+        self.gridLayout_7 = QtWidgets.QGridLayout(self.centralwidget)
+        self.gridLayout_7.setObjectName("gridLayout_7")
         self.tabWidget = QtWidgets.QTabWidget(self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -339,10 +341,46 @@ class Ui_MainWindow(object):
         self.output.setObjectName("output")
         self.gridLayout_6 = QtWidgets.QGridLayout(self.output)
         self.gridLayout_6.setObjectName("gridLayout_6")
-        self.outputLayout = QtWidgets.QVBoxLayout()
-        self.outputLayout.setContentsMargins(-1, -1, -1, 0)
-        self.outputLayout.setObjectName("outputLayout")
-        self.gridLayout_6.addLayout(self.outputLayout, 0, 0, 2, 2)
+        self.gridLayout = QtWidgets.QGridLayout()
+        self.gridLayout.setContentsMargins(-1, -1, -1, 0)
+        self.gridLayout.setObjectName("gridLayout")
+        self.inputFourierOriginal = PlotWidget(self.output)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.inputFourierOriginal.sizePolicy().hasHeightForWidth())
+        self.inputFourierOriginal.setSizePolicy(sizePolicy)
+        self.inputFourierOriginal.setMinimumSize(QtCore.QSize(250, 100))
+        self.inputFourierOriginal.setObjectName("inputFourierOriginal")
+        self.gridLayout.addWidget(self.inputFourierOriginal, 2, 0, 1, 1)
+        self.inputTimeOriginal = PlotWidget(self.output)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.inputTimeOriginal.sizePolicy().hasHeightForWidth())
+        self.inputTimeOriginal.setSizePolicy(sizePolicy)
+        self.inputTimeOriginal.setMinimumSize(QtCore.QSize(250, 100))
+        self.inputTimeOriginal.setObjectName("inputTimeOriginal")
+        self.gridLayout.addWidget(self.inputTimeOriginal, 0, 0, 1, 1)
+        self.outputFourierModified = PlotWidget(self.output)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.outputFourierModified.sizePolicy().hasHeightForWidth())
+        self.outputFourierModified.setSizePolicy(sizePolicy)
+        self.outputFourierModified.setMinimumSize(QtCore.QSize(250, 100))
+        self.outputFourierModified.setObjectName("outputFourierModified")
+        self.gridLayout.addWidget(self.outputFourierModified, 3, 0, 1, 1)
+        self.outputTimeModified = PlotWidget(self.output)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.outputTimeModified.sizePolicy().hasHeightForWidth())
+        self.outputTimeModified.setSizePolicy(sizePolicy)
+        self.outputTimeModified.setMinimumSize(QtCore.QSize(250, 100))
+        self.outputTimeModified.setObjectName("outputTimeModified")
+        self.gridLayout.addWidget(self.outputTimeModified, 1, 0, 1, 1)
+        self.gridLayout_6.addLayout(self.gridLayout, 0, 0, 2, 2)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setSizeConstraint(QtWidgets.QLayout.SetMinimumSize)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
@@ -358,10 +396,10 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.addItem(spacerItem15)
         self.gridLayout_6.addLayout(self.horizontalLayout_2, 2, 0, 1, 2)
         self.tabWidget.addTab(self.output, "")
-        self.gridLayout.addWidget(self.tabWidget, 0, 0, 1, 1)
+        self.gridLayout_7.addWidget(self.tabWidget, 0, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1083, 26))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1083, 22))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -384,7 +422,7 @@ class Ui_MainWindow(object):
         self.toolBar.addAction(self.actionload)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -417,16 +455,5 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.output), _translate("MainWindow", "Output"))
         self.toolBar.setWindowTitle(_translate("MainWindow", "toolBar"))
         self.actionload.setText(_translate("MainWindow", "load"))
-
 from mySliderClass import mySlider
 from pyqtgraph import PlotWidget
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec_())
-
