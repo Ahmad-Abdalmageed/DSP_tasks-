@@ -30,6 +30,10 @@ class equalizerApp(ss.Ui_MainWindow):
         :param mainWindow: QMainWindow Object
         """
         super(equalizerApp, self).setupUi(starterWindow)
+
+        # Set Main View
+        self.tabWidget.setCurrentIndex(0)
+
         # Initializations
         self.signalFile = ...  # the file loaded ---> data, Sampling Rate
         self.signalDataType = ...  # contains the data type of the signal
@@ -53,7 +57,7 @@ class equalizerApp(ss.Ui_MainWindow):
         self.frontWidgets = [self.inputSignalGraph, self.sliderChangedGraph]
         self.outputWidgets = [self.inputTimeOriginal, self.outputTimeModified, self.inputFourierOriginal, self.outputFourierModified]
         # self.differenceWidgets = [self.TimeDifference, self.FourierDifference]
-        self.outputButtons = [self.resetBands, self.saveResult, self.playResult]
+        self.outputButtons = [self.resetBands, self.showResult, self.playResult]
 
         self.widgetTitles = ["Original Signal", "Changes Applied"]
         self.widgetsBottomLabels = ["No. of Samples", "Frequencies"]
@@ -88,7 +92,9 @@ class equalizerApp(ss.Ui_MainWindow):
         self.resetBands.clicked.connect(self.resetAllBands)
 
         # Save Output Buttons
-        self.saveResult.clicked.connect(self.saveResultOutput)
+        self.showResult.clicked.connect(self.saveResultOutput)
+        self.saveFile.clicked.connect(lambda: self.saveWaveFile('results/outputFile.wav', self.signalFile['frequency'], self.signalModificationInv))
+
 
     def loadFile(self):
         """
@@ -145,11 +151,11 @@ class equalizerApp(ss.Ui_MainWindow):
         try:
             if len(self.signalFile['dim']) == 2 :
                 self.inputSignalGraph.plotItem.plot(self.signalFile['data'][:, 0], pem=self.pens[0]) # if 2d print one channel
-                self.plotFourier(self.signalFourier['transformedData'][:, 0], pen=self.pens[1])
+                self.plotFourier(self.sliderChangedGraph, self.signalFourier['transformedData'][:, 0], pen=self.pens[1])
             else:
                 # plotting
                 self.inputSignalGraph.plotItem.plot(self.signalFile['data'], pem=self.pens[0])
-                self.plotFourier(self.signalFourier['transformedData'], pen=self.pens[1])
+                self.plotFourier(self.sliderChangedGraph, self.signalFourier['transformedData'], pen=self.pens[1])
         except:
             pass
 
@@ -171,7 +177,7 @@ class equalizerApp(ss.Ui_MainWindow):
             self.getWindow()
             self.signalModification = applyWindowFunction(indx, self.sliderValuesClicked, self.signalBandsCopy, equalizerApp.windowMode)
             try:
-                 self.plotFourier(self.signalModification, self.pens[2])
+                 self.plotFourier(self.sliderChangedGraph, self.signalModification, self.pens[2])
             except:
                 print("failed")
                 pass
@@ -202,7 +208,7 @@ class equalizerApp(ss.Ui_MainWindow):
         sd.play(self.newInverse.astype(self.dataType), self.signalFile['frequency'])
         print(self.signalFile['frequency'])
 
-    def plotFourier(self, data, pen):
+    def plotFourier(self, widgetName, data, pen):
         """
         plot the fourier transform of the data
         :data: the data to be plotted
@@ -210,7 +216,7 @@ class equalizerApp(ss.Ui_MainWindow):
         """
         N = len(data)
         yplot = 2.0 / N * np.abs(data[: N//2])
-        self.sliderChangedGraph.plotItem.plot(yplot, pen= pen)
+        widgetName.plotItem.plot(yplot, pen= pen)
 
     def resetAllBands(self):
         """
@@ -231,8 +237,8 @@ class equalizerApp(ss.Ui_MainWindow):
 
 
     def saveResultOutput(self):
-        print("Modified", self.signalModification)
-        print("Inverse", self.signalModificationInv)
+        # self.tabWidget.currentTabIndex = 1
+        self.tabWidget.setCurrentIndex(1)
 
         # Plot Original signal in inputTimeOriginal Widget
         self.inputTimeOriginal.plotItem.plot(self.signalFile['data'])
@@ -242,16 +248,15 @@ class equalizerApp(ss.Ui_MainWindow):
 
 
         # Plot Original Signal in inputFourierOriginal Widget
-        N = len(self.signalFourier['transformedData'])
-        yplot = 2.0 / N * np.abs(self.signalFourier['transformedData'][: N // 2])
-        self.inputFourierOriginal.plotItem.plot(yplot)
+        self.plotFourier(self.inputFourierOriginal, self.signalFourier['transformedData'], pen=self.pens[2])
 
 
         #  Plot Fourier of Original in outputFourierOriginal Widget
-        self.outputFourierModified.plotItem.plot(self.signalModification)
+        self.plotFourier(self.outputFourierModified, self.signalModification, pen=self.pens[3])
 
-        pass
 
+    def saveWaveFile(self, name, rate, data):
+        wavfile.write(name, rate, data.astype(self.signalDataType))
 
 
 def main():

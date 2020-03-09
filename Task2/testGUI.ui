@@ -68,7 +68,7 @@
       <property name="movable">
        <bool>true</bool>
       </property>
-      <property name="tabBarAutoHide">
+      <property name="tabBarAutoHide" stdset="0">
        <bool>false</bool>
       </property>
       <widget class="QWidget" name="input">
@@ -203,7 +203,7 @@
               </widget>
              </item>
              <item row="2" column="1">
-              <widget class="QPushButton" name="saveResult">
+              <widget class="QPushButton" name="showResult">
                <property name="enabled">
                 <bool>false</bool>
                </property>
@@ -257,7 +257,7 @@
                 </palette>
                </property>
                <property name="text">
-                <string>Save Result</string>
+                <string>Show Result</string>
                </property>
               </widget>
              </item>
@@ -1073,9 +1073,9 @@
            </spacer>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_2">
+           <widget class="QPushButton" name="saveFile">
             <property name="text">
-             <string>save</string>
+             <string>Save File</string>
             </property>
            </widget>
           </item>
@@ -1113,7 +1113,7 @@
      <x>0</x>
      <y>0</y>
      <width>1083</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>
