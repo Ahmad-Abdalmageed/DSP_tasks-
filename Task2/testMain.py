@@ -22,6 +22,7 @@ class loaderThread(QThread):
 
 
 class equalizerApp(ss.Ui_MainWindow):
+    # Window Mode
     windowMode = "Rectangle"
 
     def __init__(self, starterWindow):
