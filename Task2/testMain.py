@@ -2,7 +2,7 @@
 import sys
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import QThread, pyqtSignal
-from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QApplication, QWidget, QInputDialog, QLineEdit, QMessageBox
 import pyqtgraph as pg
 import sounddevice as sd
 import testGUI as ss
@@ -33,7 +33,6 @@ class equalizerApp(ss.Ui_MainWindow):
         :param mainWindow: QMainWindow Object
         """
         super(equalizerApp, self).setupUi(starterWindow)
-
         # Set Main View
         self.tabWidget.setCurrentIndex(0)
 
@@ -126,7 +125,7 @@ class equalizerApp(ss.Ui_MainWindow):
 
         # Save Output Buttons
         self.showResult.clicked.connect(self.showResultOutput)
-        self.saveFile_btn.clicked.connect(lambda: self.saveWaveFile('results/outputFile.wav', self.signalFile['frequency'], self.signalModificationInv))
+        self.saveFile_btn.clicked.connect(lambda: self.saveWaveFile(self.signalFile['frequency'], self.signalModificationInv))
 
         # Difference Button
         self.showDifference_btn.clicked.connect(self.showDifferenceWindow)
@@ -134,7 +133,6 @@ class equalizerApp(ss.Ui_MainWindow):
         #Compare Results
         self.saveResult_btn.clicked.connect(self.saveResult)
         self.compareResult_btn.clicked.connect(self.compareResults)
-
 
 
     def loadFile(self):
@@ -314,9 +312,15 @@ class equalizerApp(ss.Ui_MainWindow):
             self.results[self.resultCounter].append([self.signalModification, self.signalModificationInv])
             self.resultCounter +=1
         print(self.results)
-    def saveWaveFile(self, name, rate, data):
-        self.showSaveMessage("Save", "Save your file")
-        wavfile.write(name, rate, data.astype(self.signalDataType))
+
+    def saveWaveFile(self, rate, data):
+
+        dialog = QInputDialog()
+        text, okPressed = dialog.getText(dialog, "Save File", "File name:", QLineEdit.Normal, "")
+
+        text = "results/" + text + ".wav"
+        print(text)
+        wavfile.write(text, rate, data.astype(self.signalDataType))
 
 
     def showDifferenceWindow(self):
@@ -332,14 +336,13 @@ class equalizerApp(ss.Ui_MainWindow):
         self.signalDiffInFourier = self.signalModification - self.signalFourier['transformedData']
         self.plotFourier(self.pop_ui.fourierDifference, self.signalDiffInFourier, pen=self.pens[3])
 
-    def showSaveMessage(self, message, info):
+    def showSaveMessage(self, message):
         msg = QMessageBox()
         msg.setWindowTitle("Save Result")
         msg.setText(message)
-        msg.setIcon(QMessageBox.Warning)
+        msg.setIcon(QMessageBox.Question)
         msg.setStandardButtons(QMessageBox.Ok)
-        msg.setDefaultButton(QMessageBox.Ok)
-        msg.setInformativeText(info)
+        # msg.setInformativeText(info)
         x = msg.exec_()
 
 
@@ -352,8 +355,6 @@ def main():
     MainWindow = QtWidgets.QMainWindow()
     ui = equalizerApp(MainWindow)
     MainWindow.show()
-
-
 
     sys.exit(app.exec_())
 
