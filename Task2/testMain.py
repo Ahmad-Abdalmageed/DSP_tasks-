@@ -48,7 +48,7 @@ class equalizerApp(ss.Ui_MainWindow):
                         self.verticalSlider_5, self.verticalSlider_6, self.verticalSlider_7, self.verticalSlider_8,
                         self.verticalSlider_9, self.verticalSlider_10]
 
-        self.playerButtons = [self.playButton, self.pauseButton, self.stopButton]
+        self.playerButtons = [self.playButton, self.stopButton]
         self.windows = [self.rectangle, self.hanning, self.hamming]
         self.frontWidgets = [self.inputSignalGraph, self.sliderChangedGraph]
         self.outputBttns = [self.resetBands, self.generateOutput, self.playResult]
