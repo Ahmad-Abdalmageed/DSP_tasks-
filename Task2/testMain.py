@@ -2,13 +2,10 @@
 import sys
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import QThread, pyqtSignal
-from PyQt5.QtWidgets import QMessageBox
 import pyqtgraph as pg
 import sounddevice as sd
 import testGUI as ss
 from helpers import *
-import threading
-from scipy import signal as si
 
 
 class loaderThread(QThread):
@@ -25,29 +22,26 @@ class loaderThread(QThread):
 
 
 class equalizerApp(ss.Ui_MainWindow):
-    selectedSlider = 0
     windowMode = "Rectangle"
 
     def __init__(self, starterWindow):
         """
         Main loop of the UI
-        :param mainwindow: QMainWindow Object
+        :param mainWindow: QMainWindow Object
         """
         super(equalizerApp, self).setupUi(starterWindow)
         # Initializations
-        self.signalFile = ... # the file loaded ---> data, Sampling Rate
-        self.signalDataType = ... # contains the data type of the signal
-        self.signalFourier = ... # fourier transform of the signal file data
-        self.signalBands = ... # Contains the signal bands
-        self.signalBandsCopy = ... # contains a copy of the signal bands for modification purposes
-        self.signalModification = ... # Contains the signal with the modified data
-        self.signalModificationInv = ... # Contains the data to be played and writen to wave
-        self.filename = ... # contains the file path
-        self.format = ... # contains the file format
-        self.plotInputThread = ... # contains the plotter Thread for input signal
-        self.plotFourierThread = ... # contains the plotter Thread for input signal fourier
-        self.loadThread = loaderThread()# contains the loader thread
-        self.sliderValuesClicked = {0:..., 1:..., 2:..., 3:..., 4:..., 5:..., 6:..., 7:..., 8:..., 9:...} # list contains the last pressed values
+        self.signalFile = ...  # the file loaded ---> data, Sampling Rate
+        self.signalDataType = ...  # contains the data type of the signal
+        self.signalFourier = ...  # fourier transform of the signal file data
+        self.signalBands = ...  # Contains the signal bands
+        self.signalBandsCopy = ...  # contains a copy of the signal bands for modification purposes
+        self.signalModification = ...  # Contains the signal with the modified data
+        self.signalModificationInv = ...  # Contains the data to be played and writen to wave
+        self.filename = ...  # contains the file path
+        self.format = ...  # contains the file format
+        self.loadThread = loaderThread()  # contains the loader thread
+        self.sliderValuesClicked = {0:..., 1:..., 2:..., 3:..., 4:..., 5:..., 6:..., 7:..., 8:..., 9:...}  # list contains the last pressed values
 
         # encapsulations
         self.sliders = [self.verticalSlider, self.verticalSlider_2, self.verticalSlider_3, self.verticalSlider_4,
@@ -57,7 +51,7 @@ class equalizerApp(ss.Ui_MainWindow):
         self.playerButtons = [self.playButton, self.pauseButton, self.stopButton]
         self.windows = [self.rectangle, self.hanning, self.hamming]
         self.frontWidgets = [self.inputSignalGraph, self.sliderChangedGraph]
-
+        self.outputBttns = [self.resetBands, self.generateOutput, self.playResult]
 
         self.widgetTitels = ["Original Signal", "Changes Applied"]
         self.widgetsBottomLabels = ["No. of Samples", "Frequencies"]
@@ -83,9 +77,7 @@ class equalizerApp(ss.Ui_MainWindow):
 
         self.playButton.clicked.connect(lambda : sd.play(self.signalFile["data"] ,  self.signalFile['frequency']))
         self.stopButton.clicked.connect(lambda : sd.stop())
-        # self.pauseButton.clicked.connect(lambda : sd.wait())
         self.playResult.clicked.connect(lambda : sd.play(self.signalModificationInv.astype(self.signalDataType), self.signalFile['frequency']))
-        # self.playResult.clicked.connect(self.playResultFile)
         self.resetBands.clicked.connect(self.resetAllBands)
 
     def loadFile(self):
@@ -104,6 +96,9 @@ class equalizerApp(ss.Ui_MainWindow):
             self.loadThread.filepath = self.filename
             self.loadThread.start()
             self.loadThread.signal.connect(self.loadFileConfiguration)
+            for btn in zip(self.playerButtons, self.outputBttns):
+                btn[0].setEnabled(True)
+                btn[1].setEnabled(True)
 
     def loadFileConfiguration(self, fileName):
         """
@@ -112,6 +107,7 @@ class equalizerApp(ss.Ui_MainWindow):
         :return: none
         """
         self.signalFile = fileName
+        self.signalModificationInv = self.signalFile['data']
         self.signalDataType = self.signalFile['data'].dtype
         self.plotSignalLoaded()
 
@@ -135,14 +131,16 @@ class equalizerApp(ss.Ui_MainWindow):
         :return: none
         """
        # check the dimensions of the signal and plot using best method
-        if len(self.signalFile['dim']) == 2 : # TODO NOTE: not DRY
-            self.inputSignalGraph.plotItem.plot(self.signalFile['data'][:, 0], pem=self.pens[0]) # if 2d print one channel
-            self.plotFourier(self.signalFourier['transformedData'][:, 0], pen=self.pens[1])
-        else:
-            # plotting
-            self.inputSignalGraph.plotItem.plot(self.signalFile['data'], pem=self.pens[0])
-            self.plotFourier(self.signalFourier['transformedData'], pen=self.pens[1])
-
+        try:
+            if len(self.signalFile['dim']) == 2 :
+                self.inputSignalGraph.plotItem.plot(self.signalFile['data'][:, 0], pem=self.pens[0]) # if 2d print one channel
+                self.plotFourier(self.signalFourier['transformedData'][:, 0], pen=self.pens[1])
+            else:
+                # plotting
+                self.inputSignalGraph.plotItem.plot(self.signalFile['data'], pem=self.pens[0])
+                self.plotFourier(self.signalFourier['transformedData'], pen=self.pens[1])
+        except:
+            pass
 
 
     def sliderChanged(self, indx, val):
@@ -153,16 +151,22 @@ class equalizerApp(ss.Ui_MainWindow):
         :param val: int
         :return: none
         """
-        self.sliderChangedGraph.plotItem.clear()
-        self.sliderValuesClicked[indx] = val
-        self.getWindow()
-        self.signalModification = applyWindowFunction(indx, self.sliderValuesClicked, self.signalBandsCopy, equalizerApp.windowMode)
         try:
-             self.plotFourier(self.signalModification, self.pens[2])
+            self.sliderChangedGraph.plotItem.clear()
+            if val < 0 and not 0:
+                self.sliderValuesClicked[indx] = 1/val
+            else:
+                self.sliderValuesClicked[indx] = val
+            self.getWindow()
+            self.signalModification = applyWindowFunction(indx, self.sliderValuesClicked, self.signalBandsCopy, equalizerApp.windowMode)
+            try:
+                 self.plotFourier(self.signalModification, self.pens[2])
+            except:
+                print("failed")
+                pass
+            self.signalModificationInv = inverseFourierTransform(self.signalModification, self.signalFile['dim'])
         except:
-            print("failed")
             pass
-        self.signalModificationInv = inverseFourierTransform(self.signalModification, self.signalFile['dim'])
 
     def getWindow(self):
         """
@@ -204,16 +208,17 @@ class equalizerApp(ss.Ui_MainWindow):
         resets al equalizer processes
         :return:
         """
-        for slider in self.sliders:
-            slider.setValue(1)
-        self.sliderChangedGraph.plotItem.clear()
-        self.plotUsingDimension()
-        print("before reseting", self.sliderValuesClicked)
-        for slider, value in self.sliderValuesClicked.items():
-            self.sliderValuesClicked[slider] = ...
-        print('after resetting ', self.sliderValuesClicked)
-        self.signalModification = ...
-        self.signalModificationInv = self.signalFile['data']
+        try:
+            for slider in self.sliders:
+                slider.setValue(1)
+            self.sliderChangedGraph.plotItem.clear()
+            self.plotUsingDimension()
+            for slider, value in self.sliderValuesClicked.items():
+                self.sliderValuesClicked[slider] = ...
+            self.signalModification = ...
+            self.signalModificationInv = self.signalFile['data']
+        except :
+            pass
 
 def main():
     """

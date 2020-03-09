@@ -69,17 +69,12 @@ def createBands(dataDict):
     """
     freqs = dataDict['dataFrequencies']
     data = dataDict['transformedData']
-
-    print("the data", len(data))
-    freqBands = (0, 31.25, 62.5, 125, 250, 500, 10**3, 2*10**3, 4*10**3, 8*10**3, 16*10**3, len(data))
+    freqBands = (0, 62.5, 125, 250, 500, 10**3, 2*10**3, 4*10**3, 8*10**3, 16*10**3, len(data))
     dataBands = []
     for i in range(len(freqBands)-1):
         bands = [val for indx, val in enumerate(data) if indx >= freqBands[i] and indx < freqBands[i+1]] ## equal sign هه
         dataBands.append(bands)
-    print("returned", len(dataBands))
-    print("are they equal", len(data) == len(np.concatenate(dataBands)))
     return dataBands
-
 
 def windowModification(dataModified, bandIndx, gains):
         """
@@ -95,7 +90,6 @@ def windowModification(dataModified, bandIndx, gains):
                 data[slider] = np.multiply(np.array(data[slider]), value)
             else: pass
         data = np.concatenate(data)
-        print("after modification", len(data))
         return data
 
 
@@ -112,15 +106,11 @@ def applyWindowFunction(sliderID, sliderVal, dataBands, windowType = "Rectangle"
     bandIndx = sliderID
     gain = sliderVal
     dataModified = np.copy(dataBands)
-    print("gain is ", gain)
-    print("before modification", len(np.concatenate(dataBands)))
-
     if windowType == 'Rectangle':
         dataModified = windowModification(dataModified, bandIndx, gain)
 
     if windowType == 'Hanning':
         for slider, value in gain.items():
-            print(value)
             if type(value) != type(...) :
                 if value is int :
                     gain[slider] = value * np.hanning(len(dataModified[slider]))
@@ -132,7 +122,6 @@ def applyWindowFunction(sliderID, sliderVal, dataBands, windowType = "Rectangle"
                 if value is int :
                     gain[slider] = value * np.hanning(len(dataModified[slider]))
         dataModified = windowModification(dataModified, bandIndx, gain)
-
     return dataModified
 
 
