@@ -6,6 +6,7 @@ import pyqtgraph as pg
 import sounddevice as sd
 import testGUI as ss
 from helpers import *
+from popupWindow import Ui_OtherWindow
 
 
 class loaderThread(QThread):
@@ -260,6 +261,14 @@ class equalizerApp(ss.Ui_MainWindow):
 
     def saveWaveFile(self, name, rate, data):
         wavfile.write(name, rate, data.astype(self.signalDataType))
+
+
+    def showPopupWindow(self):
+        self.window = QtWidgets.QMainWindow()
+        self.ui = Ui_OtherWindow()
+        self.ui.setupUi(self.window)
+        MainWindow.hide()
+        self.window.show()
 
 
 def main():
