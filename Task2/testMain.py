@@ -52,7 +52,7 @@ class equalizerApp(ss.Ui_MainWindow):
         self.windows = [self.rectangle, self.hanning, self.hamming]
         self.frontWidgets = [self.inputSignalGraph, self.sliderChangedGraph]
         self.outputWidgets = [self.inputTimeOriginal, self.outputTimeModified, self.inputFourierOriginal, self.outputFourierModified]
-        self.differenceWidgets = [self.TimeDifference, self.FourierDifference]
+        # self.differenceWidgets = [self.TimeDifference, self.FourierDifference]
         self.outputButtons = [self.resetBands, self.saveResult, self.playResult]
 
         self.widgetTitles = ["Original Signal", "Changes Applied"]
