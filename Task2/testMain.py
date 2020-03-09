@@ -2,6 +2,7 @@
 import sys
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import QThread, pyqtSignal
+from PyQt5.QtWidgets import QMessageBox
 import pyqtgraph as pg
 import sounddevice as sd
 import testGUI as ss
@@ -73,13 +74,14 @@ class equalizerApp(ss.Ui_MainWindow):
 
         # Top Titles
         self.widgetTitles = ["Original Signal", "Changes Applied"]
-        self.widgetsBottomLabels = ["No. of Samples", "Frequencies"]
         self.outputWidgetsTitles = ["Original Signal in Time", "Output Signal in Time", "Original Signal Fourier", "Output Signal Fourier"]
         self.compareTitles = ["First Result", "Second Result"]
         self.differenceTitles = ["Time Difference", "Fourier Difference"]
 
         # Bottom Titles
-        self.outputWidgetsBottomLabels = ["No. of Samples", "Frequencies"]
+        self.widgetsBottomLabels = ["No. of Samples", "Frequencies"]
+        self.outputWidgetsBottomLabels = ["No. of Samples", "No. of Samples", "Frequencies", "Frequencies"]
+        self.compareTitles = ["Frequencies", "Frequencies"]
 
 
         # pens configurations (Plot Colors)
@@ -96,14 +98,19 @@ class equalizerApp(ss.Ui_MainWindow):
         for widget in self.outputWidgets:
             widget.plotItem.setTitle(self.outputWidgetsTitles[self.outputWidgets.index(widget)])
             widget.plotItem.showGrid(True, True, alpha=0.8)
+            widget.plotItem.setLabel("bottom", text=self.outputWidgetsBottomLabels[self.outputWidgets.index(widget)])
+
 
         for widget in self.compareWidgets:
             widget.plotItem.setTitle(self.compareTitles[self.compareWidgets.index(widget)])
             widget.plotItem.showGrid(True, True, alpha=0.8)
+            widget.plotItem.setLabel("bottom", text=self.compareTitles[self.compareWidgets.index(widget)])
+
 
         for widget in self.differenceWidgets:
             widget.plotItem.setTitle(self.differenceTitles[self.differenceWidgets.index(widget)])
             widget.plotItem.showGrid(True, True, alpha=0.8)
+            widget.plotItem.setLabel("bottom", text=self.widgetsBottomLabels[self.differenceWidgets.index(widget)])
 
         # CONNECTIONS
         self.actionload.triggered.connect(self.loadFile)
@@ -121,10 +128,11 @@ class equalizerApp(ss.Ui_MainWindow):
         self.saveFile_btn.clicked.connect(lambda: self.saveWaveFile('results/outputFile.wav', self.signalFile['frequency'], self.signalModificationInv))
 
         # Difference Button
-        self.showDifference_btn.clicked.connect(self.showPopupWindow)
+        self.showDifference_btn.clicked.connect(self.showDifferenceWindow)
 
         #Compare Results
         self.compareResult_btn.clicked.connect(self.compareResults)
+
 
 
     def loadFile(self):
@@ -293,11 +301,14 @@ class equalizerApp(ss.Ui_MainWindow):
         pass
 
     def saveWaveFile(self, name, rate, data):
+        self.showSaveMessage("Save", "Save your file")
         wavfile.write(name, rate, data.astype(self.signalDataType))
 
 
-    def showPopupWindow(self):
+    def showDifferenceWindow(self):
         self.popup_window.show()
+        self.pop_ui.timeDifference.plotItem.clear()
+        self.pop_ui.fourierDifference.plotItem.clear()
 
         # Difference of signals in Time
         self.signalDiffInTime = self.signalModificationInv - self.signalFile['data']
@@ -305,9 +316,17 @@ class equalizerApp(ss.Ui_MainWindow):
 
         # Difference of signals in Fourier
         self.signalDiffInFourier = self.signalModification - self.signalFourier['transformedData']
-        self.pop_ui.fourierDifference.plotItem.plot(self.signalDiffInFourier)
+        self.plotFourier(self.pop_ui.fourierDifference, self.signalDiffInFourier, pen=self.pens[3])
 
-
+    def showSaveMessage(self, message, info):
+        msg = QMessageBox()
+        msg.setWindowTitle("Save Result")
+        msg.setText(message)
+        msg.setIcon(QMessageBox.Warning)
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.setDefaultButton(QMessageBox.Ok)
+        msg.setInformativeText(info)
+        x = msg.exec_()
 
 
 def main():
