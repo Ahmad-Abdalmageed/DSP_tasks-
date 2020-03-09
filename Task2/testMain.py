@@ -47,6 +47,7 @@ class equalizerApp(ss.Ui_MainWindow):
         self.format = ...  # contains the file format
         self.loadThread = loaderThread()  # contains the loader thread
         self.sliderValuesClicked = {0:..., 1:..., 2:..., 3:..., 4:..., 5:..., 6:..., 7:..., 8:..., 9:...}  # list contains the last pressed values
+        self.results = {1:[], 2:[]}
 
         # encapsulations
         self.sliders = [self.verticalSlider, self.verticalSlider_2, self.verticalSlider_3, self.verticalSlider_4,
@@ -58,13 +59,15 @@ class equalizerApp(ss.Ui_MainWindow):
         self.frontWidgets = [self.inputSignalGraph, self.sliderChangedGraph]
         self.outputWidgets = [self.inputTimeOriginal, self.outputTimeModified, self.inputFourierOriginal, self.outputFourierModified]
         # self.differenceWidgets = [self.TimeDifference, self.FourierDifference]
+        self.compareWidgets = [self.result1Plot, self.result2Plot]
         self.outputButtons = [self.resetBands, self.showResult, self.playResult]
 
+        # Titles
         self.widgetTitles = ["Original Signal", "Changes Applied"]
         self.widgetsBottomLabels = ["No. of Samples", "Frequencies"]
-
         self.outputWidgetsTitles = ["Original Signal in Time", "Output Signal in Time", "Original Signal Fourier", "Output Signal Fourier"]
         self.outputWidgetsBottomLabels = ["No. of Samples", "Frequencies"]
+        self.compareTitles = ["First Result", "Second Result"]
 
         # pens configurations (Plot Colors)
         self.pens = [pg.mkPen(color=(255, 0, 0)), pg.mkPen(color=(0, 255, 0)),
@@ -81,6 +84,10 @@ class equalizerApp(ss.Ui_MainWindow):
             widget.plotItem.setTitle(self.outputWidgetsTitles[self.outputWidgets.index(widget)])
             widget.plotItem.showGrid(True, True, alpha=0.8)
 
+        for widget in self.compareWidgets:
+            widget.plotItem.setTitle(self.compareTitles[self.compareWidgets.index(widget)])
+            widget.plotItem.showGrid(True, True, alpha=0.8)
+
         # CONNECTIONS
         self.actionload.triggered.connect(self.loadFile)
         for slider in self.sliders:
@@ -95,6 +102,9 @@ class equalizerApp(ss.Ui_MainWindow):
         # Save Output Buttons
         self.showResult.clicked.connect(self.saveResultOutput)
         self.saveFile.clicked.connect(lambda: self.saveWaveFile('results/outputFile.wav', self.signalFile['frequency'], self.signalModificationInv))
+
+        #Compare Results
+        self.compareBtn.clicked.connect(self.compareResults)
 
 
     def loadFile(self):
@@ -240,7 +250,6 @@ class equalizerApp(ss.Ui_MainWindow):
 
 
     def saveResultOutput(self):
-        # self.tabWidget.currentTabIndex = 1
         self.tabWidget.setCurrentIndex(1)
 
         # Plot Original signal in inputTimeOriginal Widget
@@ -256,6 +265,11 @@ class equalizerApp(ss.Ui_MainWindow):
 
         #  Plot Fourier of Original in outputFourierOriginal Widget
         self.plotFourier(self.outputFourierModified, self.signalModification, pen=self.pens[3])
+
+    def compareResults(self):
+        pass
+
+
 
 
     def saveWaveFile(self, name, rate, data):
