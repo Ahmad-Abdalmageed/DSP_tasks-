@@ -51,10 +51,15 @@ class equalizerApp(ss.Ui_MainWindow):
         self.playerButtons = [self.playButton, self.stopButton]
         self.windows = [self.rectangle, self.hanning, self.hamming]
         self.frontWidgets = [self.inputSignalGraph, self.sliderChangedGraph]
+        self.outputWidgets = [self.inputTimeOriginal, self.outputTimeModified, self.inputFourierOriginal, self.outputFourierModified]
+        self.differenceWidgets = [self.TimeDifference, self.FourierDifference]
         self.outputButtons = [self.resetBands, self.saveResult, self.playResult]
 
         self.widgetTitles = ["Original Signal", "Changes Applied"]
         self.widgetsBottomLabels = ["No. of Samples", "Frequencies"]
+
+        self.outputWidgetsTitles = ["Original Signal in Time", "Output Signal in Time", "Original Signal Fourier", "Output Signal Fourier"]
+        self.outputWidgetsBottomLabels = ["No. of Samples", "Frequencies"]
 
         # pens configurations (Plot Colors)
         self.pens = [pg.mkPen(color=(255, 0, 0)), pg.mkPen(color=(0, 255, 0)),
@@ -67,7 +72,9 @@ class equalizerApp(ss.Ui_MainWindow):
             widget.plotItem.showGrid(True, True, alpha=0.8)
             widget.plotItem.setLabel("bottom", text=self.widgetsBottomLabels[self.frontWidgets.index(widget)])
 
-
+        for widget in self.outputWidgets:
+            widget.plotItem.setTitle(self.outputWidgetsTitles[self.outputWidgets.index(widget)])
+            widget.plotItem.showGrid(True, True, alpha=0.8)
 
         # CONNECTIONS
         self.actionload.triggered.connect(self.loadFile)
@@ -79,6 +86,9 @@ class equalizerApp(ss.Ui_MainWindow):
         self.stopButton.clicked.connect(lambda : sd.stop())
         self.playResult.clicked.connect(lambda : sd.play(self.signalModificationInv.astype(self.signalDataType), self.signalFile['frequency']))
         self.resetBands.clicked.connect(self.resetAllBands)
+
+        # Save Output Buttons
+        self.saveResult.clicked.connect(self.saveResultOutput)
 
     def loadFile(self):
         """
@@ -220,8 +230,28 @@ class equalizerApp(ss.Ui_MainWindow):
             pass
 
 
-    def saveResult(self):
+    def saveResultOutput(self):
+        print("Modified", self.signalModification)
+        print("Inverse", self.signalModificationInv)
+
+        # Plot Original signal in inputTimeOriginal Widget
+        self.inputTimeOriginal.plotItem.plot(self.signalFile['data'])
+
+        # Plot Inverse of Original in outputTimeOriginal Widget
+        self.outputTimeModified.plotItem.plot(self.signalModificationInv)
+
+
+        # Plot Original Signal in inputFourierOriginal Widget
+        N = len(self.signalFourier['transformedData'])
+        yplot = 2.0 / N * np.abs(self.signalFourier['transformedData'][: N // 2])
+        self.inputFourierOriginal.plotItem.plot(yplot)
+
+
+        #  Plot Fourier of Original in outputFourierOriginal Widget
+        self.outputFourierModified.plotItem.plot(self.signalModification)
+
         pass
+
 
 
 def main():
