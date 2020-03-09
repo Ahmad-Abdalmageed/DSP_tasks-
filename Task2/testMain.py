@@ -55,6 +55,7 @@ class equalizerApp(ss.Ui_MainWindow):
         self.loadThread = loaderThread()  # contains the loader thread
         self.sliderValuesClicked = {0:..., 1:..., 2:..., 3:..., 4:..., 5:..., 6:..., 7:..., 8:..., 9:...}  # list contains the last pressed values
         self.results = {1:[], 2:[]}
+        self.resultCounter = 1
 
         # encapsulations
         self.sliders = [self.verticalSlider, self.verticalSlider_2, self.verticalSlider_3, self.verticalSlider_4,
@@ -131,6 +132,7 @@ class equalizerApp(ss.Ui_MainWindow):
         self.showDifference_btn.clicked.connect(self.showDifferenceWindow)
 
         #Compare Results
+        self.saveResult_btn.clicked.connect(self.saveResult)
         self.compareResult_btn.clicked.connect(self.compareResults)
 
 
@@ -282,7 +284,8 @@ class equalizerApp(ss.Ui_MainWindow):
 
         for btn in self.saveButtons:
             btn.setEnabled(True)
-
+        for widget in self.outputWidgets:
+            widget.plotItem.clear()
         # Plot Original signal in inputTimeOriginal Widget
         self.inputTimeOriginal.plotItem.plot(self.signalFile['data'])
 
@@ -298,8 +301,19 @@ class equalizerApp(ss.Ui_MainWindow):
         self.plotFourier(self.outputFourierModified, self.signalModification, pen=self.pens[3])
 
     def compareResults(self):
-        pass
+        print("yes")
 
+        self.tabWidget.setCurrentIndex(-1)
+        self.plotFourier(self.result1Plot, self.results[1][0], self.pens[3])
+        self.plotFourier(self.result2Plot, self.results[2][0], self.pens[3])
+
+    def saveResult(self):
+        if self.resultCounter > 2:
+            print("No more yala")
+        else:
+            self.results[self.resultCounter].append([self.signalModification, self.signalModificationInv])
+            self.resultCounter +=1
+        print(self.results)
     def saveWaveFile(self, name, rate, data):
         self.showSaveMessage("Save", "Save your file")
         wavfile.write(name, rate, data.astype(self.signalDataType))
