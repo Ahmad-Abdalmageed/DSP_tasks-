@@ -301,15 +301,18 @@ class equalizerApp(ss.Ui_MainWindow):
     def compareResults(self):
         print("yes")
 
-        self.tabWidget.setCurrentIndex(-1)
-        self.plotFourier(self.result1Plot, self.results[1][0], self.pens[3])
-        self.plotFourier(self.result2Plot, self.results[2][0], self.pens[3])
-
+        self.tabWidget.setCurrentIndex(2)
+        print(self.results[2])
+        try:
+            self.plotFourier(self.result1Plot, self.results[1][0], self.pens[3])
+            self.plotFourier(self.result2Plot, self.results[2][0], self.pens[3])
+        except IndexError:
+            self.showMessage("Warning", "You can compare two results please choose and save the second result", QMessageBox.Ok, QMessageBox.Warning)
     def saveResult(self):
         if self.resultCounter > 2:
             print("No more yala")
         else:
-            self.results[self.resultCounter].append([self.signalModification, self.signalModificationInv])
+            self.results[self.resultCounter].extend([self.signalModification, self.signalModificationInv])
             self.resultCounter +=1
         print(self.results)
 
@@ -336,13 +339,12 @@ class equalizerApp(ss.Ui_MainWindow):
         self.signalDiffInFourier = self.signalModification - self.signalFourier['transformedData']
         self.plotFourier(self.pop_ui.fourierDifference, self.signalDiffInFourier, pen=self.pens[3])
 
-    def showSaveMessage(self, message):
+    def showMessage(self, header,message, button, icon):
         msg = QMessageBox()
-        msg.setWindowTitle("Save Result")
+        msg.setWindowTitle(header)
         msg.setText(message)
-        msg.setIcon(QMessageBox.Question)
-        msg.setStandardButtons(QMessageBox.Ok)
-        # msg.setInformativeText(info)
+        msg.setIcon(icon)
+        msg.setStandardButtons(button)
         x = msg.exec_()
 
 
