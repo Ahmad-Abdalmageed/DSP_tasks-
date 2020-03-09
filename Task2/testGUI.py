@@ -2,13 +2,11 @@
 
 # Form implementation generated from reading ui file 'testGUI.ui'
 #
-# Created by: PyQt5 UI code generator 5.14.1
+# Created by: PyQt5 UI code generator 5.9.2
 #
 # WARNING! All changes made in this file will be lost!
 
-
 from PyQt5 import QtCore, QtGui, QtWidgets
-
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -422,7 +420,7 @@ class Ui_MainWindow(object):
         self.toolBar.addAction(self.actionload)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -455,5 +453,16 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.output), _translate("MainWindow", "Output"))
         self.toolBar.setWindowTitle(_translate("MainWindow", "toolBar"))
         self.actionload.setText(_translate("MainWindow", "load"))
+
 from mySliderClass import mySlider
 from pyqtgraph import PlotWidget
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())
+
