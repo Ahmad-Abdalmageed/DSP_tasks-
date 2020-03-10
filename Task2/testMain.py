@@ -1,6 +1,6 @@
 # Importing Packages
 import sys
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtCore import QThread, pyqtSignal
 from PyQt5.QtWidgets import QApplication, QWidget, QInputDialog, QLineEdit, QMessageBox
 import pyqtgraph as pg
@@ -315,12 +315,13 @@ class equalizerApp(ss.Ui_MainWindow):
 
 
     def saveWaveFile(self, rate, data):
+        # dialog = QInputDialog()
+        # text, okPressed = dialog.getText(dialog, "Save File", "File name:", QLineEdit.Normal, "")
+        #
+        # text = "results/" + text + ".wav"
 
-        dialog = QInputDialog()
-        text, okPressed = dialog.getText(dialog, "Save File", "File name:", QLineEdit.Normal, "")
+        text = QtGui.QFileDialog.getSaveFileName(None, 'Save File', self.filename)[0]
 
-        text = "results/" + text + ".wav"
-        print(text)
         wavfile.write(text, rate, data.astype(self.signalDataType))
 
 
