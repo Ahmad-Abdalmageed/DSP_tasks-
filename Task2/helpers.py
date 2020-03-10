@@ -40,6 +40,7 @@ def fourierTransform(signalDict):
         data_ft = fftpack.rfft(signal)
         data_freqs = fftpack.fftfreq(len(signal), d=1 / samplingFrequency)
     dataDict = {'transformedData': data_ft, 'dataFrequencies': data_freqs}
+    print("the data", data_ft)
 
     return dataDict
 
@@ -54,7 +55,9 @@ def inverseFourierTransform(transfomerdData, dim):
         print("2 dimensional inverse")
         dataInverse = np.real(fftpack.ifft2(transfomerdData))
     else:
-        dataInverse = np.real(fftpack.irfft(transfomerdData))
+        dataInverse = (fftpack.irfft(transfomerdData))
+        print("inverse", dataInverse)
+
     return dataInverse
 
 
@@ -67,9 +70,12 @@ def createBands(dataDict):
 
     :return: array of bands within the signal
     """
+
     freqs = dataDict['dataFrequencies']
     data = dataDict['transformedData']
+    # N = len(data) // 10
     freqBands = (0, 62.5, 125, 250, 500, 10**3, 2*10**3, 4*10**3, 8*10**3, 16*10**3, len(data))
+    # freqBands = [N*i for i in range(10)]
     dataBands = []
     for i in range(len(freqBands)-1):
         bands = [val for indx, val in enumerate(data) if indx >= freqBands[i] and indx < freqBands[i+1]] ## equal sign هه

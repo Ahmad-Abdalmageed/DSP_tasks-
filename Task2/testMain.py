@@ -61,16 +61,19 @@ class equalizerApp(ss.Ui_MainWindow):
                         self.verticalSlider_5, self.verticalSlider_6, self.verticalSlider_7, self.verticalSlider_8,
                         self.verticalSlider_9, self.verticalSlider_10]
 
-        self.playerButtons = [self.playButton, self.stopButton]
-        self.windows = [self.rectangle, self.hanning, self.hamming]
+        # Widgets encapsulations
         self.frontWidgets = [self.inputSignalGraph, self.sliderChangedGraph]
         self.outputWidgets = [self.inputTimeOriginal, self.outputTimeModified, self.inputFourierOriginal, self.outputFourierModified]
-        # self.differenceWidgets = [self.TimeDifference, self.FourierDifference]
         self.compareWidgets = [self.result1Plot, self.result2Plot]
         self.differenceWidgets = [self.pop_ui.timeDifference, self.pop_ui.fourierDifference]
 
+        self.allWidgets = [self.frontWidgets, self.outputWidgets, self.compareWidgets, self.differenceWidgets]
+        # buttons encapsulations
+        self.playerButtons = [self.playButton, self.stopButton]
         self.outputButtons = [self.resetBands, self.showResult, self.playResult]
         self.saveButtons = [self.saveFile_btn, self.showDifference_btn, self.saveResult_btn, self.compareResult_btn]
+        self.resultButtons = {1: [self.playCompare, self.stopCompare], 2: [self.playCompare_2, self.stopCompare_2]}
+        self.windows = [self.rectangle, self.hanning, self.hamming]
 
         # Top Titles
         self.widgetTitles = ["Original Signal", "Changes Applied"]
@@ -78,39 +81,25 @@ class equalizerApp(ss.Ui_MainWindow):
         self.compareTitles = ["First Result", "Second Result"]
         self.differenceTitles = ["Time Difference", "Fourier Difference"]
 
+        self.allTitles = [self.widgetTitles, self.outputWidgetsTitles, self.compareTitles, self.differenceTitles]
         # Bottom Titles
         self.widgetsBottomLabels = ["No. of Samples", "Frequencies"]
         self.outputWidgetsBottomLabels = ["No. of Samples", "No. of Samples", "Frequencies", "Frequencies"]
-        self.compareTitles = ["Frequencies", "Frequencies"]
+        self.compareBottomLabels = ["Frequencies", "Frequencies"]
+        self.differenceBottomLabels = ["No. of Samples", "Frequencies"]
 
-
+        self.allButtomLabels = [self.widgetsBottomLabels, self.outputWidgetsBottomLabels, self.compareBottomLabels,
+                                self.differenceBottomLabels]
         # pens configurations (Plot Colors)
         self.pens = [pg.mkPen(color=(255, 0, 0)), pg.mkPen(color=(0, 255, 0)),
                      pg.mkPen(color=(0, 0, 255)), pg.mkPen(color=(200, 87, 125)),
                      pg.mkPen(color=(123, 34, 203))]
 
-        # Setup widget configurations
-        for widget in self.frontWidgets:
-            widget.plotItem.setTitle(self.widgetTitles[self.frontWidgets.index(widget)])
-            widget.plotItem.showGrid(True, True, alpha=0.8)
-            widget.plotItem.setLabel("bottom", text=self.widgetsBottomLabels[self.frontWidgets.index(widget)])
-
-        for widget in self.outputWidgets:
-            widget.plotItem.setTitle(self.outputWidgetsTitles[self.outputWidgets.index(widget)])
-            widget.plotItem.showGrid(True, True, alpha=0.8)
-            widget.plotItem.setLabel("bottom", text=self.outputWidgetsBottomLabels[self.outputWidgets.index(widget)])
-
-
-        for widget in self.compareWidgets:
-            widget.plotItem.setTitle(self.compareTitles[self.compareWidgets.index(widget)])
-            widget.plotItem.showGrid(True, True, alpha=0.8)
-            widget.plotItem.setLabel("bottom", text=self.compareTitles[self.compareWidgets.index(widget)])
-
-
-        for widget in self.differenceWidgets:
-            widget.plotItem.setTitle(self.differenceTitles[self.differenceWidgets.index(widget)])
-            widget.plotItem.showGrid(True, True, alpha=0.8)
-            widget.plotItem.setLabel("bottom", text=self.widgetsBottomLabels[self.differenceWidgets.index(widget)])
+        for encap in zip(self.allWidgets, self.allTitles, self.allButtomLabels):
+            for widget, title, label in zip(encap[0], encap[1], encap[2]):
+                widget.plotItem.setTitle(title)
+                widget.plotItem.showGrid(True, True, alpha=0.8)
+                widget.plotItem.setLabel("bottom", text=label)
 
         # CONNECTIONS
         self.actionload.triggered.connect(self.loadFile)
@@ -133,7 +122,10 @@ class equalizerApp(ss.Ui_MainWindow):
         #Compare Results
         self.saveResult_btn.clicked.connect(self.saveResult)
         self.compareResult_btn.clicked.connect(self.compareResults)
-
+        self.playCompare.clicked.connect(lambda : sd.play(self.results[1][1].astype(self.signalDataType), self.signalFile['frequency']))
+        self.playCompare_2.clicked.connect(lambda : sd.play(self.results[2][1].astype(self.signalDataType), self.signalFile['frequency']))
+        self.stopCompare.clicked.connect(lambda : sd.stop())
+        self.stopCompare_2.clicked.connect(lambda : sd.stop())
 
     def loadFile(self):
         """
@@ -175,7 +167,6 @@ class equalizerApp(ss.Ui_MainWindow):
         self.signalFourier = fourierTransform(self.signalFile)
         self.signalBands = createBands(self.signalFourier)
         self.signalBandsCopy = np.copy(self.signalBands)
-
         # on loading a new file
         for widget in self.frontWidgets:
             widget.plotItem.clear()
@@ -218,8 +209,8 @@ class equalizerApp(ss.Ui_MainWindow):
             try:
                  self.plotFourier(self.sliderChangedGraph, self.signalModification, self.pens[2])
             except:
-                print("failed")
-                pass
+                    print("failed")
+                    pass
             self.signalModificationInv = inverseFourierTransform(self.signalModification, self.signalFile['dim'])
         except:
             pass
@@ -255,7 +246,7 @@ class equalizerApp(ss.Ui_MainWindow):
         """
         try:
             N = len(data)
-            yplot = 2.0 / N * np.abs(data[: N//2])
+            yplot = 2* np.abs(data[: N//2]) / N
             widgetName.plotItem.plot(yplot, pen= pen)
         except:
             pass
@@ -290,28 +281,38 @@ class equalizerApp(ss.Ui_MainWindow):
         # Plot Inverse of Original in outputTimeOriginal Widget
         self.outputTimeModified.plotItem.plot(self.signalModificationInv)
 
-
         # Plot Original Signal in inputFourierOriginal Widget
         self.plotFourier(self.inputFourierOriginal, self.signalFourier['transformedData'], pen=self.pens[2])
-
 
         #  Plot Fourier of Original in outputFourierOriginal Widget
         self.plotFourier(self.outputFourierModified, self.signalModification, pen=self.pens[3])
 
     def compareResults(self):
-        print("yes")
+        """
+        compares the two results saved by the user
+        """
+        self.tabWidget.setCurrentIndex(2)
+        print(self.results[2])
+        try:
+            self.plotFourier(self.result1Plot, self.results[1][0], self.pens[4])
+            for btn in self.resultButtons[1]:
+                btn.setEnabled(True)
+            self.plotFourier(self.result2Plot, self.results[2][0], self.pens[4])
+            for btn in self.resultButtons[2]:
+                btn.setEnabled(True)
 
-        self.tabWidget.setCurrentIndex(-1)
-        self.plotFourier(self.result1Plot, self.results[1][0], self.pens[3])
-        self.plotFourier(self.result2Plot, self.results[2][0], self.pens[3])
+        except IndexError:
+            self.showMessage("Warning", "You can compare two results please choose and save the second result", QMessageBox.Ok, QMessageBox.Warning)
+
 
     def saveResult(self):
         if self.resultCounter > 2:
             print("No more yala")
         else:
-            self.results[self.resultCounter].append([self.signalModification, self.signalModificationInv])
+            self.results[self.resultCounter].extend([self.signalModification, self.signalModificationInv])
             self.resultCounter +=1
         print(self.results)
+
 
     def saveWaveFile(self, rate, data):
 
@@ -336,13 +337,13 @@ class equalizerApp(ss.Ui_MainWindow):
         self.signalDiffInFourier = self.signalModification - self.signalFourier['transformedData']
         self.plotFourier(self.pop_ui.fourierDifference, self.signalDiffInFourier, pen=self.pens[3])
 
-    def showSaveMessage(self, message):
+
+    def showMessage(self, header,message, button, icon):
         msg = QMessageBox()
-        msg.setWindowTitle("Save Result")
+        msg.setWindowTitle(header)
         msg.setText(message)
-        msg.setIcon(QMessageBox.Question)
-        msg.setStandardButtons(QMessageBox.Ok)
-        # msg.setInformativeText(info)
+        msg.setIcon(icon)
+        msg.setStandardButtons(button)
         x = msg.exec_()
 
 
