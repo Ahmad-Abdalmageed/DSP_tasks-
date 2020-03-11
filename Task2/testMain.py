@@ -2,7 +2,7 @@
 import sys
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtCore import QThread, pyqtSignal
-from PyQt5.QtWidgets import QApplication, QWidget, QInputDialog, QLineEdit, QMessageBox
+from PyQt5.QtWidgets import QMessageBox
 import pyqtgraph as pg
 import sounddevice as sd
 import testGUI as ss
@@ -101,7 +101,13 @@ class equalizerApp(ss.Ui_MainWindow):
                 widget.plotItem.showGrid(True, True, alpha=0.8)
                 widget.plotItem.setLabel("bottom", text=label)
 
-        # CONNECTIONS
+        # Setup Y Range in Time Plot widgets
+        for i in range(0, 2):
+            self.outputWidgets[i].setYRange(-30000, 30000)
+
+        self.inputSignalGraph.setYRange(-30000, 30000)
+
+        # CONNECTIONSx
         self.actionload.triggered.connect(self.loadFile)
         for slider in self.sliders:
             slider.id = self.sliders.index(slider)
@@ -334,6 +340,7 @@ class equalizerApp(ss.Ui_MainWindow):
 
         # Difference of signals in Time
         self.signalDiffInTime = self.signalModificationInv - self.signalFile['data']
+
         self.pop_ui.timeDifference.plotItem.plot(self.signalDiffInTime)
 
         # Difference of signals in Fourier

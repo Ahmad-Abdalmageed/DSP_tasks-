@@ -127,6 +127,48 @@ def applyWindowFunction(sliderID, sliderVal, dataBands, windowType = "Rectangle"
                 hanning = np.hanning(len(dataModified[slider])*2)
                 low = len(hanning) // 4
                 high = 3 * low
+                if sliderID != 0:
+                    # Check if dataBefore length is +  --->>> data > hamming
+                    difSizeBefore = len(dataModified[slider - 1]) - len(hanning[: low])
+
+                    if difSizeBefore > 0:
+                        onesBefore = np.ones(difSizeBefore)
+                        # Create array of ones ---->>> Add ones to dataBefore
+                        hanningBefore = np.concatenate(onesBefore, hanning[: low])
+                        dataModified[sliderID - 1] *= value * hanningBefore
+
+                    # Check if dataBefore length is -  --->>> data < hamming
+                    elif difSizeBefore < 0:
+                        # Slice dataBefore from 0 to its length ---->>> multiply by hamming
+                        slicedHanningBefore = hanning[len(dataModified[slider - 1]): low]
+                        dataModified[sliderID - 1] *= value * slicedHanningBefore
+
+                    # Hanning == len of data
+                    else:
+                        dataModified[sliderID - 1] *= value * hanning[: low]
+
+                # Apply hanning after
+                if sliderID != 9:
+                    difSizeAfter = len(dataModified[slider + 1]) - len(hanning[high: ])
+
+                    # Data >> hanning
+                    if difSizeAfter > 0:
+                        onesAfter = np.ones(difSizeAfter)
+                        # Create array of ones ---->>> Add ones to difSizeAfter
+                        hanningAfter = np.concatenate((hanning[high: ], onesAfter))
+                        dataModified[sliderID + 1] *= value * hanningAfter
+
+                    # Check if difSizeAfter length is -  --->>> data < hamming
+                    elif difSizeAfter < 0:
+                        # Slice dataBefore from 0 to its length ---->>> multiply by hamming
+                        slicedHanningAfter = hanning[high: len(dataModified[slider + 1])]
+                        dataModified[sliderID + 1] *= value * slicedHanningAfter
+
+                    # Hanning == len of data
+                    else:
+                        dataModified[sliderID + 1] *= value * hanning[high: ]
+
+                # Effective area of hanning
                 gain[slider] = value * hanning[low : high]
 
         dataModified = windowModification(dataModified, bandIndx, gain)
