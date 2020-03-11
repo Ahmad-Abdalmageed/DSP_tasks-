@@ -246,6 +246,7 @@ class equalizerApp(ss.Ui_MainWindow):
         """
         try:
             N = len(data)
+            # Normalization
             yplot = 2* np.abs(data[: N//2]) / N
             widgetName.plotItem.plot(self.signalFourier['dataFrequencies'][: N//2], yplot, pen= pen)
         except:
@@ -275,6 +276,7 @@ class equalizerApp(ss.Ui_MainWindow):
             btn.setEnabled(True)
         for widget in self.outputWidgets:
             widget.plotItem.clear()
+
         # Plot Original signal in inputTimeOriginal Widget
         self.inputTimeOriginal.plotItem.plot(self.signalFile['data'])
 

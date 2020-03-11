@@ -13,7 +13,7 @@ def loadAudioFile(filePath):
     dimensions = data.shape
     print(dimensions)
     if len(dimensions) == 2:
-        data = data[:,  0]
+        data = data[:, 0]
         print("de channeled ")
         dimensions = (dimensions[0],)
     signalDict = {'frequency':samplingFrequency, 'data':data, 'dim': dimensions}
@@ -78,7 +78,13 @@ def createBands(dataDict):
     # freqBands = [N*i for i in range(10)]
     dataBands = []
     for i in range(len(freqBands)-1):
-        bands = [indx for indx, val in enumerate(freqs) if val >= freqBands[i] and val < freqBands[i+1]] ## equal sign هه
+        # bands = [indx for indx, val in enumerate(freqs) if val >= freqBands[i] and val < freqBands[i+1]] ## equal sign هه
+
+        bands = []
+        for indx, val in enumerate(freqs):
+            if val >= freqBands[i] and val < freqBands[i + 1]:
+                bands.append(indx)
+
         dataBands.append(data[bands])
     return dataBands
 
