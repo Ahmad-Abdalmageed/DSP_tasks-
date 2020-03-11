@@ -201,7 +201,7 @@ class equalizerApp(ss.Ui_MainWindow):
         try:
             self.sliderChangedGraph.plotItem.clear()
             if val < 0 and not 0:
-                self.sliderValuesClicked[indx] = 1/val
+                self.sliderValuesClicked[indx] = 1/abs(val)
             else:
                 self.sliderValuesClicked[indx] = val
             self.getWindow()
@@ -247,7 +247,7 @@ class equalizerApp(ss.Ui_MainWindow):
         try:
             N = len(data)
             yplot = 2* np.abs(data[: N//2]) / N
-            widgetName.plotItem.plot(yplot, pen= pen)
+            widgetName.plotItem.plot(self.signalFourier['dataFrequencies'][: N//2], yplot, pen= pen)
         except:
             pass
     def resetAllBands(self):

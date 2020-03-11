@@ -1,7 +1,6 @@
 import numpy as np
 from scipy import fftpack
 from scipy.io import wavfile
-import threading
 
 ## These are helper functions
 def loadAudioFile(filePath):
@@ -12,6 +11,7 @@ def loadAudioFile(filePath):
     """
     samplingFrequency, data = wavfile.read(filePath)
     dimensions = data.shape
+    print(dimensions)
     if len(dimensions) == 2:
         data = data[:,  0]
         print("de channeled ")
@@ -22,7 +22,7 @@ def loadAudioFile(filePath):
 
 def fourierTransform(signalDict):
     """
-    apply fourier transform on the data
+    apply fourier transform on the data;
     :param signalDict: a dictionary with:
      'frequency'-- Sampling frequency
      'data' -- Signal Data
@@ -38,7 +38,7 @@ def fourierTransform(signalDict):
         data_freqs = fftpack.fftfreq(len(signal), d= 1/samplingFrequency)
     else:
         data_ft = fftpack.rfft(signal)
-        data_freqs = fftpack.fftfreq(len(signal), d=1 / samplingFrequency)
+        data_freqs = fftpack.rfftfreq(len(signal), d=1 / samplingFrequency)
     dataDict = {'transformedData': data_ft, 'dataFrequencies': data_freqs}
     print("the data", data_ft)
 
@@ -74,12 +74,12 @@ def createBands(dataDict):
     freqs = dataDict['dataFrequencies']
     data = dataDict['transformedData']
     # N = len(data) // 10
-    freqBands = (0, 62.5, 125, 250, 500, 10**3, 2*10**3, 4*10**3, 8*10**3, 16*10**3, len(data))
+    freqBands = (0, 62.5, 125, 250, 500, 10**3, 2*10**3, 4*10**3, 8*10**3, 16*10**3, 20*10**3)
     # freqBands = [N*i for i in range(10)]
     dataBands = []
     for i in range(len(freqBands)-1):
-        bands = [val for indx, val in enumerate(data) if indx >= freqBands[i] and indx < freqBands[i+1]] ## equal sign هه
-        dataBands.append(bands)
+        bands = [indx for indx, val in enumerate(freqs) if val >= freqBands[i] and val < freqBands[i+1]] ## equal sign هه
+        dataBands.append(data[bands])
     return dataBands
 
 def windowModification(dataModified, bandIndx, gains):
@@ -118,30 +118,36 @@ def applyWindowFunction(sliderID, sliderVal, dataBands, windowType = "Rectangle"
     if windowType == 'Hanning':
         for slider, value in gain.items():
             if type(value) != type(...) :
-                if value is int :
-                    gain[slider] = value * np.hanning(len(dataModified[slider]))
+                # if type(value) is int :
+                    hanning = np.hanning(len(dataModified[slider])*2)
+                    low = len(hanning) // 4
+                    high = 3 * low
+                    gain[slider] = value * hanning[low : high]
         dataModified = windowModification(dataModified, bandIndx, gain)
 
     if windowType == 'Hamming':
         for slider, value in gain.items():
             if type(value) != type(...) :
-                if value is int :
-                    gain[slider] = value * np.hanning(len(dataModified[slider]))
+                # if value is int :
+                    hamming = np.hamming(len(dataModified[slider])*2)
+                    low = len(hamming) // 4
+                    high = 3 * low
+                    gain[slider] = value * hamming[low : high]
         dataModified = windowModification(dataModified, bandIndx, gain)
     return dataModified
 
 
 if __name__ == '__main__':
-    audioFile = loadAudioFile('audio/Casio-MT-45-16-Beat.wav')
-    print(audioFile['data'])
-    fourierDict= fourierTransform(audioFile)
-    print(fourierDict['transformedData'])
-    dataBands = createBands(fourierDict)
-    print(dataBands)
-    mod = applyWindowFunction(1, 5, dataBands)
-    print(mod)
-    inv = inverseFourierTransform(mod, audioFile['dim'])
-    print(type(inv))
+    # audioFile = loadAudioFile('audio/Casio-MT-45-16-Beat.wav')
+    # # print(audioFile['data'])
+    # fourierDict= fourierTransform(audioFile)
+    # # print(fourierDict['transformedData'])
+    # dataBands = createBands(fourierDict)
+    # # print(dataBands)
+    # mod = applyWindowFunction(1, 5, dataBands)
+    # # print(mod)
+    # inv = inverseFourierTransform(mod, audioFile['dim'])
+    # print(type(inv))
     # for i in dataBands:
     #     print(i)
     # print(np.real(np.concatenate(dataBands)))
@@ -151,3 +157,9 @@ if __name__ == '__main__':
     # dataBands[1] = applyWindowFunction(1, 2, dataBands)
     # dataBands[1] = applyWindowFunction(1, 3, dataBands)
     # dataBands[1] = applyWindowFunction(1, 4, dataBands)
+
+
+    array1 = np.array([10, 100, 20])
+    array2 = np.array([3, 30, 1])
+    result = array1 - array2
+    print(result)
